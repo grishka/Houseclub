@@ -1,5 +1,7 @@
 Unofficial Clubhouse app for Android. Inspired by [this](https://github.com/stypr/clubhouse-py).
 
+Not to be taken seriously.
+
 # FAQ
 ### What works?
 * Login
