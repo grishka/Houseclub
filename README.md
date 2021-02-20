@@ -14,6 +14,7 @@ Unofficial Clubhouse app for Android. Inspired by [this](https://github.com/styp
 * Following and unfollowing people
 * Followers/following lists
 * Updating your "bio"
+
 The rest isn't implemented. In particular, there are no notifications, and you can't create and moderate rooms. There's probably a hundred bugs in the existing functionality too.
 
 ### Java? In %year%?! Why not Kotlin? Why are there no jetpack libraries? System fragments?!?! Are you out of your mind?
