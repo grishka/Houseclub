@@ -44,4 +44,7 @@
 	<color name="blue">#5b75a6</color>
 	<color name="navBar">#000</color>
 	<color name="grey">#E3E0D9</color>
+    <color name="buttonGray">#f2f2f2</color>
+    <color name="buttonGrayPressed">#C8C8C8</color>
+    <color name="red">#ea5858</color>
 </resources>

@@ -1,63 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/refresh_layout"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="#FFF">
+    android:id="@+id/refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-		<FrameLayout
-			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:layout_weight="1">
-		<me.grishka.appkit.views.UsableRecyclerView
-			android:id="@+id/list"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-		<include layout="@layout/appkit_empty"
-			android:id="@+id/empty"/>
-		</FrameLayout>
+            <me.grishka.appkit.views.UsableRecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			android:layout_gravity="bottom"
-			android:padding="8dp">
+            <include
+                android:id="@+id/empty"
+                layout="@layout/appkit_empty" />
+        </FrameLayout>
 
-			<Button
-				android:id="@+id/leave"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				style="@style/Widget.Button.Grey"
-				android:text="@string/leave_room"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-			<View
-				android:layout_width="0dp"
-				android:layout_height="1dp"
-				android:layout_weight="1"/>
+            <Button
+                android:id="@+id/leave"
+                style="@style/Widget.Button.Grey"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:includeFontPadding="false"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:text="@string/leave_room"
+                android:textColor="@color/red"
+                android:textSize="16sp" />
 
-			<Button
-				android:id="@+id/raise"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:minWidth="0dp"
-				style="@style/Widget.Button.Grey"
-				android:text="✋"/>
-			<ImageButton
-				android:id="@+id/mute"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:minWidth="0dp"
-				android:src="@drawable/ic_mic_off"
-				style="@style/Widget.Button.Grey"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
 
-		</LinearLayout>
-	</LinearLayout>
+            <Button
+                android:id="@+id/raise"
+                style="@style/Widget.Button.Grey"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginEnd="12dp"
+                android:includeFontPadding="false"
+                android:minWidth="0dp"
+                android:text="✋"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/mute"
+                style="@style/Widget.Button.Grey"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:includeFontPadding="false"
+                android:minWidth="0dp"
+                android:src="@drawable/ic_mic_off"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
