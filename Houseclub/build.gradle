@@ -7,8 +7,8 @@ android {
 		applicationId "me.grishka.houseclub"
 		minSdkVersion 24
 		targetSdkVersion 30
-		versionCode 1
-		versionName "1.0"
+		versionCode 2
+		versionName "1.0.1"
 	}
 	buildTypes {
 		release {
@@ -35,6 +35,7 @@ dependencies {
 	implementation 'com.github.grishka.litex:swiperefreshlayout:1.0'
 	implementation 'com.github.grishka.litex:viewpager2:1.0'
 	implementation 'com.github.grishka:appkit:c7854a3'
+	implementation 'com.squareup.okhttp3:okhttp:3.14.7'
 	api 'com.github.grishka.litex:annotation:1.0'
 
 	implementation 'com.google.code.gson:gson:2.8.6'
