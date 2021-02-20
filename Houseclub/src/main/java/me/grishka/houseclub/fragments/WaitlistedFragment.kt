@@ -15,7 +15,7 @@ class WaitlistedFragment : BaseToolbarFragment() {
         setTitle(R.string.waitlist)
     }
 
-    override fun onCreateContentView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View {
+    override fun onCreateContentView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.waitlist, container, false)
         view.findViewById<View>(R.id.log_out).setOnClickListener { v: View -> logOut(v) }
         return view

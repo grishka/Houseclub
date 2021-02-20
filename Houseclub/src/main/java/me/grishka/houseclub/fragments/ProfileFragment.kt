@@ -60,7 +60,7 @@ class ProfileFragment : LoaderFragment() {
         if (self) setHasOptionsMenu(true)
     }
 
-    override fun onCreateContentView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View {
+    override fun onCreateContentView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
         val v = inflater.inflate(R.layout.profile, container, false)
         name = v.findViewById(R.id.name)
         username = v.findViewById(R.id.username)
@@ -91,31 +91,31 @@ class ProfileFragment : LoaderFragment() {
                 override fun onSuccess(result: GetProfile.Response?) {
                     currentRequest = null
                     user = result?.userProfile
-                    name!!.text = user?.name
-                    username!!.text = '@'.toString() + user?.username
+                    name?.text = user?.name
+                    username?.text = '@'.toString() + user?.username
                     val d = ColorDrawable(-0x7f7f80)
                     if (user?.photoUrl != null) ViewImageLoader.load(
                         photo,
                         d,
                         user?.photoUrl
-                    ) else photo!!.setImageDrawable(d)
-                    followsYou!!.visibility = if (user!!.followsMe) View.VISIBLE else View.GONE
-                    followers!!.text =
+                    ) else photo?.setImageDrawable(d)
+                    followsYou?.visibility = if (user!!.followsMe) View.VISIBLE else View.GONE
+                    followers?.text =
                         resources.getQuantityString(R.plurals.followers, user!!.numFollowers, user?.numFollowers)
-                    following!!.text =
+                    following?.text =
                         resources.getQuantityString(R.plurals.following, user!!.numFollowing, user?.numFollowing)
-                    bio!!.text = user?.bio
-                    if (TextUtils.isEmpty(user?.bio) && self) bio!!.setText(R.string.update_bio)
-                    if (self) followBtn!!.visibility =
-                        View.GONE else followBtn!!.setText(if (user!!.isFollowed) R.string.following else R.string.follow)
+                    bio?.text = user?.bio
+                    if (TextUtils.isEmpty(user?.bio) && self) bio?.setText(R.string.update_bio)
+                    if (self) followBtn?.visibility =
+                        View.GONE else followBtn?.setText(if (user!!.isFollowed) R.string.following else R.string.follow)
                     if (user?.twitter == null && user?.instagram == null) {
-                        socialButtons!!.visibility = View.GONE
+                        socialButtons?.visibility = View.GONE
                     } else {
-                        socialButtons!!.visibility = View.VISIBLE
-                        twitter!!.visibility = if (user?.twitter == null) View.GONE else View.VISIBLE
-                        instagram!!.visibility = if (user?.instagram == null) View.GONE else View.VISIBLE
-                        if (user!!.twitter != null) twitter!!.text = user?.twitter
-                        if (user!!.instagram != null) instagram!!.text = user?.instagram
+                        socialButtons?.visibility = View.VISIBLE
+                        twitter?.visibility = if (user?.twitter == null) View.GONE else View.VISIBLE
+                        instagram?.visibility = if (user?.instagram == null) View.GONE else View.VISIBLE
+                        if (user!!.twitter != null) twitter?.text = user?.twitter
+                        if (user!!.instagram != null) instagram?.text = user?.instagram
                     }
                     var joined = getString(R.string.joined_date, DateFormat.getDateInstance().format(user!!.timeCreated))
                     if (user?.invitedByUserProfile != null) {
@@ -124,15 +124,18 @@ class ProfileFragment : LoaderFragment() {
                         
                         ${getString(R.string.invited_by, user!!.invitedByUserProfile!!.name)}
                         """.trimIndent()
-                        if (user!!.invitedByUserProfile!!.photoUrl != null) ViewImageLoader.load(
-                            inviterPhoto,
-                            d2,
-                            user!!.invitedByUserProfile!!.photoUrl
-                        ) else inviterPhoto!!.setImageDrawable(d2)
+                        if(inviterPhoto != null){
+                            if (user?.invitedByUserProfile?.photoUrl != null) ViewImageLoader.load(
+                                inviterPhoto,
+                                d2,
+                                user?.invitedByUserProfile!!.photoUrl
+                            ) else inviterPhoto?.setImageDrawable(d2)
+                        }
+
                     } else {
-                        inviterPhoto!!.visibility = View.GONE
+                        inviterPhoto?.visibility = View.GONE
                     }
-                    inviteInfo!!.text = joined
+                    inviteInfo?.text = joined
                     dataLoaded()
                 }
             })

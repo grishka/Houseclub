@@ -26,7 +26,7 @@ class RegisterFragment : BaseToolbarFragment() {
         setTitle(R.string.register)
     }
 
-    override fun onCreateContentView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View {
+    override fun onCreateContentView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.register, container, false)
         firstNameInput = view.findViewById(R.id.first_name_input)
         lastNameInput = view.findViewById(R.id.last_name_input)
