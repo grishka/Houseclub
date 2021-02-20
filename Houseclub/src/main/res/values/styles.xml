@@ -41,6 +41,7 @@
 		<item name="android:colorAccent">@color/blue</item>
 	</style>
 
+	<color name="white">#FFF</color>
 	<color name="lightBeige">#F1EEE4</color>
 	<color name="blue">#5b75a6</color>
 	<color name="navBar">#000</color>

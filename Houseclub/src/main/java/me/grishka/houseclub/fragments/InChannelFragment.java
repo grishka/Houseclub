@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Outline;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -87,6 +89,19 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 				return 12;
 			}
 		});
+		list.setOutlineProvider(new ViewOutlineProvider() {
+			@Override
+			public void getOutline(View view, Outline outline) {
+				outline.setRoundRect(
+						0,
+						0,
+						view.getWidth(),
+						view.getHeight() + V.dp(36),
+						V.dp(36)
+				);
+			}
+		});
+		list.setClipToOutline(true);
 		list.setLayoutManager(lm);
 		list.setPadding(0, V.dp(16), 0, V.dp(16));
 		list.setClipToPadding(false);
