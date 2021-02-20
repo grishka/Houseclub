@@ -7,15 +7,15 @@ android {
 		applicationId "me.grishka.houseclub"
 		minSdkVersion 24
 		targetSdkVersion 30
-		versionCode 2
-		versionName "1.0.1"
+		versionCode 3
+		versionName "1.0.2"
 	}
 	buildTypes {
 		release {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 			ndk{
-				abiFilters "arm64-v8a"
+				abiFilters "arm64-v8a", "armeabi-v7a"
 			}
 		}
 	}

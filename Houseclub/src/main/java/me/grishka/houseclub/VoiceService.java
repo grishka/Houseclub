@@ -209,7 +209,7 @@ public class VoiceService extends Service{
 		pubnub.subscribe().channels(Arrays.asList(
 				"users."+ClubhouseSession.userID,
 				"channel_user."+channel.channel+"."+ClubhouseSession.userID,
-				"channel_speakers."+channel.channel,
+//				"channel_speakers."+channel.channel,
 				"channel_all."+channel.channel
 		)).execute();
 	}
