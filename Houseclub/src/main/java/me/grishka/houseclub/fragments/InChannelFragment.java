@@ -64,12 +64,6 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 	}
 
 	@Override
-	public void onStop() {
-		VoiceService.getInstance().leaveChannel();
-		super.onStop();
-	}
-
-	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState){
 		super.onViewCreated(view, savedInstanceState);
 		view.findViewById(R.id.leave).setOnClickListener(this::onLeaveClick);
