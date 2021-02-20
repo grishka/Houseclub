@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:padding="16dp"
+	android:background="#FFF"
+	android:foreground="?android:selectableItemBackground">
+
+	<TextView
+		android:id="@+id/topic"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="16dp"
+		android:fontFamily="sans-serif-medium"
+		tools:text="Channel topic"/>
+
+	<me.grishka.houseclub.views.SquircleImageView
+		android:id="@+id/pic1"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_below="@id/topic"
+		tools:src="#0f0"/>
+
+	<me.grishka.houseclub.views.SquircleImageView
+		android:id="@+id/pic2"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_alignTop="@id/pic1"
+		android:layout_alignLeft="@id/pic1"
+		android:layout_marginTop="20dp"
+		android:layout_marginLeft="20dp"
+		tools:src="#00f"/>
+
+	<TextView
+		android:id="@+id/speakers"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/pic2"
+		android:layout_marginLeft="16dp"
+		android:layout_below="@id/topic"
+		tools:text="Speaker list"/>
+
+	<TextView
+		android:id="@+id/num_members"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/speakers"
+		android:layout_alignLeft="@id/speakers"
+		android:layout_marginTop="8dp"
+		android:textSize="12dp"
+		android:fontFamily="sans-serif-medium"
+		android:textColor="#808080"
+		android:drawablePadding="4dp"
+		android:drawableRight="@drawable/ic_person"
+		tools:text="7"/>
+
+	<TextView
+		android:id="@+id/num_speakers"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/speakers"
+		android:layout_toRightOf="@id/num_members"
+		android:layout_marginTop="8dp"
+		android:layout_marginLeft="16dp"
+		android:textSize="12dp"
+		android:fontFamily="sans-serif-medium"
+		android:textColor="#808080"
+		android:drawablePadding="4dp"
+		android:drawableRight="@drawable/ic_chat_bubble"
+		tools:text="5"/>
+
+</RelativeLayout>
