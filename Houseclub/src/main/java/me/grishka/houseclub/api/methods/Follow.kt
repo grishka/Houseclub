@@ -1,19 +1,14 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
+import me.grishka.houseclub.api.BaseResponse
+import me.grishka.houseclub.api.ClubhouseAPIRequest
 
-public class Follow extends ClubhouseAPIRequest<BaseResponse>{
-	public Follow(int userID){
-		super("POST", "follow", BaseResponse.class);
-		requestBody=new Body(userID);
-	}
+class Follow(userID: Int) : ClubhouseAPIRequest<BaseResponse?>("POST", "follow", BaseResponse::class.java) {
+    private class Body(var userId: Int) {
+        var source = 4
+    }
 
-	private static class Body{
-		public int userId, source=4;
-
-		public Body(int userId){
-			this.userId=userId;
-		}
-	}
+    init {
+        requestBody = Body(userID)
+    }
 }

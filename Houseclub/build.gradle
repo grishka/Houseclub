@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
 	compileSdkVersion 30
@@ -44,4 +45,8 @@ dependencies {
 
 	implementation 'io.agora.rtc:voice-sdk:3.3.0'
 	implementation group: 'com.pubnub', name: 'pubnub-gson', version: '4.33.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

@@ -1,55 +1,44 @@
-package me.grishka.houseclub.views;
+package me.grishka.houseclub.views
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Outline;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewOutlineProvider;
-import android.widget.ImageView;
+import android.content.Context
+import android.graphics.Outline
+import android.util.AttributeSet
+import android.view.View
+import android.view.ViewOutlineProvider
+import android.widget.ImageView
 
-import androidx.annotation.Nullable;
-import me.grishka.appkit.utils.V;
+class SquircleImageView : ImageView {
+    constructor(context: Context?) : super(context) {
+        init()
+    }
 
-public class SquircleImageView extends ImageView{
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        init()
+    }
 
-	private static final ViewOutlineProvider squircleOutline=new ViewOutlineProvider(){
-		@Override
-		public void getOutline(View view, Outline outline){
-			if(view.getWidth()==0 || view.getHeight()==0)
-				return;
-//			Path path=new Path();
-//			path.moveTo(0, view.getHeight()/2f);
-//			path.cubicTo(0f, 0f, 0f, 0f, view.getWidth()/2f, 0f);
-//			path.cubicTo(view.getWidth(), 0f, view.getWidth(), 0f, view.getWidth(), view.getHeight()/2f);
-//			path.cubicTo(view.getWidth(), view.getHeight(), view.getWidth(), view.getHeight(), view.getWidth()/2f, view.getHeight());
-//			path.cubicTo(0f, view.getHeight(), 0f, view.getHeight(), 0f, view.getHeight()/2f);
-//			path.close();
-//			outline.setConvexPath(path);
-			outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), view.getWidth()*0.42f);
-		}
-	};
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init()
+    }
 
-	public SquircleImageView(Context context){
-		super(context);
-		init();
-	}
+    private fun init() {
+        outlineProvider = squircleOutline
+        clipToOutline = true
+    }
 
-	public SquircleImageView(Context context, @Nullable AttributeSet attrs){
-		super(context, attrs);
-		init();
-	}
-
-	public SquircleImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr){
-		super(context, attrs, defStyleAttr);
-		init();
-	}
-
-	private void init(){
-		setOutlineProvider(squircleOutline);
-		setClipToOutline(true);
-	}
+    companion object {
+        private val squircleOutline: ViewOutlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                if (view.width == 0 || view.height == 0) return
+                //			Path path=new Path();
+                //			path.moveTo(0, view.getHeight()/2f);
+                //			path.cubicTo(0f, 0f, 0f, 0f, view.getWidth()/2f, 0f);
+                //			path.cubicTo(view.getWidth(), 0f, view.getWidth(), 0f, view.getWidth(), view.getHeight()/2f);
+                //			path.cubicTo(view.getWidth(), view.getHeight(), view.getWidth(), view.getHeight(), view.getWidth()/2f, view.getHeight());
+                //			path.cubicTo(0f, view.getHeight(), 0f, view.getHeight(), 0f, view.getHeight()/2f);
+                //			path.close();
+                //			outline.setConvexPath(path);
+                outline.setRoundRect(0, 0, view.width, view.height, view.width * 0.42f)
+            }
+        }
+    }
 }

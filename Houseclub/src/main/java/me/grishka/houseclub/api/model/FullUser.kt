@@ -1,19 +1,23 @@
-package me.grishka.houseclub.api.model;
+package me.grishka.houseclub.api.model
 
-import java.util.Date;
+import java.util.Date
 
-public class FullUser extends User{
-	public String dsplayname, bio, twitter, instagram;
-	public int numFollowers, numFollowing;
-	public boolean followsMe, isBlockedByNetwork;
-	public Date timeCreated;
-	public User invitedByUserProfile;
-	// null = not following
-	// 2 = following
-	// other values = ?
-	public int notificationType;
+class FullUser : User() {
+    var dsplayname: String? = null
+    var bio: String? = null
+    var twitter: String? = null
+    var instagram: String? = null
+    var numFollowers = 0
+    var numFollowing = 0
+    var followsMe = false
+    var isBlockedByNetwork = false
+    var timeCreated: Date? = null
+    var invitedByUserProfile: User? = null
 
-	public boolean isFollowed(){
-		return notificationType==2;
-	}
+    // null = not following
+    // 2 = following
+    // other values = ?
+    var notificationType = 0
+    val isFollowed: Boolean
+        get() = notificationType == 2
 }

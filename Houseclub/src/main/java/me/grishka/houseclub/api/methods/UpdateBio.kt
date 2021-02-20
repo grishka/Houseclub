@@ -1,19 +1,12 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
+import me.grishka.houseclub.api.BaseResponse
+import me.grishka.houseclub.api.ClubhouseAPIRequest
 
-public class UpdateBio extends ClubhouseAPIRequest<BaseResponse>{
-	public UpdateBio(String bio){
-		super("POST", "update_bio", BaseResponse.class);
-		requestBody=new Body(bio);
-	}
+class UpdateBio(bio: String) : ClubhouseAPIRequest<BaseResponse?>("POST", "update_bio", BaseResponse::class.java) {
+    private class Body(var bio: String)
 
-	private static class Body{
-		public String bio;
-
-		public Body(String bio){
-			this.bio=bio;
-		}
-	}
+    init {
+        requestBody = Body(bio)
+    }
 }

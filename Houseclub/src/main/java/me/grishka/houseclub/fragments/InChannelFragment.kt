@@ -1,402 +1,345 @@
-package me.grishka.houseclub.fragments;
+package me.grishka.houseclub.fragments
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import androidx.recyclerview.widget.RecyclerView
+import me.grishka.appkit.Nav
+import me.grishka.appkit.api.Callback
+import me.grishka.appkit.api.ErrorResponse
+import me.grishka.appkit.api.SimpleCallback
+import me.grishka.appkit.fragments.BaseRecyclerFragment
+import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter
+import me.grishka.appkit.imageloader.ImageLoaderViewHolder
+import me.grishka.appkit.utils.BindableViewHolder
+import me.grishka.appkit.utils.MergeRecyclerAdapter
+import me.grishka.appkit.utils.SingleViewRecyclerAdapter
+import me.grishka.appkit.utils.V
+import me.grishka.appkit.views.UsableRecyclerView.Clickable
+import me.grishka.houseclub.R
+import me.grishka.houseclub.VoiceService.ChannelEventListener
+import me.grishka.houseclub.VoiceService.Companion.addListener
+import me.grishka.houseclub.VoiceService.Companion.instance
+import me.grishka.houseclub.VoiceService.Companion.removeListener
+import me.grishka.houseclub.api.BaseResponse
+import me.grishka.houseclub.api.ClubhouseSession
+import me.grishka.houseclub.api.methods.AcceptSpeakerInvite
+import me.grishka.houseclub.api.methods.GetChannel
+import me.grishka.houseclub.api.model.Channel
+import me.grishka.houseclub.api.model.ChannelUser
+import java.util.ArrayList
 
-import java.util.ArrayList;
-import java.util.List;
+class InChannelFragment : BaseRecyclerFragment<ChannelUser?>(10), ChannelEventListener {
+    private var adapter: MergeRecyclerAdapter? = null
+    private var speakersAdapter: UserListAdapter? = null
+    private var followedAdapter: UserListAdapter? = null
+    private var othersAdapter: UserListAdapter? = null
+    private var muteBtn: ImageButton? = null
+    private var raiseBtn: Button? = null
+    private var channel: Channel? = null
+    private val speakers = ArrayList<ChannelUser?>()
+    private val followedBySpeakers = ArrayList<ChannelUser?>()
+    private val otherUsers = ArrayList<ChannelUser?>()
+    private val mutedUsers = ArrayList<Int>()
+    private val speakingUsers = ArrayList<Int>()
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
+    }
 
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import me.grishka.appkit.Nav;
-import me.grishka.appkit.api.Callback;
-import me.grishka.appkit.api.ErrorResponse;
-import me.grishka.appkit.api.SimpleCallback;
-import me.grishka.appkit.fragments.BaseRecyclerFragment;
-import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
-import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
-import me.grishka.appkit.utils.BindableViewHolder;
-import me.grishka.appkit.utils.MergeRecyclerAdapter;
-import me.grishka.appkit.utils.SingleViewRecyclerAdapter;
-import me.grishka.appkit.utils.V;
-import me.grishka.appkit.views.UsableRecyclerView;
-import me.grishka.houseclub.R;
-import me.grishka.houseclub.VoiceService;
-import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseSession;
-import me.grishka.houseclub.api.methods.AcceptSpeakerInvite;
-import me.grishka.houseclub.api.methods.GetChannel;
-import me.grishka.houseclub.api.model.Channel;
-import me.grishka.houseclub.api.model.ChannelUser;
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.findViewById<View>(R.id.leave).setOnClickListener { v: View -> onLeaveClick(v) }
+        raiseBtn = view.findViewById(R.id.raise)
+        muteBtn = view.findViewById(R.id.mute)
+        raiseBtn?.setOnClickListener(View.OnClickListener { v: View -> onRaiseClick(v) })
+        muteBtn?.setOnClickListener(View.OnClickListener { v: View -> onMuteClick(v) })
+        val lm = GridLayoutManager(activity, 12)
+        lm.spanSizeLookup = object : SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                val a = adapter!!.getAdapterForPosition(position)
+                return if (a is UserListAdapter) {
+                    if (a.users === speakers) 4 else 3
+                } else 12
+            }
+        }
+        list.layoutManager = lm
+        list.setPadding(0, V.dp(16f), 0, V.dp(16f))
+        list.clipToPadding = false
+        addListener(this)
+        toolbar.elevation = 0f
+        val svc = instance
+        if (svc != null) {
+            muteBtn?.setImageResource(if (svc.isMuted) R.drawable.ic_mic_off else R.drawable.ic_mic)
+            onUserMuteChanged(ClubhouseSession.userID!!.toInt(), svc.isMuted)
+        }
+    }
 
-public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> implements VoiceService.ChannelEventListener{
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        toolbar.elevation = 0f
+    }
 
-	private MergeRecyclerAdapter adapter;
-	private UserListAdapter speakersAdapter, followedAdapter, othersAdapter;
-	private ImageButton muteBtn;
-	private Button raiseBtn;
-	private Channel channel;
-	private ArrayList<ChannelUser> speakers=new ArrayList<>(), followedBySpeakers=new ArrayList<>(), otherUsers=new ArrayList<>();
-	private ArrayList<Integer> mutedUsers=new ArrayList<>(), speakingUsers=new ArrayList<>();
+    override fun onDestroyView() {
+        super.onDestroyView()
+        removeListener(this)
+    }
 
-	public InChannelFragment(){
-		super(10);
-		setListLayoutId(R.layout.in_channel);
-	}
+    override fun doLoadData(offset: Int, count: Int) {
+        //		channel=VoiceService.getInstance().getChannel();
+        //		setTitle(channel.topic);
+        //		onDataLoaded(channel.users, false);
+        GetChannel(channel!!.channel!!)
+            .setCallback(object : SimpleCallback<Channel?>(this) {
+                override fun onSuccess(result: Channel?) {
+                    instance!!.updateChannel(result)
+                    onChannelUpdated(result)
+                }
+            })
+            .exec()
+    }
 
-	@Override
-	public void onAttach(Activity activity){
-		super.onAttach(activity);
-	}
+    private fun makeSectionHeader(@StringRes text: Int): View {
+        val view = View.inflate(activity, R.layout.category_header, null) as TextView
+        view.setText(text)
+        return view
+    }
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState){
-		super.onViewCreated(view, savedInstanceState);
-		view.findViewById(R.id.leave).setOnClickListener(this::onLeaveClick);
+    override fun getAdapter(): RecyclerView.Adapter<*> {
+        if (adapter == null) {
+            adapter = MergeRecyclerAdapter()
+            adapter!!.addAdapter(UserListAdapter(speakers, View.generateViewId()).also { speakersAdapter = it })
+            adapter!!.addAdapter(SingleViewRecyclerAdapter(makeSectionHeader(R.string.followed_by_speakers)))
+            adapter!!.addAdapter(UserListAdapter(followedBySpeakers, View.generateViewId()).also {
+                followedAdapter = it
+            })
+            adapter!!.addAdapter(SingleViewRecyclerAdapter(makeSectionHeader(R.string.others_in_room)))
+            adapter!!.addAdapter(UserListAdapter(otherUsers, View.generateViewId()).also { othersAdapter = it })
+        }
+        return adapter!!
+    }
 
-		raiseBtn=view.findViewById(R.id.raise);
-		muteBtn=view.findViewById(R.id.mute);
+    private fun onLeaveClick(v: View) {
+        instance!!.leaveChannel()
+        Nav.finish(this)
+    }
 
-		raiseBtn.setOnClickListener(this::onRaiseClick);
-		muteBtn.setOnClickListener(this::onMuteClick);
+    private fun onRaiseClick(v: View) {
+        val svc = instance
+        if (svc!!.isHandRaised) svc.unraiseHand() else svc.raiseHand()
+    }
 
-		GridLayoutManager lm=new GridLayoutManager(getActivity(), 12);
-		lm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
-			@Override
-			public int getSpanSize(int position){
-				RecyclerView.Adapter a=adapter.getAdapterForPosition(position);
-				if(a instanceof UserListAdapter){
-					if(((UserListAdapter) a).users==speakers)
-						return 4;
-					return 3;
-				}
-				return 12;
-			}
-		});
-		list.setLayoutManager(lm);
-		list.setPadding(0, V.dp(16), 0, V.dp(16));
-		list.setClipToPadding(false);
+    private fun onMuteClick(v: View) {
+        val svc = instance
+        svc!!.isMuted = !svc.isMuted
+        muteBtn!!.setImageResource(if (svc.isMuted) R.drawable.ic_mic_off else R.drawable.ic_mic)
+        onUserMuteChanged(ClubhouseSession.userID!!.toInt(), svc.isMuted)
+    }
 
-		VoiceService.addListener(this);
-		getToolbar().setElevation(0);
+    override fun onUserMuteChanged(id: Int, muted: Boolean) {
+        var i = 0
+        if (muted) {
+            if (!mutedUsers.contains(id)) mutedUsers.add(id)
+        } else {
+            mutedUsers.remove(id)
+        }
+        for (user in speakers) {
+            if (user!!.userId == id) {
+                user.isMuted = muted
+                val h = list.findViewHolderForAdapterPosition(i)
+                if (h is UserViewHolder) {
+                    h.muted.visibility = if (muted) View.VISIBLE else View.INVISIBLE
+                }
+            }
+            i++
+        }
+    }
 
-		VoiceService svc=VoiceService.getInstance();
-		if(svc!=null){
-			muteBtn.setImageResource(svc.isMuted() ? R.drawable.ic_mic_off : R.drawable.ic_mic);
-			onUserMuteChanged(Integer.parseInt(ClubhouseSession.userID), svc.isMuted());
-		}
-	}
+    override fun onUserJoined(user: ChannelUser?) {
+        if (user!!.isSpeaker) {
+            speakers.add(user)
+            speakersAdapter!!.notifyItemInserted(speakers.size - 1)
+        } else if (user.isFollowedBySpeaker) {
+            followedBySpeakers.add(user)
+            followedAdapter!!.notifyItemInserted(followedBySpeakers.size - 1)
+        } else {
+            otherUsers.add(user)
+            othersAdapter!!.notifyItemInserted(otherUsers.size - 1)
+        }
+    }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig){
-		super.onConfigurationChanged(newConfig);
-		getToolbar().setElevation(0);
-	}
+    override fun onUserLeft(id: Int) {
+        var i = 0
+        for (user in speakers) {
+            if (user!!.userId == id) {
+                speakers.remove(user)
+                speakersAdapter!!.notifyItemRemoved(i)
+                return
+            }
+            i++
+        }
+        i = 0
+        for (user in followedBySpeakers) {
+            if (user!!.userId == id) {
+                followedBySpeakers.remove(user)
+                followedAdapter!!.notifyItemRemoved(i)
+                return
+            }
+            i++
+        }
+        i = 0
+        for (user in otherUsers) {
+            if (user!!.userId == id) {
+                otherUsers.remove(user)
+                othersAdapter!!.notifyItemRemoved(i)
+                return
+            }
+            i++
+        }
+    }
 
-	@Override
-	public void onDestroyView(){
-		super.onDestroyView();
-		VoiceService.removeListener(this);
-	}
+    override fun onCanSpeak(inviterName: String?, inviterID: Int) {
+        AlertDialog.Builder(activity)
+            .setMessage(getString(R.string.confirm_join_as_speaker, inviterName))
+            .setPositiveButton(R.string.join) { dialogInterface, i ->
+                AcceptSpeakerInvite(channel!!.channel!!, inviterID)
+                    .wrapProgress(activity)
+                    .setCallback(object : Callback<BaseResponse?> {
+                        override fun onSuccess(result: BaseResponse?) {
+                            instance!!.rejoinChannel()
+                        }
 
-	@Override
-	protected void doLoadData(int offset, int count){
-//		channel=VoiceService.getInstance().getChannel();
-//		setTitle(channel.topic);
-//		onDataLoaded(channel.users, false);
-		new GetChannel(channel.channel)
-				.setCallback(new SimpleCallback<Channel>(this){
-					@Override
-					public void onSuccess(Channel result){
-						VoiceService.getInstance().updateChannel(result);
-						onChannelUpdated(result);
-					}
-				})
-				.exec();
-	}
+                        override fun onError(error: ErrorResponse) {
+                            error.showToast(activity)
+                        }
+                    })
+                    .exec()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
 
-	private View makeSectionHeader(@StringRes int text){
-		TextView view=(TextView) View.inflate(getActivity(), R.layout.category_header, null);
-		view.setText(text);
-		return view;
-	}
+    override fun onChannelUpdated(channel: Channel?) {
+        this.channel = channel
+        setTitle(channel!!.topic)
+        speakers.clear()
+        followedBySpeakers.clear()
+        otherUsers.clear()
+        for (user in channel.users!!) {
+            if (user!!.isMuted && !mutedUsers.contains(user.userId)) mutedUsers.add(user.userId)
+            if (user.isSpeaker) speakers.add(user) else if (user.isFollowedBySpeaker) followedBySpeakers.add(user) else otherUsers.add(
+                user
+            )
+        }
+        onDataLoaded(channel.users, false)
+        val svc = instance
+        raiseBtn!!.isEnabled = channel.isHandraiseEnabled
+        raiseBtn!!.visibility = if (svc!!.isSelfSpeaker) View.GONE else View.VISIBLE
+        muteBtn!!.visibility = if (svc.isSelfSpeaker) View.VISIBLE else View.GONE
+    }
 
-	@Override
-	protected RecyclerView.Adapter getAdapter(){
-		if(adapter==null){
-			adapter=new MergeRecyclerAdapter();
-			adapter.addAdapter(speakersAdapter=new UserListAdapter(speakers, View.generateViewId()));
-			adapter.addAdapter(new SingleViewRecyclerAdapter(makeSectionHeader(R.string.followed_by_speakers)));
-			adapter.addAdapter(followedAdapter=new UserListAdapter(followedBySpeakers, View.generateViewId()));
-			adapter.addAdapter(new SingleViewRecyclerAdapter(makeSectionHeader(R.string.others_in_room)));
-			adapter.addAdapter(othersAdapter=new UserListAdapter(otherUsers, View.generateViewId()));
-		}
-		return adapter;
-	}
+    override fun onSpeakingUsersChanged(ids: List<Int>?) {
+        speakingUsers.clear()
+        speakingUsers.addAll(ids!!)
+        var i = 0
+        for (user in speakers) {
+            val h = list.findViewHolderForAdapterPosition(i)
+            if (h is UserViewHolder) {
+                h.speakerBorder.setAlpha(
+                    if (speakingUsers.contains(
+                            user!!.userId
+                        )) 1.toFloat() else 0.toFloat()
+                )
+            }
+            i++
+        }
+    }
 
-	private void onLeaveClick(View v){
-		VoiceService.getInstance().leaveChannel();
-		Nav.finish(this);
-	}
+    private inner class UserListAdapter(val users: List<ChannelUser?>, private val type: Int) :
+        RecyclerView.Adapter<UserViewHolder>(), ImageLoaderRecyclerAdapter {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+            return UserViewHolder(users === speakers)
+        }
 
-	private void onRaiseClick(View v){
-		VoiceService svc=VoiceService.getInstance();
-		if(svc.isHandRaised())
-			svc.unraiseHand();
-		else
-			svc.raiseHand();
-	}
+        override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+            holder.bind(users[position])
+        }
 
-	private void onMuteClick(View v){
-		VoiceService svc=VoiceService.getInstance();
-		svc.setMuted(!svc.isMuted());
-		muteBtn.setImageResource(svc.isMuted() ? R.drawable.ic_mic_off : R.drawable.ic_mic);
-		onUserMuteChanged(Integer.parseInt(ClubhouseSession.userID), svc.isMuted());
-	}
+        override fun getItemViewType(position: Int): Int {
+            return type
+        }
 
-	@Override
-	public void onUserMuteChanged(int id, boolean muted){
-		int i=0;
-		if(muted){
-			if(!mutedUsers.contains(id))
-				mutedUsers.add(id);
-		}else{
-			mutedUsers.remove((Integer)id);
-		}
-		for(ChannelUser user:speakers){
-			if(user.userId==id){
-				user.isMuted=muted;
-				RecyclerView.ViewHolder h=list.findViewHolderForAdapterPosition(i);
-				if(h instanceof UserViewHolder){
-					((UserViewHolder) h).muted.setVisibility(muted ? View.VISIBLE : View.INVISIBLE);
-				}
-			}
-			i++;
-		}
-	}
+        override fun getItemCount(): Int {
+            return users.size
+        }
 
-	@Override
-	public void onUserJoined(ChannelUser user){
-		if(user.isSpeaker){
-			speakers.add(user);
-			speakersAdapter.notifyItemInserted(speakers.size()-1);
-		}else if(user.isFollowedBySpeaker){
-			followedBySpeakers.add(user);
-			followedAdapter.notifyItemInserted(followedBySpeakers.size()-1);
-		}else{
-			otherUsers.add(user);
-			othersAdapter.notifyItemInserted(otherUsers.size()-1);
-		}
-	}
+        override fun getImageCountForItem(position: Int): Int {
+            return if (users[position]!!.photoUrl != null) 1 else 0
+        }
 
-	@Override
-	public void onUserLeft(int id){
-		int i=0;
-		for(ChannelUser user:speakers){
-			if(user.userId==id){
-				speakers.remove(user);
-				speakersAdapter.notifyItemRemoved(i);
-				return;
-			}
-			i++;
-		}
-		i=0;
-		for(ChannelUser user:followedBySpeakers){
-			if(user.userId==id){
-				followedBySpeakers.remove(user);
-				followedAdapter.notifyItemRemoved(i);
-				return;
-			}
-			i++;
-		}
-		i=0;
-		for(ChannelUser user:otherUsers){
-			if(user.userId==id){
-				otherUsers.remove(user);
-				othersAdapter.notifyItemRemoved(i);
-				return;
-			}
-			i++;
-		}
-	}
+        override fun getImageURL(position: Int, image: Int): String {
+            return users[position]!!.photoUrl!!
+        }
+    }
 
-	@Override
-	public void onCanSpeak(String inviterName, int inviterID){
-		new AlertDialog.Builder(getActivity())
-				.setMessage(getString(R.string.confirm_join_as_speaker, inviterName))
-				.setPositiveButton(R.string.join, new DialogInterface.OnClickListener(){
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i){
-						new AcceptSpeakerInvite(channel.channel, inviterID)
-								.wrapProgress(getActivity())
-								.setCallback(new Callback<BaseResponse>(){
-									@Override
-									public void onSuccess(BaseResponse result){
-										VoiceService.getInstance().rejoinChannel();
-									}
+    private inner class UserViewHolder(large: Boolean) :
+        BindableViewHolder<ChannelUser>(activity, R.layout.channel_user_cell, list), ImageLoaderViewHolder, Clickable {
+        private val photo: ImageView
+        val muted: ImageView
+        private val name: TextView
+        val speakerBorder: View
+        private val placeholder: Drawable = ColorDrawable(-0x7f7f80)
+        override fun onBind(item: ChannelUser) {
+            if (item.isModerator) name.text = "✱ " + item.firstName else name.text = item.firstName
+            muted.visibility = if (mutedUsers.contains(item.userId)) View.VISIBLE else View.INVISIBLE
+            speakerBorder.setAlpha(if (speakingUsers.contains(item.userId)) 1.toFloat() else 0.toFloat())
+            if (item.photoUrl == null) photo.setImageDrawable(placeholder) else imgLoader.bindViewHolder(
+                adapter,
+                this,
+                adapterPosition
+            )
+        }
 
-									@Override
-									public void onError(ErrorResponse error){
-										error.showToast(getActivity());
-									}
-								})
-								.exec();
-					}
-				})
-				.setNegativeButton(R.string.cancel, null)
-				.show();
-	}
+        override fun setImage(index: Int, bitmap: Bitmap) {
+            photo.setImageBitmap(bitmap)
+        }
 
-	@Override
-	public void onChannelUpdated(Channel channel){
-		this.channel=channel;
-		setTitle(channel.topic);
-		speakers.clear();
-		followedBySpeakers.clear();
-		otherUsers.clear();
-		for(ChannelUser user:channel.users){
-			if(user.isMuted && !mutedUsers.contains(user.userId))
-				mutedUsers.add(user.userId);
-			if(user.isSpeaker)
-				speakers.add(user);
-			else if(user.isFollowedBySpeaker)
-				followedBySpeakers.add(user);
-			else
-				otherUsers.add(user);
-		}
-		onDataLoaded(channel.users, false);
+        override fun clearImage(index: Int) {
+            photo.setImageDrawable(placeholder)
+        }
 
-		VoiceService svc=VoiceService.getInstance();
-		raiseBtn.setEnabled(channel.isHandraiseEnabled);
-		raiseBtn.setVisibility(svc.isSelfSpeaker() ? View.GONE : View.VISIBLE);
-		muteBtn.setVisibility(svc.isSelfSpeaker() ? View.VISIBLE : View.GONE);
-	}
+        override fun onClick() {
+            val args = Bundle()
+            args.putInt("id", item.userId)
+            Nav.go(activity, ProfileFragment::class.java, args)
+        }
 
-	@Override
-	public void onSpeakingUsersChanged(List<Integer> ids){
-		speakingUsers.clear();
-		speakingUsers.addAll(ids);
+        init {
+            photo = findViewById(R.id.photo)
+            name = findViewById(R.id.name)
+            muted = findViewById(R.id.muted)
+            speakerBorder = findViewById(R.id.speaker_border)
+            val lp = photo.layoutParams
+            lp.height = V.dp(if (large) 72.toFloat() else 48.toFloat())
+            lp.width = lp.height
+            muted.visibility = View.INVISIBLE
+            if (!large) speakerBorder.visibility = View.GONE else speakerBorder.alpha = 0f
+        }
+    }
 
-		int i=0;
-		for(ChannelUser user:speakers){
-			RecyclerView.ViewHolder h=list.findViewHolderForAdapterPosition(i);
-			if(h instanceof UserViewHolder){
-				((UserViewHolder) h).speakerBorder.setAlpha(speakingUsers.contains(user.userId) ? 1 : 0);
-			}
-			i++;
-		}
-	}
-
-	private class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> implements ImageLoaderRecyclerAdapter{
-
-		private List<ChannelUser> users;
-		private int type;
-
-		public UserListAdapter(List<ChannelUser> users, int type){
-			this.users=users;
-			this.type=type;
-		}
-
-		@NonNull
-		@Override
-		public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-			return new UserViewHolder(users==speakers);
-		}
-
-		@Override
-		public void onBindViewHolder(@NonNull UserViewHolder holder, int position){
-			holder.bind(users.get(position));
-		}
-
-		@Override
-		public int getItemViewType(int position){
-			return type;
-		}
-
-		@Override
-		public int getItemCount(){
-			return users.size();
-		}
-
-		@Override
-		public int getImageCountForItem(int position){
-			return users.get(position).photoUrl!=null ? 1 : 0;
-		}
-
-		@Override
-		public String getImageURL(int position, int image){
-			return users.get(position).photoUrl;
-		}
-	}
-
-	private class UserViewHolder extends BindableViewHolder<ChannelUser> implements ImageLoaderViewHolder, UsableRecyclerView.Clickable{
-
-		private ImageView photo, muted;
-		private TextView name;
-		private View speakerBorder;
-		private Drawable placeholder=new ColorDrawable(0xFF808080);
-
-		public UserViewHolder(boolean large){
-			super(getActivity(), R.layout.channel_user_cell, list);
-
-			photo=findViewById(R.id.photo);
-			name=findViewById(R.id.name);
-			muted=findViewById(R.id.muted);
-			speakerBorder=findViewById(R.id.speaker_border);
-
-			ViewGroup.LayoutParams lp=photo.getLayoutParams();
-			lp.width=lp.height=V.dp(large ? 72 : 48);
-			muted.setVisibility(View.INVISIBLE);
-			if(!large)
-				speakerBorder.setVisibility(View.GONE);
-			else
-				speakerBorder.setAlpha(0);
-		}
-
-		@Override
-		public void onBind(ChannelUser item){
-			if(item.isModerator)
-				name.setText("✱ "+item.firstName);
-			else
-				name.setText(item.firstName);
-			muted.setVisibility(mutedUsers.contains(item.userId) ? View.VISIBLE : View.INVISIBLE);
-			speakerBorder.setAlpha(speakingUsers.contains(item.userId) ? 1 : 0);
-
-			if(item.photoUrl==null)
-				photo.setImageDrawable(placeholder);
-			else
-				imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
-		}
-
-		@Override
-		public void setImage(int index, Bitmap bitmap){
-			photo.setImageBitmap(bitmap);
-		}
-
-		@Override
-		public void clearImage(int index){
-			photo.setImageDrawable(placeholder);
-		}
-
-		@Override
-		public void onClick(){
-			Bundle args=new Bundle();
-			args.putInt("id", item.userId);
-			Nav.go(getActivity(), ProfileFragment.class, args);
-		}
-	}
+    init {
+        setListLayoutId(R.layout.in_channel)
+    }
 }

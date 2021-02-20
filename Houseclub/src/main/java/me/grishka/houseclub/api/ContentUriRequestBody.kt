@@ -1,51 +1,37 @@
-package me.grishka.houseclub.api;
+package me.grishka.houseclub.api
 
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.OpenableColumns;
+import android.net.Uri
+import android.provider.OpenableColumns
+import me.grishka.houseclub.App
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import okio.BufferedSink
+import okio.Okio
+import java.io.IOException
 
-import java.io.IOException;
+class ContentUriRequestBody(private val uri: Uri) : RequestBody() {
+    private var size: Long = 0
+    var fileName: String? = null
+    @Throws(IOException::class)
+    override fun contentLength(): Long {
+        return size
+    }
 
-import me.grishka.houseclub.App;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okio.BufferedSink;
-import okio.Okio;
-import okio.Source;
+    override fun contentType(): MediaType? {
+        return MediaType.get(App.applicationContext!!.contentResolver.getType(uri))
+    }
 
-public class ContentUriRequestBody extends RequestBody{
+    @Throws(IOException::class)
+    override fun writeTo(sink: BufferedSink) {
+        Okio.source(App.applicationContext!!.contentResolver.openInputStream(uri))
+            .use { source -> sink.writeAll(source) }
+    }
 
-	private Uri uri;
-	private long size;
-	private String name;
-
-	public ContentUriRequestBody(Uri uri){
-		this.uri=uri;
-		try(Cursor cursor=App.applicationContext.getContentResolver().query(uri, null, null, null, null)){
-			cursor.moveToFirst();
-			size=cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
-			name=cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-		}
-	}
-
-	@Override
-	public long contentLength() throws IOException{
-		return size;
-	}
-
-	@Override
-	public MediaType contentType(){
-		return MediaType.get(App.applicationContext.getContentResolver().getType(uri));
-	}
-
-	@Override
-	public void writeTo(BufferedSink sink) throws IOException{
-		try(Source source=Okio.source(App.applicationContext.getContentResolver().openInputStream(uri))){
-			sink.writeAll(source);
-		}
-	}
-
-	public String getFileName(){
-		return name;
-	}
+    init {
+        App.applicationContext!!.contentResolver.query(uri, null, null, null, null).use { cursor ->
+            cursor!!.moveToFirst()
+            size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
+            fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+        }
+    }
 }

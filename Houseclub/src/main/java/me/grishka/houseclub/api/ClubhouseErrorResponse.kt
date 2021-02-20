@@ -1,40 +1,37 @@
-package me.grishka.houseclub.api;
+package me.grishka.houseclub.api
 
-import android.content.Context;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.content.Context
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import me.grishka.appkit.api.ErrorResponse
+import me.grishka.houseclub.BuildConfig
+import me.grishka.houseclub.R
 
-import me.grishka.appkit.api.ErrorResponse;
-import me.grishka.houseclub.BuildConfig;
-import me.grishka.houseclub.R;
+class ClubhouseErrorResponse : ErrorResponse {
+    private var message: String
 
-public class ClubhouseErrorResponse extends ErrorResponse{
+    constructor(code: Int, message: String) {
+        this.message = message
+    }
 
-	private String message;
+    constructor(br: BaseResponse) {
+        message = br.errorMessage!!
+    }
 
-	public ClubhouseErrorResponse(int code, String message){
-		this.message=message;
-	}
+    override fun bindErrorView(view: View) {
+        val txt = view.findViewById<TextView>(R.id.error_text)
+        if (BuildConfig.DEBUG) txt.text = """
+     ${view.context.getString(R.string.error_loading)}:
+     $message
+     """.trimIndent() else txt.setText(R.string.error_loading)
+    }
 
-	public ClubhouseErrorResponse(BaseResponse br){
-		message=br.errorMessage;
-	}
-
-	@Override
-	public void bindErrorView(View view){
-		TextView txt=view.findViewById(R.id.error_text);
-		if(BuildConfig.DEBUG)
-			txt.setText(view.getContext().getString(R.string.error_loading)+":\n"+message);
-		else
-			txt.setText(R.string.error_loading);
-	}
-
-	@Override
-	public void showToast(Context context){
-		if(BuildConfig.DEBUG)
-			Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-		else
-			Toast.makeText(context, R.string.error_loading, Toast.LENGTH_SHORT).show();
-	}
+    override fun showToast(context: Context) {
+        if (BuildConfig.DEBUG) Toast.makeText(context, message, Toast.LENGTH_LONG).show() else Toast.makeText(
+            context,
+            R.string.error_loading,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
 }

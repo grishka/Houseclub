@@ -1,19 +1,15 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
+import me.grishka.houseclub.api.BaseResponse
+import me.grishka.houseclub.api.ClubhouseAPIRequest
 
-public class LeaveChannel extends ClubhouseAPIRequest<BaseResponse>{
-	public LeaveChannel(String channelName){
-		super("POST", "leave_channel", BaseResponse.class);
-		requestBody=new Body(channelName);
-	}
+class LeaveChannel(channelName: String) :
+    ClubhouseAPIRequest<BaseResponse?>("POST", "leave_channel", BaseResponse::class.java) {
+    private class Body(var channel: String) {
+        var channelId: String? = null
+    }
 
-	private static class Body{
-		public String channel, channelId;
-
-		public Body(String channel){
-			this.channel=channel;
-		}
-	}
+    init {
+        requestBody = Body(channelName)
+    }
 }

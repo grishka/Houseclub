@@ -1,17 +1,10 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import java.util.List;
+import me.grishka.houseclub.api.ClubhouseAPIRequest
+import me.grishka.houseclub.api.model.Channel
 
-import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
-import me.grishka.houseclub.api.model.Channel;
-
-public class GetChannels extends ClubhouseAPIRequest<GetChannels.Response>{
-	public GetChannels(){
-		super("GET", "get_channels", Response.class);
-	}
-
-	public static class Response{
-		public List<Channel> channels;
-	}
+class GetChannels : ClubhouseAPIRequest<GetChannels.Response?>("GET", "get_channels", Response::class.java) {
+    class Response {
+        var channels: List<Channel>? = null
+    }
 }

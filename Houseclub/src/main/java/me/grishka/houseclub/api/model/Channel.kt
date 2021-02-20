@@ -1,12 +1,10 @@
-package me.grishka.houseclub.api.model;
+package me.grishka.houseclub.api.model
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Parcel
+import android.os.Parcelable
 
-import java.util.List;
-
-public class Channel implements Parcelable{
-	/*
+class Channel : Parcelable {
+    /*
 	* "channels":[
 {
 "creator_user_profile_id":5468389,
@@ -60,108 +58,101 @@ public class Channel implements Parcelable{
 }
 ]
 	* */
+    var creatorUserProfileId = 0
+    var channelId = 0
+    var channel: String? = null
+    var topic: String? = null
+    var isPrivate = false
+    var isSocialMode = false
+    var url: String? = null
+    var numOther = 0
+    var hasBlockedSpeakers = false
+    var isExploreChannel = false
+    var numSpeakers = 0
+    var numAll = 0
+    var users: MutableList<ChannelUser?>? = null
+    var token: String? = null
+    var isHandraiseEnabled = false
+    var pubnubToken: String? = null
+    var pubnubHeartbeatValue = 0
+    var pubnubHeartbeatInterval = 0
+    override fun describeContents(): Int {
+        return 0
+    }
 
-	public int creatorUserProfileId;
-	public int channelId;
-	public String channel;
-	public String topic;
-	public boolean isPrivate;
-	public boolean isSocialMode;
-	public String url;
-	public int numOther;
-	public boolean hasBlockedSpeakers;
-	public boolean isExploreChannel;
-	public int numSpeakers;
-	public int numAll;
-	public List<ChannelUser> users;
-	public String token;
-	public boolean isHandraiseEnabled;
-	public String pubnubToken;
-	public int pubnubHeartbeatValue;
-	public int pubnubHeartbeatInterval;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeInt(creatorUserProfileId)
+        dest.writeInt(channelId)
+        dest.writeString(channel)
+        dest.writeString(topic)
+        dest.writeByte(if (isPrivate) 1.toByte() else 0.toByte())
+        dest.writeByte(if (isSocialMode) 1.toByte() else 0.toByte())
+        dest.writeString(url)
+        dest.writeInt(numOther)
+        dest.writeByte(if (hasBlockedSpeakers) 1.toByte() else 0.toByte())
+        dest.writeByte(if (isExploreChannel) 1.toByte() else 0.toByte())
+        dest.writeInt(numSpeakers)
+        dest.writeInt(numAll)
+        dest.writeTypedList(users)
+        dest.writeString(token)
+        dest.writeByte(if (isHandraiseEnabled) 1.toByte() else 0.toByte())
+        dest.writeString(pubnubToken)
+        dest.writeInt(pubnubHeartbeatValue)
+        dest.writeInt(pubnubHeartbeatInterval)
+    }
 
+    fun readFromParcel(source: Parcel) {
+        creatorUserProfileId = source.readInt()
+        channelId = source.readInt()
+        channel = source.readString()
+        topic = source.readString()
+        isPrivate = source.readByte().toInt() != 0
+        isSocialMode = source.readByte().toInt() != 0
+        url = source.readString()
+        numOther = source.readInt()
+        hasBlockedSpeakers = source.readByte().toInt() != 0
+        isExploreChannel = source.readByte().toInt() != 0
+        numSpeakers = source.readInt()
+        numAll = source.readInt()
+        users = source.createTypedArrayList(ChannelUser.CREATOR)
+        token = source.readString()
+        isHandraiseEnabled = source.readByte().toInt() != 0
+        pubnubToken = source.readString()
+        pubnubHeartbeatValue = source.readInt()
+        pubnubHeartbeatInterval = source.readInt()
+    }
 
-	@Override
-	public int describeContents(){
-		return 0;
-	}
+    constructor() {}
+    protected constructor(`in`: Parcel) {
+        creatorUserProfileId = `in`.readInt()
+        channelId = `in`.readInt()
+        channel = `in`.readString()
+        topic = `in`.readString()
+        isPrivate = `in`.readByte().toInt() != 0
+        isSocialMode = `in`.readByte().toInt() != 0
+        url = `in`.readString()
+        numOther = `in`.readInt()
+        hasBlockedSpeakers = `in`.readByte().toInt() != 0
+        isExploreChannel = `in`.readByte().toInt() != 0
+        numSpeakers = `in`.readInt()
+        numAll = `in`.readInt()
+        users = `in`.createTypedArrayList(ChannelUser.CREATOR)
+        token = `in`.readString()
+        isHandraiseEnabled = `in`.readByte().toInt() != 0
+        pubnubToken = `in`.readString()
+        pubnubHeartbeatValue = `in`.readInt()
+        pubnubHeartbeatInterval = `in`.readInt()
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags){
-		dest.writeInt(this.creatorUserProfileId);
-		dest.writeInt(this.channelId);
-		dest.writeString(this.channel);
-		dest.writeString(this.topic);
-		dest.writeByte(this.isPrivate ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isSocialMode ? (byte) 1 : (byte) 0);
-		dest.writeString(this.url);
-		dest.writeInt(this.numOther);
-		dest.writeByte(this.hasBlockedSpeakers ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isExploreChannel ? (byte) 1 : (byte) 0);
-		dest.writeInt(this.numSpeakers);
-		dest.writeInt(this.numAll);
-		dest.writeTypedList(this.users);
-		dest.writeString(this.token);
-		dest.writeByte(this.isHandraiseEnabled ? (byte) 1 : (byte) 0);
-		dest.writeString(this.pubnubToken);
-		dest.writeInt(this.pubnubHeartbeatValue);
-		dest.writeInt(this.pubnubHeartbeatInterval);
-	}
+    companion object {
+        val CREATOR: Parcelable.Creator<Channel> = object : Parcelable.Creator<Channel> {
+            override fun createFromParcel(source: Parcel): Channel {
+                return Channel(source)
+            }
 
-	public void readFromParcel(Parcel source){
-		this.creatorUserProfileId=source.readInt();
-		this.channelId=source.readInt();
-		this.channel=source.readString();
-		this.topic=source.readString();
-		this.isPrivate=source.readByte()!=0;
-		this.isSocialMode=source.readByte()!=0;
-		this.url=source.readString();
-		this.numOther=source.readInt();
-		this.hasBlockedSpeakers=source.readByte()!=0;
-		this.isExploreChannel=source.readByte()!=0;
-		this.numSpeakers=source.readInt();
-		this.numAll=source.readInt();
-		this.users=source.createTypedArrayList(ChannelUser.CREATOR);
-		this.token=source.readString();
-		this.isHandraiseEnabled=source.readByte()!=0;
-		this.pubnubToken=source.readString();
-		this.pubnubHeartbeatValue=source.readInt();
-		this.pubnubHeartbeatInterval=source.readInt();
-	}
-
-	public Channel(){
-	}
-
-	protected Channel(Parcel in){
-		this.creatorUserProfileId=in.readInt();
-		this.channelId=in.readInt();
-		this.channel=in.readString();
-		this.topic=in.readString();
-		this.isPrivate=in.readByte()!=0;
-		this.isSocialMode=in.readByte()!=0;
-		this.url=in.readString();
-		this.numOther=in.readInt();
-		this.hasBlockedSpeakers=in.readByte()!=0;
-		this.isExploreChannel=in.readByte()!=0;
-		this.numSpeakers=in.readInt();
-		this.numAll=in.readInt();
-		this.users=in.createTypedArrayList(ChannelUser.CREATOR);
-		this.token=in.readString();
-		this.isHandraiseEnabled=in.readByte()!=0;
-		this.pubnubToken=in.readString();
-		this.pubnubHeartbeatValue=in.readInt();
-		this.pubnubHeartbeatInterval=in.readInt();
-	}
-
-	public static final Creator<Channel> CREATOR=new Creator<Channel>(){
-		@Override
-		public Channel createFromParcel(Parcel source){
-			return new Channel(source);
-		}
-
-		@Override
-		public Channel[] newArray(int size){
-			return new Channel[size];
-		}
-	};
+            override fun newArray(size: Int): Array<Channel?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }

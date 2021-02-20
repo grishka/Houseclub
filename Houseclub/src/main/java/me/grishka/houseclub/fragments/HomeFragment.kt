@@ -1,230 +1,193 @@
-package me.grishka.houseclub.fragments;
+package me.grishka.houseclub.fragments
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Outline;
-import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.app.Activity
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Outline
+import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewOutlineProvider
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import me.grishka.appkit.Nav
+import me.grishka.appkit.api.SimpleCallback
+import me.grishka.appkit.fragments.BaseRecyclerFragment
+import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter
+import me.grishka.appkit.imageloader.ImageLoaderViewHolder
+import me.grishka.appkit.utils.BindableViewHolder
+import me.grishka.appkit.utils.V
+import me.grishka.houseclub.MainActivity
+import me.grishka.houseclub.R
+import me.grishka.houseclub.api.ClubhouseSession
+import me.grishka.houseclub.api.methods.GetChannels
+import me.grishka.houseclub.api.model.Channel
+import me.grishka.houseclub.api.model.ChannelUser
+import java.util.stream.Collectors
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+class HomeFragment : BaseRecyclerFragment<Channel?>(20) {
+    private var adapter: ChannelAdapter? = null
+    private val roundedCornersOutline: ViewOutlineProvider = object : ViewOutlineProvider() {
+        override fun getOutline(view: View, outline: Outline) {
+            outline.setRoundRect(0, 0, view.width, view.height, V.dp(8f).toFloat())
+        }
+    }
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import me.grishka.appkit.Nav;
-import me.grishka.appkit.api.SimpleCallback;
-import me.grishka.appkit.fragments.BaseRecyclerFragment;
-import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
-import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
-import me.grishka.appkit.utils.BindableViewHolder;
-import me.grishka.appkit.utils.V;
-import me.grishka.houseclub.MainActivity;
-import me.grishka.houseclub.R;
-import me.grishka.houseclub.VoiceService;
-import me.grishka.houseclub.api.ClubhouseSession;
-import me.grishka.houseclub.api.methods.GetChannels;
-import me.grishka.houseclub.api.model.Channel;
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
+        loadData()
+        setHasOptionsMenu(true)
+    }
 
-public class HomeFragment extends BaseRecyclerFragment<Channel>{
+    override fun doLoadData(offset: Int, count: Int) {
+        currentRequest = GetChannels()
+            .setCallback(object : SimpleCallback<GetChannels.Response?>(this) {
+                override fun onSuccess(result: GetChannels.Response?) {
+                    currentRequest = null
+                    onDataLoaded(result!!.channels, false)
+                }
+            }).exec()
+    }
 
-	private ChannelAdapter adapter;
-	private ViewOutlineProvider roundedCornersOutline=new ViewOutlineProvider(){
-		@Override
-		public void getOutline(View view, Outline outline){
-			outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), V.dp(8));
-		}
-	};
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        list.addItemDecoration(object : ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = V.dp(8f)
+                outRect.bottom = outRect.top
+                outRect.right = V.dp(16f)
+                outRect.left = outRect.right
+            }
+        })
+        toolbar.elevation = 0f
+    }
 
-	public HomeFragment(){
-		super(20);
-	}
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        toolbar.elevation = 0f
+    }
 
-	@Override
-	public void onAttach(Activity activity){
-		super.onAttach(activity);
-		loadData();
-		setHasOptionsMenu(true);
-	}
+    override fun getAdapter(): RecyclerView.Adapter<*> {
+        if (adapter == null) {
+            adapter = ChannelAdapter()
+            adapter!!.setHasStableIds(true)
+        }
+        return adapter!!
+    }
 
-	@Override
-	protected void doLoadData(int offset, int count){
-		currentRequest=new GetChannels()
-				.setCallback(new SimpleCallback<GetChannels.Response>(this){
-					@Override
-					public void onSuccess(GetChannels.Response result){
-						currentRequest=null;
-						onDataLoaded(result.channels, false);
-					}
-				}).exec();
-	}
+    override fun wantsLightNavigationBar(): Boolean {
+        return true
+    }
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState){
-		super.onViewCreated(view, savedInstanceState);
-		list.addItemDecoration(new RecyclerView.ItemDecoration(){
-			@Override
-			public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state){
-				outRect.bottom=outRect.top=V.dp(8);
-				outRect.left=outRect.right=V.dp(16);
-			}
-		});
-		getToolbar().setElevation(0);
-	}
+    override fun wantsLightStatusBar(): Boolean {
+        return true
+    }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig){
-		super.onConfigurationChanged(newConfig);
-		getToolbar().setElevation(0);
-	}
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.add("").setIcon(R.drawable.ic_baseline_person_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+    }
 
-	@Override
-	protected RecyclerView.Adapter getAdapter(){
-		if(adapter==null){
-			adapter=new ChannelAdapter();
-			adapter.setHasStableIds(true);
-		}
-		return adapter;
-	}
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val args = Bundle()
+        args.putInt("id", ClubhouseSession.userID!!.toInt())
+        Nav.go(activity, ProfileFragment::class.java, args)
+        return true
+    }
 
-	@Override
-	public boolean wantsLightNavigationBar(){
-		return true;
-	}
+    private inner class ChannelAdapter : RecyclerView.Adapter<ChannelViewHolder>(), ImageLoaderRecyclerAdapter {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChannelViewHolder {
+            return ChannelViewHolder()
+        }
 
-	@Override
-	public boolean wantsLightStatusBar(){
-		return true;
-	}
+        override fun onBindViewHolder(holder: ChannelViewHolder, position: Int) {
+            holder.bind(data[position])
+        }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		menu.add("").setIcon(R.drawable.ic_baseline_person_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-	}
+        override fun getItemCount(): Int {
+            return data.size
+        }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item){
-		Bundle args=new Bundle();
-		args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
-		Nav.go(getActivity(), ProfileFragment.class, args);
-		return true;
-	}
+        override fun getItemId(position: Int): Long {
+            return data[position]!!.channelId.toLong()
+        }
 
-	private class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> implements ImageLoaderRecyclerAdapter{
+        override fun getImageCountForItem(position: Int): Int {
+            val chan = data[position]!!
+            var count = 0
+            for (i in 0 until Math.min(2, chan.users!!.size)) {
+                if (chan.users!![i]!!.photoUrl != null) count++
+            }
+            return count
+        }
 
-		@NonNull
-		@Override
-		public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-			return new ChannelViewHolder();
-		}
+        override fun getImageURL(position: Int, image: Int): String? {
+            var image = image
+            val chan = data[position]!!
+            for (i in 0 until Math.min(2, chan.users!!.size)) {
+                if (chan.users!![i]!!.photoUrl != null) {
+                    if (image == 0) return chan.users!![i]!!.photoUrl else image--
+                }
+            }
+            return null
+        }
+    }
 
-		@Override
-		public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position){
-			holder.bind(data.get(position));
-		}
+    private inner class ChannelViewHolder : BindableViewHolder<Channel>(activity, R.layout.channel_row),
+        View.OnClickListener, ImageLoaderViewHolder {
+        private val topic: TextView
+        private val speakers: TextView
+        private val numMembers: TextView
+        private val numSpeakers: TextView
+        private val pic1: ImageView
+        private val pic2: ImageView
+        private val placeholder: Drawable = ColorDrawable(-0x7f7f80)
+        override fun onBind(item: Channel) {
+            topic.text = item.topic
+            numMembers.text = "" + item.numAll
+            numSpeakers.text = "" + item.numSpeakers
+            speakers.text =
+                item.users!!.stream().map { user: ChannelUser? -> if (user!!.isSpeaker) user.name + " 💬" else user.name }
+                    .collect(Collectors.joining("\n"))
+            imgLoader.bindViewHolder(adapter, this, adapterPosition)
+        }
 
-		@Override
-		public int getItemCount(){
-			return data.size();
-		}
+        override fun onClick(view: View) {
+            (activity as MainActivity).joinChannel(item)
+        }
 
-		@Override
-		public long getItemId(int position){
-			return data.get(position).channelId;
-		}
+        private fun imgForIndex(index: Int): ImageView {
+            return if (index == 0) pic1 else pic2
+        }
 
-		@Override
-		public int getImageCountForItem(int position){
-			Channel chan=data.get(position);
-			int count=0;
-			for(int i=0;i<Math.min(2, chan.users.size());i++){
-				if(chan.users.get(i).photoUrl!=null)
-					count++;
-			}
-			return count;
-		}
+        override fun setImage(index: Int, bitmap: Bitmap) {
+            var index = index
+            if (index == 0 && item!!.users!![0]!!.photoUrl == null) index = 1
+            imgForIndex(index).setImageBitmap(bitmap)
+        }
 
-		@Override
-		public String getImageURL(int position, int image){
-			Channel chan=data.get(position);
-			for(int i=0;i<Math.min(2, chan.users.size());i++){
-				if(chan.users.get(i).photoUrl!=null){
-					if(image==0)
-						return chan.users.get(i).photoUrl;
-					else
-						image--;
-				}
-			}
-			return null;
-		}
-	}
+        override fun clearImage(index: Int) {
+            imgForIndex(index).setImageDrawable(placeholder)
+        }
 
-	private class ChannelViewHolder extends BindableViewHolder<Channel> implements View.OnClickListener, ImageLoaderViewHolder{
-
-		private TextView topic, speakers, numMembers, numSpeakers;
-		private ImageView pic1, pic2;
-		private Drawable placeholder=new ColorDrawable(0xFF808080);
-
-		public ChannelViewHolder(){
-			super(getActivity(), R.layout.channel_row);
-			topic=findViewById(R.id.topic);
-			speakers=findViewById(R.id.speakers);
-			numSpeakers=findViewById(R.id.num_speakers);
-			numMembers=findViewById(R.id.num_members);
-			pic1=findViewById(R.id.pic1);
-			pic2=findViewById(R.id.pic2);
-
-			itemView.setOutlineProvider(roundedCornersOutline);
-			itemView.setClipToOutline(true);
-			itemView.setElevation(V.dp(2));
-			itemView.setOnClickListener(this);
-		}
-
-		@Override
-		public void onBind(Channel item){
-			topic.setText(item.topic);
-			numMembers.setText(""+item.numAll);
-			numSpeakers.setText(""+item.numSpeakers);
-			speakers.setText(item.users.stream().map(user->user.isSpeaker ? (user.name+" 💬") : user.name).collect(Collectors.joining("\n")));
-
-			imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
-		}
-
-		@Override
-		public void onClick(View view){
-			((MainActivity)getActivity()).joinChannel(item);
-		}
-
-		private ImageView imgForIndex(int index){
-			if(index==0)
-				return pic1;
-			return pic2;
-		}
-
-		@Override
-		public void setImage(int index, Bitmap bitmap){
-			if(index==0 && item.users.get(0).photoUrl==null)
-				index=1;
-			imgForIndex(index).setImageBitmap(bitmap);
-		}
-
-		@Override
-		public void clearImage(int index){
-			imgForIndex(index).setImageDrawable(placeholder);
-		}
-	}
+        init {
+            topic = findViewById(R.id.topic)
+            speakers = findViewById(R.id.speakers)
+            numSpeakers = findViewById(R.id.num_speakers)
+            numMembers = findViewById(R.id.num_members)
+            pic1 = findViewById(R.id.pic1)
+            pic2 = findViewById(R.id.pic2)
+            itemView.outlineProvider = roundedCornersOutline
+            itemView.clipToOutline = true
+            itemView.elevation = V.dp(2f).toFloat()
+            itemView.setOnClickListener(this)
+        }
+    }
 }

@@ -1,32 +1,26 @@
-package me.grishka.houseclub.fragments;
+package me.grishka.houseclub.fragments
 
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.view.View;
+import android.content.res.Configuration
+import android.os.Bundle
+import android.view.View
+import me.grishka.appkit.fragments.ToolbarFragment
 
-import me.grishka.appkit.fragments.ToolbarFragment;
+abstract class BaseToolbarFragment : ToolbarFragment() {
+    override fun wantsLightStatusBar(): Boolean {
+        return true
+    }
 
-public abstract class BaseToolbarFragment extends ToolbarFragment{
+    override fun wantsLightNavigationBar(): Boolean {
+        return true
+    }
 
-	@Override
-	public boolean wantsLightStatusBar(){
-		return true;
-	}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        toolbar.elevation = 0f
+    }
 
-	@Override
-	public boolean wantsLightNavigationBar(){
-		return true;
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState){
-		super.onViewCreated(view, savedInstanceState);
-		getToolbar().setElevation(0);
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig){
-		super.onConfigurationChanged(newConfig);
-		getToolbar().setElevation(0);
-	}
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        toolbar.elevation = 0f
+    }
 }

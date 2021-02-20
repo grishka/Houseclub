@@ -1,22 +1,13 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
+import me.grishka.houseclub.api.BaseResponse
+import me.grishka.houseclub.api.ClubhouseAPIRequest
 
-public class AudienceReply extends ClubhouseAPIRequest<BaseResponse>{
-	public AudienceReply(String channel, boolean raise){
-		super("POST", "audience_reply", BaseResponse.class);
-		requestBody=new Body(channel, raise, !raise);
-	}
+class AudienceReply(channel: String, raise: Boolean) :
+    ClubhouseAPIRequest<BaseResponse?>("POST", "audience_reply", BaseResponse::class.java) {
+    private class Body(var channel: String, var raiseHands: Boolean, var unraiseHands: Boolean)
 
-	private static class Body{
-		public String channel;
-		public boolean raiseHands, unraiseHands;
-
-		public Body(String channel, boolean raiseHands, boolean unraiseHands){
-			this.channel=channel;
-			this.raiseHands=raiseHands;
-			this.unraiseHands=unraiseHands;
-		}
-	}
+    init {
+        requestBody = Body(channel, raise, !raise)
+    }
 }

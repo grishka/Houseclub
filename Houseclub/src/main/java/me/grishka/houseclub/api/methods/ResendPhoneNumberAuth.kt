@@ -1,19 +1,13 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
+import me.grishka.houseclub.api.BaseResponse
+import me.grishka.houseclub.api.ClubhouseAPIRequest
 
-public class ResendPhoneNumberAuth extends ClubhouseAPIRequest<BaseResponse>{
-	public ResendPhoneNumberAuth(String phoneNumber){
-		super("POST", "resend_phone_number_auth", BaseResponse.class);
-		requestBody=new Body(phoneNumber);
-	}
+class ResendPhoneNumberAuth(phoneNumber: String) :
+    ClubhouseAPIRequest<BaseResponse?>("POST", "resend_phone_number_auth", BaseResponse::class.java) {
+    private class Body(var phoneNumber: String)
 
-	private static class Body{
-		public String phoneNumber;
-
-		public Body(String phoneNumber){
-			this.phoneNumber=phoneNumber;
-		}
-	}
+    init {
+        requestBody = Body(phoneNumber)
+    }
 }

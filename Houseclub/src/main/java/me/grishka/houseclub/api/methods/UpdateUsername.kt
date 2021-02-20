@@ -1,19 +1,13 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
+import me.grishka.houseclub.api.BaseResponse
+import me.grishka.houseclub.api.ClubhouseAPIRequest
 
-public class UpdateUsername extends ClubhouseAPIRequest<BaseResponse>{
-	public UpdateUsername(String name){
-		super("POST", "update_username", BaseResponse.class);
-		requestBody=new Body(name);
-	}
+class UpdateUsername(name: String) :
+    ClubhouseAPIRequest<BaseResponse?>("POST", "update_username", BaseResponse::class.java) {
+    private class Body(var username: String)
 
-	private static class Body{
-		public String username;
-
-		public Body(String username){
-			this.username=username;
-		}
-	}
+    init {
+        requestBody = Body(name)
+    }
 }

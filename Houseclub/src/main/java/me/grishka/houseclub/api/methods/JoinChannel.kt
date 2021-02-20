@@ -1,24 +1,12 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import java.lang.reflect.Type;
+import me.grishka.houseclub.api.ClubhouseAPIRequest
+import me.grishka.houseclub.api.model.Channel
 
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
-import me.grishka.houseclub.api.model.Channel;
+class JoinChannel(channelName: String) : ClubhouseAPIRequest<Channel?>("POST", "join_channel", Channel::class.java) {
+    private class Body(var channel: String, var attributionSource: String, var attributionDetails: String)
 
-public class JoinChannel extends ClubhouseAPIRequest<Channel>{
-
-	public JoinChannel(String channelName){
-		super("POST", "join_channel", Channel.class);
-		requestBody=new Body(channelName, "feed", "eyJpc19leHBsb3JlIjpmYWxzZSwicmFuayI6MX0=");
-	}
-
-	private static class Body{
-		public String channel, attributionSource, attributionDetails;
-
-		public Body(String channel, String attributionSource, String attributionDetails){
-			this.channel=channel;
-			this.attributionSource=attributionSource;
-			this.attributionDetails=attributionDetails;
-		}
-	}
+    init {
+        requestBody = Body(channelName, "feed", "eyJpc19leHBsb3JlIjpmYWxzZSwicmFuayI6MX0=")
+    }
 }

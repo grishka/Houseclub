@@ -1,23 +1,15 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
-import me.grishka.houseclub.api.model.FullUser;
+import me.grishka.houseclub.api.ClubhouseAPIRequest
+import me.grishka.houseclub.api.model.FullUser
 
-public class GetProfile extends ClubhouseAPIRequest<GetProfile.Response>{
-	public GetProfile(int id){
-		super("POST", "get_profile", Response.class);
-		requestBody=new Body(id);
-	}
+class GetProfile(id: Int) : ClubhouseAPIRequest<GetProfile.Response?>("POST", "get_profile", Response::class.java) {
+    private class Body(var userId: Int)
+    class Response {
+        var userProfile: FullUser? = null
+    }
 
-	private static class Body{
-		public int userId;
-
-		public Body(int userId){
-			this.userId=userId;
-		}
-	}
-
-	public static class Response{
-		public FullUser userProfile;
-	}
+    init {
+        requestBody = Body(id)
+    }
 }

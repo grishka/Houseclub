@@ -1,148 +1,123 @@
-package me.grishka.houseclub.fragments;
+package me.grishka.houseclub.fragments
 
-import android.app.Activity;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.app.Activity
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.text.TextUtils
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import me.grishka.appkit.Nav
+import me.grishka.appkit.fragments.BaseRecyclerFragment
+import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter
+import me.grishka.appkit.imageloader.ImageLoaderViewHolder
+import me.grishka.appkit.utils.BindableViewHolder
+import me.grishka.appkit.views.UsableRecyclerView.Clickable
+import me.grishka.houseclub.R
+import me.grishka.houseclub.api.ClubhouseSession
+import me.grishka.houseclub.api.model.FullUser
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import me.grishka.appkit.Nav;
-import me.grishka.appkit.fragments.BaseRecyclerFragment;
-import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
-import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
-import me.grishka.appkit.utils.BindableViewHolder;
-import me.grishka.appkit.views.UsableRecyclerView;
-import me.grishka.houseclub.R;
-import me.grishka.houseclub.api.ClubhouseSession;
-import me.grishka.houseclub.api.model.FullUser;
+abstract class UserListFragment : BaseRecyclerFragment<FullUser?>(50) {
+    private val selfID = ClubhouseSession.userID!!.toInt()
+    private var adapter: UserListAdapter? = null
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
+        loadData()
+    }
 
-public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
+    override fun getAdapter(): RecyclerView.Adapter<*>? {
+        if (adapter == null) {
+            adapter = UserListAdapter()
+        }
+        return adapter
+    }
 
-	private int selfID=Integer.parseInt(ClubhouseSession.userID);
-	private UserListAdapter adapter;
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        toolbar.elevation = 0f
+    }
 
-	public UserListFragment(){
-		super(50);
-	}
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        toolbar.elevation = 0f
+    }
 
-	@Override
-	public void onAttach(Activity activity){
-		super.onAttach(activity);
-		loadData();
-	}
+    private inner class UserListAdapter : RecyclerView.Adapter<UserViewHolder>(), ImageLoaderRecyclerAdapter {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+            return UserViewHolder()
+        }
 
-	@Override
-	protected RecyclerView.Adapter getAdapter(){
-		if(adapter==null){
-			adapter=new UserListAdapter();
-		}
-		return adapter;
-	}
+        override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+            holder.bind(data[position])
+        }
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState){
-		super.onViewCreated(view, savedInstanceState);
-		getToolbar().setElevation(0);
-	}
+        override fun getItemCount(): Int {
+            return data.size
+        }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig){
-		super.onConfigurationChanged(newConfig);
-		getToolbar().setElevation(0);
-	}
+        override fun getImageCountForItem(position: Int): Int {
+            return if (data[position]!!.photoUrl != null) 1 else 0
+        }
 
-	private class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> implements ImageLoaderRecyclerAdapter{
+        override fun getImageURL(position: Int, image: Int): String {
+            return data[position]!!.photoUrl!!
+        }
+    }
 
-		@NonNull
-		@Override
-		public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-			return new UserViewHolder();
-		}
+    private inner class UserViewHolder : BindableViewHolder<FullUser>(activity, R.layout.user_list_row),
+        ImageLoaderViewHolder, Clickable {
+        var name: TextView
+        var bio: TextView
+        var followBtn: Button
+        var photo: ImageView
+        private val placeholder: Drawable = ColorDrawable(-0x7f7f80)
+        override fun onBind(item: FullUser) {
+            name.text = item.name
+            if (TextUtils.isEmpty(item.bio)) {
+                bio.visibility = View.GONE
+            } else {
+                bio.visibility = View.VISIBLE
+                bio.text = item.bio
+            }
+            // TODO get_followers/get_following don't return current follow status?
+            //			if(item.userId==selfID){
+            followBtn.visibility = View.GONE
+            //			}else{
+            //				followBtn.setVisibility(View.VISIBLE);
+            //				followBtn.setText(item.isFollowed() ? R.string.following : R.string.follow);
+            //			}
+            if (item.photoUrl != null) imgLoader.bindViewHolder(
+                adapter,
+                this,
+                adapterPosition
+            ) else photo.setImageDrawable(placeholder)
+        }
 
-		@Override
-		public void onBindViewHolder(@NonNull UserViewHolder holder, int position){
-			holder.bind(data.get(position));
-		}
+        override fun setImage(index: Int, bitmap: Bitmap) {
+            photo.setImageBitmap(bitmap)
+        }
 
-		@Override
-		public int getItemCount(){
-			return data.size();
-		}
+        override fun clearImage(index: Int) {
+            photo.setImageDrawable(placeholder)
+        }
 
-		@Override
-		public int getImageCountForItem(int position){
-			return data.get(position).photoUrl!=null ? 1 : 0;
-		}
+        override fun onClick() {
+            val args = Bundle()
+            args.putInt("id", item.userId)
+            Nav.go(activity, ProfileFragment::class.java, args)
+        }
 
-		@Override
-		public String getImageURL(int position, int image){
-			return data.get(position).photoUrl;
-		}
-	}
-
-	private class UserViewHolder extends BindableViewHolder<FullUser> implements ImageLoaderViewHolder, UsableRecyclerView.Clickable{
-
-		public TextView name, bio;
-		public Button followBtn;
-		public ImageView photo;
-		private Drawable placeholder=new ColorDrawable(0xFF808080);
-
-		public UserViewHolder(){
-			super(getActivity(), R.layout.user_list_row);
-
-			name=findViewById(R.id.name);
-			bio=findViewById(R.id.bio);
-			followBtn=findViewById(R.id.follow_btn);
-			photo=findViewById(R.id.photo);
-		}
-
-		@Override
-		public void onBind(FullUser item){
-			name.setText(item.name);
-			if(TextUtils.isEmpty(item.bio)){
-				bio.setVisibility(View.GONE);
-			}else{
-				bio.setVisibility(View.VISIBLE);
-				bio.setText(item.bio);
-			}
-			// TODO get_followers/get_following don't return current follow status?
-//			if(item.userId==selfID){
-				followBtn.setVisibility(View.GONE);
-//			}else{
-//				followBtn.setVisibility(View.VISIBLE);
-//				followBtn.setText(item.isFollowed() ? R.string.following : R.string.follow);
-//			}
-
-			if(item.photoUrl!=null)
-				imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
-			else
-				photo.setImageDrawable(placeholder);
-		}
-
-		@Override
-		public void setImage(int index, Bitmap bitmap){
-			photo.setImageBitmap(bitmap);
-		}
-
-		@Override
-		public void clearImage(int index){
-			photo.setImageDrawable(placeholder);
-		}
-
-		@Override
-		public void onClick(){
-			Bundle args=new Bundle();
-			args.putInt("id", item.userId);
-			Nav.go(getActivity(), ProfileFragment.class, args);
-		}
-	}
+        init {
+            name = findViewById(R.id.name)
+            bio = findViewById(R.id.bio)
+            followBtn = findViewById(R.id.follow_btn)
+            photo = findViewById(R.id.photo)
+        }
+    }
 }

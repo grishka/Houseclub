@@ -1,19 +1,12 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
-import me.grishka.houseclub.api.model.Channel;
+import me.grishka.houseclub.api.ClubhouseAPIRequest
+import me.grishka.houseclub.api.model.Channel
 
-public class GetChannel extends ClubhouseAPIRequest<Channel>{
-	public GetChannel(String name){
-		super("POST", "get_channel", Channel.class);
-		requestBody=new Body(name);
-	}
+class GetChannel(name: String) : ClubhouseAPIRequest<Channel?>("POST", "get_channel", Channel::class.java) {
+    private class Body(var channel: String)
 
-	private static class Body{
-		public String channel;
-
-		public Body(String channel){
-			this.channel=channel;
-		}
-	}
+    init {
+        requestBody = Body(name)
+    }
 }

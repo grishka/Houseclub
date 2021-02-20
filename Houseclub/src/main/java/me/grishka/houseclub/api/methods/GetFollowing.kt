@@ -1,22 +1,20 @@
-package me.grishka.houseclub.api.methods;
+package me.grishka.houseclub.api.methods
 
-import java.util.HashMap;
-import java.util.List;
+import me.grishka.houseclub.api.ClubhouseAPIRequest
+import me.grishka.houseclub.api.model.FullUser
+import java.util.HashMap
 
-import me.grishka.houseclub.api.ClubhouseAPIRequest;
-import me.grishka.houseclub.api.model.FullUser;
+class GetFollowing(userID: Int, pageSize: Int, page: Int) :
+    ClubhouseAPIRequest<GetFollowing.Response?>("GET", "get_following", Response::class.java) {
+    class Response {
+        var users: List<FullUser>? = null
+        var count = 0
+    }
 
-public class GetFollowing extends ClubhouseAPIRequest<GetFollowing.Response>{
-	public GetFollowing(int userID, int pageSize, int page){
-		super("GET", "get_following", Response.class);
-		queryParams=new HashMap<>();
-		queryParams.put("user_id", userID+"");
-		queryParams.put("page_size", pageSize+"");
-		queryParams.put("page", page+"");
-	}
-
-	public static class Response{
-		public List<FullUser> users;
-		public int count;
-	}
+    init {
+        queryParams = HashMap()
+        queryParams!!["user_id"] = userID.toString() + ""
+        queryParams!!["page_size"] = pageSize.toString() + ""
+        queryParams!!["page"] = page.toString() + ""
+    }
 }

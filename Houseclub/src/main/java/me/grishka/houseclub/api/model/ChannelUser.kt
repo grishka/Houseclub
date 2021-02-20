@@ -1,70 +1,65 @@
-package me.grishka.houseclub.api.model;
+package me.grishka.houseclub.api.model
 
-import android.os.Parcel;
+import android.os.Parcel
+import android.os.Parcelable
 
-public class ChannelUser extends User{
-	public boolean isSpeaker;
-	public boolean isModerator;
-	public boolean isFollowedBySpeaker;
-	public boolean isInvitedAsSpeaker;
-	public boolean isNew;
-	public String timeJoinedAsSpeaker;
-	public String firstName;
+class ChannelUser : User {
+    var isSpeaker = false
+    var isModerator = false
+    var isFollowedBySpeaker = false
+    var isInvitedAsSpeaker = false
+    var isNew = false
+    var timeJoinedAsSpeaker: String? = null
+    var firstName: String? = null
 
-	public transient boolean isMuted;
+    @Transient
+    var isMuted = false
+    override fun describeContents(): Int {
+        return 0
+    }
 
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        super.writeToParcel(dest, flags)
+        dest.writeByte(if (isSpeaker) 1.toByte() else 0.toByte())
+        dest.writeByte(if (isModerator) 1.toByte() else 0.toByte())
+        dest.writeByte(if (isFollowedBySpeaker) 1.toByte() else 0.toByte())
+        dest.writeByte(if (isInvitedAsSpeaker) 1.toByte() else 0.toByte())
+        dest.writeByte(if (isNew) 1.toByte() else 0.toByte())
+        dest.writeString(timeJoinedAsSpeaker)
+        dest.writeString(firstName)
+    }
 
-	@Override
-	public int describeContents(){
-		return 0;
-	}
+    override fun readFromParcel(source: Parcel) {
+        super.readFromParcel(source)
+        isSpeaker = source.readByte().toInt() != 0
+        isModerator = source.readByte().toInt() != 0
+        isFollowedBySpeaker = source.readByte().toInt() != 0
+        isInvitedAsSpeaker = source.readByte().toInt() != 0
+        isNew = source.readByte().toInt() != 0
+        timeJoinedAsSpeaker = source.readString()
+        firstName = source.readString()
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags){
-		super.writeToParcel(dest, flags);
-		dest.writeByte(this.isSpeaker ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isModerator ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isFollowedBySpeaker ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isInvitedAsSpeaker ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isNew ? (byte) 1 : (byte) 0);
-		dest.writeString(this.timeJoinedAsSpeaker);
-		dest.writeString(this.firstName);
-	}
+    constructor() {}
+    protected constructor(`in`: Parcel) : super(`in`) {
+        isSpeaker = `in`.readByte().toInt() != 0
+        isModerator = `in`.readByte().toInt() != 0
+        isFollowedBySpeaker = `in`.readByte().toInt() != 0
+        isInvitedAsSpeaker = `in`.readByte().toInt() != 0
+        isNew = `in`.readByte().toInt() != 0
+        timeJoinedAsSpeaker = `in`.readString()
+        firstName = `in`.readString()
+    }
 
-	public void readFromParcel(Parcel source){
-		super.readFromParcel(source);
-		this.isSpeaker=source.readByte()!=0;
-		this.isModerator=source.readByte()!=0;
-		this.isFollowedBySpeaker=source.readByte()!=0;
-		this.isInvitedAsSpeaker=source.readByte()!=0;
-		this.isNew=source.readByte()!=0;
-		this.timeJoinedAsSpeaker=source.readString();
-		this.firstName=source.readString();
-	}
+    companion object {
+        val CREATOR: Parcelable.Creator<ChannelUser> = object : Parcelable.Creator<ChannelUser> {
+            override fun createFromParcel(source: Parcel): ChannelUser {
+                return ChannelUser(source)
+            }
 
-	public ChannelUser(){
-	}
-
-	protected ChannelUser(Parcel in){
-		super(in);
-		this.isSpeaker=in.readByte()!=0;
-		this.isModerator=in.readByte()!=0;
-		this.isFollowedBySpeaker=in.readByte()!=0;
-		this.isInvitedAsSpeaker=in.readByte()!=0;
-		this.isNew=in.readByte()!=0;
-		this.timeJoinedAsSpeaker=in.readString();
-		this.firstName=in.readString();
-	}
-
-	public static final Creator<ChannelUser> CREATOR=new Creator<ChannelUser>(){
-		@Override
-		public ChannelUser createFromParcel(Parcel source){
-			return new ChannelUser(source);
-		}
-
-		@Override
-		public ChannelUser[] newArray(int size){
-			return new ChannelUser[size];
-		}
-	};
+            override fun newArray(size: Int): Array<ChannelUser?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }
