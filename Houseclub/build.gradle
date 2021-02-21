@@ -31,17 +31,20 @@ android {
 }
 
 dependencies {
-	implementation 'com.github.grishka.litex:recyclerview:1.0'
-	implementation 'com.github.grishka.litex:swiperefreshlayout:1.0'
-	implementation 'com.github.grishka.litex:viewpager2:1.0'
-	implementation 'com.github.grishka:appkit:c7854a3'
-	implementation 'com.squareup.okhttp3:okhttp:3.14.7'
-	api 'com.github.grishka.litex:annotation:1.0'
+    implementation 'com.github.grishka.litex:recyclerview:1.0'
+    implementation 'com.github.grishka.litex:swiperefreshlayout:1.0'
+    implementation 'com.github.grishka.litex:viewpager2:1.0'
+    implementation 'com.github.grishka:appkit:c7854a3'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.7'
+    api 'com.github.grishka.litex:annotation:1.0'
 
-	implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.6'
 //	implementation 'com.squareup:otto:1.3.8'
 //	implementation 'de.psdev:async-otto:1.0.3'
 
-	implementation 'io.agora.rtc:voice-sdk:3.3.0'
-	implementation group: 'com.pubnub', name: 'pubnub-gson', version: '4.33.3'
+    implementation 'io.agora.rtc:voice-sdk:3.3.0'
+    implementation group: 'com.pubnub', name: 'pubnub-gson', version: '4.33.3'
+    implementation('com.github.joielechong:countrycodepicker:2.4.2') {
+        exclude group: 'androidx.annotation'
+    }
 }
