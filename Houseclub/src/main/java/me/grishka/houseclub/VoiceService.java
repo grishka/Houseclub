@@ -92,8 +92,8 @@ public class VoiceService extends Service{
 			return;
 		}
 
-		engine.setAudioProfile(Constants.AUDIO_PROFILE_SPEECH_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
-		engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
+		engine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY_STEREO, Constants.AUDIO_SCENARIO_GAME_STREAMING);
+		engine.setChannelProfile(Constants.CHANNEL_PROFILE_COMMUNICATION);
 		engine.setDefaultAudioRoutetoSpeakerphone(true);
 		engine.enableAudioVolumeIndication(500, 3, false);
 		engine.muteLocalAudioStream(true);
