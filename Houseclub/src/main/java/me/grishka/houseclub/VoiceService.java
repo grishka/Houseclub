@@ -81,12 +81,12 @@ public class VoiceService extends Service{
 	}
 
 	@Override
-	public void onCreate() {
+	public void onCreate(){
 		super.onCreate();
 
-		try {
-			engine = RtcEngine.create(getBaseContext(), ClubhouseAPIController.AGORA_KEY, new RtcEngineEventHandler());
-		} catch(Exception x) {
+		try{
+			engine=RtcEngine.create(getBaseContext(), ClubhouseAPIController.AGORA_KEY, new RtcEngineEventHandler());
+		}catch(Exception x){
 			Log.e(TAG, "Error initializing agora", x);
 			stopSelf();
 			return;
@@ -97,7 +97,7 @@ public class VoiceService extends Service{
 		engine.setDefaultAudioRoutetoSpeakerphone(true);
 		engine.enableAudioVolumeIndication(500, 3, false);
 		engine.muteLocalAudioStream(true);
-		instance = this;
+		instance=this;
 	}
 
 	@Override
