@@ -150,7 +150,8 @@ public class MainActivity extends FragmentStackActivity{
 						@Override
 						public void onSuccess(Channel result){
 							Intent intent=new Intent(MainActivity.this, VoiceService.class);
-							intent.putExtra("channel", result);
+							intent.putExtra("channel", result.channel);
+							DataProvider.saveChannel(result);
 							if(Build.VERSION.SDK_INT>=26)
 								startForegroundService(intent);
 							else
