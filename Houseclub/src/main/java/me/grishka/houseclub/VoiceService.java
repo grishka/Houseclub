@@ -102,13 +102,15 @@ public class VoiceService extends Service{
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
+		RtcEngine.destroy();
 		instance=null;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
 		if(engine!=null){
-			channel=intent.getParcelableExtra("channel");
+			String id = intent.getStringExtra("channel");
+			channel=DataProvider.getChannel(id);
 			updateChannel(channel);
 
 			NotificationManager nm=getSystemService(NotificationManager.class);
