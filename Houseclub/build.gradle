@@ -44,4 +44,7 @@ dependencies {
 
 	implementation 'io.agora.rtc:voice-sdk:3.3.0'
 	implementation group: 'com.pubnub', name: 'pubnub-gson', version: '4.33.3'
+	implementation('com.github.joielechong:countrycodepicker:2.4.2') {
+    	exclude group: 'androidx.annotation'
+	}
 }

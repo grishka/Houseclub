@@ -2,8 +2,10 @@
 	<string name="app_name">Houseclub</string>
 	<string name="login">Login</string>
 	<string name="phone_number">Phone number</string>
+	<string name="enter_your_phone">Enter your phone #</string>
 	<string name="sms_code">Code from SMS</string>
-	<string name="resend_code">Resend code</string>
+	<string name="resend_code_message">Did not receive it?</string>
+	<string name="resend_code_button">Tap to resend</string>
 	<string name="next">Next</string>
 	<string name="warning">Warning!</string>
 	<string name="warning_text">This is an <b>unofficial</b> app. Using this might get your Clubhouse account permanently banned. Proceed at your own risk.</string>
