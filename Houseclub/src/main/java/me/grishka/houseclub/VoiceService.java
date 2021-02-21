@@ -92,7 +92,7 @@ public class VoiceService extends Service{
 			return;
 		}
 
-		engine.setAudioProfile(Constants.AUDIO_PROFILE_SPEECH_STANDARD, Constants.AUDIO_SCENARIO_MEETING);
+		engine.setAudioProfile(Constants.AUDIO_PROFILE_SPEECH_STANDARD, Constants.AUDIO_SCENARIO_CHATROOM_ENTERTAINMENT);
 		engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
 		engine.setDefaultAudioRoutetoSpeakerphone(true);
 		engine.enableAudioVolumeIndication(500, 3, false);
