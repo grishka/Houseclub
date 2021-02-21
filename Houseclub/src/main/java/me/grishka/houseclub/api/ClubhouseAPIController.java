@@ -88,6 +88,7 @@ public class ClubhouseAPIController{
 						uri.appendQueryParameter(e.getKey(), e.getValue());
 					}
 				}
+				req.prepare();
 				RequestBody reqBody=null;
 				if(req.requestBody!=null){
 					reqBody=RequestBody.create(MediaType.get("application/json; charset=utf-8"), gson.toJson(req.requestBody));
@@ -140,7 +141,7 @@ public class ClubhouseAPIController{
 						if(DEBUG)
 							Log.i(TAG, "Raw response: "+respStr);
 //						T robj=gson.fromJson(body.charStream(), req.responseClass);
-						T robj=gson.fromJson(respStr, req.responseClass);
+						T robj=req.parse(respStr);
 						if(DEBUG)
 							Log.i(TAG, "Parsed response: "+robj);
 						req.onSuccess(robj);

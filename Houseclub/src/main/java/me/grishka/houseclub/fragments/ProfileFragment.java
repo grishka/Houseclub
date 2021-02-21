@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,9 +39,12 @@ import me.grishka.houseclub.api.methods.Follow;
 import me.grishka.houseclub.api.methods.GetProfile;
 import me.grishka.houseclub.api.methods.Unfollow;
 import me.grishka.houseclub.api.methods.UpdateBio;
+import me.grishka.houseclub.api.methods.UpdatePhoto;
 import me.grishka.houseclub.api.model.FullUser;
 
 public class ProfileFragment extends LoaderFragment{
+
+	private static final int PICK_PHOTO_RESULT=468;
 
 	private FullUser user;
 
@@ -83,8 +87,10 @@ public class ProfileFragment extends LoaderFragment{
 		followers.setOnClickListener(this::onFollowersClick);
 		following.setOnClickListener(this::onFollowingClick);
 		v.findViewById(R.id.inviter_btn).setOnClickListener(this::onInviterClick);
-		if(self)
+		if(self){
 			bio.setOnClickListener(this::onBioClick);
+			photo.setOnClickListener(this::onPhotoClick);
+		}
 
 		return v;
 	}
@@ -182,6 +188,26 @@ public class ProfileFragment extends LoaderFragment{
 		ClubhouseSession.write();
 		Nav.goClearingStack(getActivity(), LoginFragment.class, null);
 		return true;
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data){
+		if(requestCode==PICK_PHOTO_RESULT && resultCode==Activity.RESULT_OK){
+			new UpdatePhoto(data.getData())
+					.wrapProgress(getActivity())
+					.setCallback(new Callback<Bitmap>(){
+						@Override
+						public void onSuccess(Bitmap result){
+							photo.setImageBitmap(result);
+						}
+
+						@Override
+						public void onError(ErrorResponse error){
+							error.showToast(getActivity());
+						}
+					})
+					.exec();
+		}
 	}
 
 	private void onFollowClick(View v){
@@ -294,5 +320,11 @@ public class ProfileFragment extends LoaderFragment{
 				})
 				.setNegativeButton(R.string.cancel, null)
 				.show();
+	}
+
+	private void onPhotoClick(View v){
+		Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("image/*");
+		startActivityForResult(intent, PICK_PHOTO_RESULT);
 	}
 }

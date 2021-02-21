@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 
@@ -72,6 +73,14 @@ public abstract class ClubhouseAPIRequest<T> extends APIRequest<T>{
 	private void dismissProgressDialog(){
 		progress.dismiss();
 		progress=null;
+	}
+
+	public void prepare() throws Exception{
+
+	}
+
+	public T parse(String resp) throws Exception{
+		return ClubhouseAPIController.getInstance().getGson().fromJson(resp, responseClass);
 	}
 
 	void onSuccess(T result){
