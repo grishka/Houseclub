@@ -40,6 +40,7 @@ import me.grishka.houseclub.api.methods.GetProfile;
 import me.grishka.houseclub.api.methods.Unfollow;
 import me.grishka.houseclub.api.methods.UpdateBio;
 import me.grishka.houseclub.api.methods.UpdatePhoto;
+import me.grishka.houseclub.api.methods.UpdateName;
 import me.grishka.houseclub.api.model.FullUser;
 
 public class ProfileFragment extends LoaderFragment{
@@ -90,6 +91,7 @@ public class ProfileFragment extends LoaderFragment{
 		if(self){
 			bio.setOnClickListener(this::onBioClick);
 			photo.setOnClickListener(this::onPhotoClick);
+			name.setOnClickListener(this::onNameClick);
 		}
 
 		return v;
@@ -281,6 +283,46 @@ public class ProfileFragment extends LoaderFragment{
 		Bundle args=new Bundle();
 		args.putInt("id", user.invitedByUserProfile.userId);
 		Nav.go(getActivity(), ProfileFragment.class, args);
+	}
+
+	private void onNameClick(View v) {
+		final EditText edit = new EditText(getActivity());
+		edit.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+		edit.setSingleLine(false);
+		edit.setMinLines(3);
+		edit.setMaxLines(6);
+		edit.setGravity(Gravity.TOP);
+		edit.setText(user.name);
+		new AlertDialog.Builder(getActivity())
+				.setTitle(R.string.update_name)
+				.setView(edit)
+				.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						final String newName = edit.getText().toString();
+						new UpdateName(newName)
+								.wrapProgress(getActivity())
+								.setCallback(new Callback<BaseResponse>() {
+									@Override
+									public void onSuccess(BaseResponse result) {
+										user.name = newName;
+
+										if (TextUtils.isEmpty((newName)))
+											name.setText(R.string.update_name);
+										else
+											name.setText(newName);
+									}
+
+									@Override
+									public void onError(ErrorResponse error) {
+										error.showToast(getActivity());
+									}
+								})
+								.exec();
+					}
+				})
+				.setNegativeButton(R.string.cancel, null)
+				.show();
 	}
 
 	private void onBioClick(View v){
