@@ -81,22 +81,23 @@ public class VoiceService extends Service{
 	}
 
 	@Override
-	public void onCreate(){
+	public void onCreate() {
 		super.onCreate();
 
-		try{
-			engine=RtcEngine.create(getBaseContext(), ClubhouseAPIController.AGORA_KEY, new RtcEngineEventHandler());
-		}catch(Exception x){
+		try {
+			engine = RtcEngine.create(getBaseContext(), ClubhouseAPIController.AGORA_KEY, new RtcEngineEventHandler());
+		} catch(Exception x) {
 			Log.e(TAG, "Error initializing agora", x);
 			stopSelf();
 			return;
 		}
 
+		engine.setAudioProfile(Constants.AUDIO_PROFILE_SPEECH_STANDARD, Constants.AUDIO_SCENARIO_MEETING);
 		engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
 		engine.setDefaultAudioRoutetoSpeakerphone(true);
 		engine.enableAudioVolumeIndication(500, 3, false);
 		engine.muteLocalAudioStream(true);
-		instance=this;
+		instance = this;
 	}
 
 	@Override
