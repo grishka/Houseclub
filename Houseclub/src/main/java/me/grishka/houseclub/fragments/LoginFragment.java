@@ -94,7 +94,7 @@ public class LoginFragment extends BaseToolbarFragment {
                         public void onSuccess(BaseResponse result) {
                             sentCode = true;
                             phoneInput.setEnabled(false);
-                            countryCodePicker.setEnabled(false);
+                            countryCodePicker.setClickable(false);
                             codeInput.setVisibility(View.VISIBLE);
                             resendCodeLayout.setVisibility(View.VISIBLE);
                         }
