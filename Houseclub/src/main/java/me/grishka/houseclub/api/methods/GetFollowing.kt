@@ -12,9 +12,8 @@ class GetFollowing(userID: Int, pageSize: Int, page: Int) :
     }
 
     init {
-        queryParams = HashMap()
-        queryParams!!["user_id"] = userID.toString() + ""
-        queryParams!!["page_size"] = pageSize.toString() + ""
-        queryParams!!["page"] = page.toString() + ""
+        queryParams["user_id"] = userID.toString()
+        queryParams["page_size"] = pageSize.toString()
+        queryParams["page"] = page.toString()
     }
 }

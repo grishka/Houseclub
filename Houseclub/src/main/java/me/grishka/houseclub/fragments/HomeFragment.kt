@@ -151,8 +151,8 @@ class HomeFragment : BaseRecyclerFragment<Channel?>(20) {
         private val placeholder: Drawable = ColorDrawable(-0x7f7f80)
         override fun onBind(item: Channel) {
             topic.text = item.topic
-            numMembers.text = "" + item.numAll
-            numSpeakers.text = "" + item.numSpeakers
+            numMembers.text = item.numAll.toString()
+            numSpeakers.text = item.numSpeakers.toString()
             speakers.text =
                 item.users!!.stream().map { user: ChannelUser? -> if (user!!.isSpeaker) user.name + " 💬" else user.name }
                     .collect(Collectors.joining("\n"))

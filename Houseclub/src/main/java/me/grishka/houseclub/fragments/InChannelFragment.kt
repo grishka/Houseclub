@@ -55,9 +55,7 @@ class InChannelFragment : BaseRecyclerFragment<ChannelUser?>(10), ChannelEventLi
     private val otherUsers = ArrayList<ChannelUser?>()
     private val mutedUsers = ArrayList<Int>()
     private val speakingUsers = ArrayList<Int>()
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

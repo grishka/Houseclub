@@ -346,9 +346,7 @@ class VoiceService : Service() {
         private const val TAG = "VoiceService"
         fun addListener(l: ChannelEventListener) {
             if (!listeners.contains(l)) listeners.add(l)
-            if (instance != null) {
-                instance!!.callAddedListener(l)
-            }
+            instance?.callAddedListener(l)
         }
 
         fun removeListener(l: ChannelEventListener) {

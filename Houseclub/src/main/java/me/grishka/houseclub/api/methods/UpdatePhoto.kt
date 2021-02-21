@@ -19,8 +19,8 @@ class UpdatePhoto(private val uri: Uri) :
     @Throws(IOException::class)
     override fun prepare() {
         var orig: Bitmap
-        App.applicationContext!!.contentResolver.openInputStream(uri).use { `in` ->
-            orig = BitmapFactory.decodeStream(`in`)
+        App.applicationContext.contentResolver.openInputStream(uri).use {
+            orig = BitmapFactory.decodeStream(it)
         }
         val size = Math.min(512, Math.min(orig.width, orig.height))
         resizedBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
@@ -33,7 +33,7 @@ class UpdatePhoto(private val uri: Uri) :
             Rect(0, y, orig.width, y + orig.width)
         }
         Canvas(resizedBitmap).drawBitmap(orig, srcRect, Rect(0, 0, size, size), Paint(Paint.FILTER_BITMAP_FLAG))
-        val tmp = File(App.applicationContext!!.cacheDir, "ava_tmp.jpg")
+        val tmp = File(App.applicationContext.cacheDir, "ava_tmp.jpg")
         FileOutputStream(tmp).use { out -> resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 95, out) }
         fileToUpload = tmp
         fileFieldName = "file"

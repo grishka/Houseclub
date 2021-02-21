@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import me.grishka.houseclub.App
 import me.grishka.houseclub.api.model.User
+import java.util.Locale
 import java.util.UUID
 
 object ClubhouseSession {
@@ -19,7 +20,7 @@ object ClubhouseSession {
         userToken = prefs.getString("user_token", null)
         isWaitlisted = prefs.getBoolean("waitlisted", false)
         if (deviceID == null) {
-            deviceID = UUID.randomUUID().toString().toUpperCase()
+            deviceID = UUID.randomUUID().toString().toUpperCase(Locale.getDefault())
             write()
         }
     }
@@ -37,6 +38,6 @@ object ClubhouseSession {
         get() = userID != null
 
     private fun prefs(): SharedPreferences {
-        return App.applicationContext!!.getSharedPreferences("session", Context.MODE_PRIVATE)
+        return App.applicationContext.getSharedPreferences("session", Context.MODE_PRIVATE)
     }
 }
