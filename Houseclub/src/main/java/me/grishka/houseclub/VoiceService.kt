@@ -50,12 +50,12 @@ class VoiceService : Service() {
     var isMuted = true
         set(muted) {
             field = muted
-            engine!!.muteLocalAudioStream(muted)
+            engine?.muteLocalAudioStream(muted)
         }
     private val uiHandler = Handler(Looper.getMainLooper())
     private val pinger: Runnable = object : Runnable {
         override fun run() {
-            ActivePing(channel!!.channel!!).exec()
+            channel?.channel?.let { ActivePing(it).exec() }
             uiHandler.postDelayed(this, 30000)
         }
     }
@@ -147,8 +147,7 @@ class VoiceService : Service() {
             override fun message(pubnub: PubNub, pnMessageResult: PNMessageResult) {
                 Log.d(TAG, "message() called with: pubnub = [$pubnub], pnMessageResult = [$pnMessageResult]")
                 val msg = pnMessageResult.message.asJsonObject
-                val act = msg["action"].asString
-                when (act) {
+                when (msg["action"].asString) {
                     "invite_speaker" -> onInvitedAsSpeaker(msg)
                     "join_channel" -> onUserJoined(msg)
                     "leave_channel" -> onUserLeft(msg)
