@@ -32,6 +32,6 @@
 				<data android:host="ios.joinclubhouse.com" android:pathPrefix="/event/" android:scheme="https"/>
 			</intent-filter>
 		</activity>
-		<service android:name=".VoiceService" />
+		<service android:name=".VoiceService" android:stopWithTask="false" />
 	</application>
 </manifest>

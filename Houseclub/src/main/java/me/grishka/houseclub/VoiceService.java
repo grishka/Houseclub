@@ -101,8 +101,16 @@ public class VoiceService extends Service{
 
 	@Override
 	public void onDestroy(){
-		super.onDestroy();
+		instance.leaveChannel();
 		instance=null;
+		super.onDestroy();
+	}
+
+	@Override
+	public void onTaskRemoved(Intent rootIntent) {
+		instance.leaveChannel();
+		instance=null;
+		super.onTaskRemoved(rootIntent);
 	}
 
 	@Override
