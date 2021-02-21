@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -34,10 +35,14 @@ import me.grishka.houseclub.api.methods.Follow
 import me.grishka.houseclub.api.methods.GetProfile
 import me.grishka.houseclub.api.methods.Unfollow
 import me.grishka.houseclub.api.methods.UpdateBio
+import me.grishka.houseclub.api.methods.UpdatePhoto
 import me.grishka.houseclub.api.model.FullUser
 import java.text.DateFormat
 
 class ProfileFragment : LoaderFragment() {
+
+    private val PICK_PHOTO_RESULT = 468
+
     private var user: FullUser? = null
     private var name: TextView? = null
     private var username: TextView? = null
@@ -81,7 +86,10 @@ class ProfileFragment : LoaderFragment() {
         followers?.setOnClickListener(View.OnClickListener { v: View -> onFollowersClick(v) })
         following?.setOnClickListener(View.OnClickListener { v: View -> onFollowingClick(v) })
         v.findViewById<View>(R.id.inviter_btn).setOnClickListener { v: View -> onInviterClick(v) }
-        if (self) bio?.setOnClickListener(View.OnClickListener { v: View -> onBioClick(v) })
+        if (self) {
+            bio?.setOnClickListener(View.OnClickListener { v: View -> onBioClick(v) })
+            photo?.setOnClickListener(this::onPhotoClick)
+        }
         return v
     }
 
@@ -117,14 +125,17 @@ class ProfileFragment : LoaderFragment() {
                         if (user!!.twitter != null) twitter?.text = user?.twitter
                         if (user!!.instagram != null) instagram?.text = user?.instagram
                     }
-                    var joined = getString(R.string.joined_date, DateFormat.getDateInstance().format(user!!.timeCreated))
+                    var joined = getString(
+                        R.string.joined_date,
+                        DateFormat.getDateInstance().format(user!!.timeCreated)
+                    )
                     if (user?.invitedByUserProfile != null) {
                         val d2 = ColorDrawable(-0x7f7f80)
                         joined += """
                         
                         ${getString(R.string.invited_by, user!!.invitedByUserProfile!!.name)}
                         """.trimIndent()
-                        if(inviterPhoto != null){
+                        if (inviterPhoto != null) {
                             if (user?.invitedByUserProfile?.photoUrl != null) ViewImageLoader.load(
                                 inviterPhoto,
                                 d2,
@@ -169,6 +180,23 @@ class ProfileFragment : LoaderFragment() {
         ClubhouseSession.write()
         Nav.goClearingStack(activity, LoginFragment::class.java, null)
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (requestCode == PICK_PHOTO_RESULT && resultCode == Activity.RESULT_OK) {
+            UpdatePhoto(data.data!!)
+                .wrapProgress(activity)
+                .setCallback(object : Callback<Bitmap?> {
+                    override fun onSuccess(result: Bitmap?) {
+                        photo!!.setImageBitmap(result)
+                    }
+
+                    override fun onError(error: ErrorResponse) {
+                        error.showToast(activity)
+                    }
+                })
+                .exec()
+        }
     }
 
     private fun onFollowClick(v: View) {
@@ -265,5 +293,11 @@ class ProfileFragment : LoaderFragment() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    private fun onPhotoClick(v: View) {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_PHOTO_RESULT)
     }
 }

@@ -57,6 +57,15 @@ abstract class ClubhouseAPIRequest<T>(var method: String, var path: String, var 
         progress = null
     }
 
+    @Throws(Exception::class)
+    open fun prepare() {
+    }
+
+    @Throws(Exception::class)
+    open fun parse(resp: String?): T {
+        return ClubhouseAPIController.instance.gson.fromJson(resp, responseClass)
+    }
+
     fun onSuccess(result: T) {
         if (progress != null) uiThreadHandler.post { dismissProgressDialog() }
         invokeSuccessCallback(result)

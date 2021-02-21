@@ -38,6 +38,7 @@ class ClubhouseAPIController private constructor() {
                         uri.appendQueryParameter(key, value)
                     }
                 }
+                req.prepare()
                 var reqBody: RequestBody? = null
                 if (req.requestBody != null) {
                     reqBody = RequestBody.create(
@@ -95,7 +96,7 @@ class ClubhouseAPIController private constructor() {
                         val respStr = body!!.string()
                         if (DEBUG) Log.i(TAG, "Raw response: $respStr")
                         //						T robj=gson.fromJson(body.charStream(), req.responseClass);
-                        val robj: T = gson.fromJson(respStr, req.responseClass)
+                        val robj: T = req.parse(respStr)
                         if (DEBUG) Log.i(TAG, "Parsed response: $robj")
                         req.onSuccess(robj)
                     } else {
@@ -114,14 +115,7 @@ class ClubhouseAPIController private constructor() {
     }
 
     companion object {
-        var instance: ClubhouseAPIController? = null
-            get() {
-                if (field == null) {
-                    field = ClubhouseAPIController()
-                }
-                return field
-            }
-            private set
+        val instance: ClubhouseAPIController by  lazy { ClubhouseAPIController() }
         private const val TAG = "ClubhouseAPI"
         private val DEBUG = BuildConfig.DEBUG
         private val API_URL = Uri.parse("https://www.clubhouseapi.com/api")
