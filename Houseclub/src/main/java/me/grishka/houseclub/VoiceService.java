@@ -403,7 +403,7 @@ public class VoiceService extends Service{
 				@Override
 				public void run(){
 					int selfID=Integer.parseInt(ClubhouseSession.userID);
-					List<Integer> uids=Arrays.stream(speakers).map(s -> s.uid==0 ? selfID : s.uid).collect(Collectors.toList());
+					List<Integer> uids=Arrays.stream(speakers).map(s->s.uid==0 ? selfID : s.uid).collect(Collectors.toList());
 					for(ChannelEventListener l:listeners)
 						l.onSpeakingUsersChanged(uids);
 				}
@@ -416,14 +416,14 @@ public class VoiceService extends Service{
 			uiHandler.post(new Runnable(){
 				@Override
 				public void run(){
-							for(ChannelUser u:channel.users){
-								if(u.userId==uid){
-									u.isMuted=muted;
-									break;
-								}
-							}
-							for(ChannelEventListener l:listeners)
-								l.onUserMuteChanged(uid, muted);
+					for(ChannelUser u:channel.users){
+						if(u.userId==uid){
+							u.isMuted=muted;
+							break;
+						}
+					}
+					for(ChannelEventListener l:listeners)
+						l.onUserMuteChanged(uid, muted);
 				}
 			});
 		}
