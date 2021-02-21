@@ -2,21 +2,17 @@ package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.LocaleList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.SimpleCallback;
-import me.grishka.appkit.fragments.ToolbarFragment;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseSession;
-import me.grishka.houseclub.api.methods.CheckForUpdate;
 import me.grishka.houseclub.api.methods.CompletePhoneNumberAuth;
 import me.grishka.houseclub.api.methods.ResendPhoneNumberAuth;
 import me.grishka.houseclub.api.methods.StartPhoneNumberAuth;

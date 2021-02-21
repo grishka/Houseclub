@@ -15,13 +15,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.Callback;
 import me.grishka.appkit.api.ErrorResponse;
@@ -80,7 +81,7 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 			public int getSpanSize(int position){
 				RecyclerView.Adapter a=adapter.getAdapterForPosition(position);
 				if(a instanceof UserListAdapter){
-					if(((UserListAdapter) a).users==speakers)
+					if(((UserListAdapter)a).users==speakers)
 						return 4;
 					return 3;
 				}
@@ -130,7 +131,7 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 	}
 
 	private View makeSectionHeader(@StringRes int text){
-		TextView view=(TextView) View.inflate(getActivity(), R.layout.category_header, null);
+		TextView view=(TextView)View.inflate(getActivity(), R.layout.category_header, null);
 		view.setText(text);
 		return view;
 	}
@@ -182,7 +183,7 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 				user.isMuted=muted;
 				RecyclerView.ViewHolder h=list.findViewHolderForAdapterPosition(i);
 				if(h instanceof UserViewHolder){
-					((UserViewHolder) h).muted.setVisibility(muted ? View.VISIBLE : View.INVISIBLE);
+					((UserViewHolder)h).muted.setVisibility(muted ? View.VISIBLE : View.INVISIBLE);
 				}
 			}
 			i++;
@@ -295,7 +296,7 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 		for(ChannelUser user:speakers){
 			RecyclerView.ViewHolder h=list.findViewHolderForAdapterPosition(i);
 			if(h instanceof UserViewHolder){
-				((UserViewHolder) h).speakerBorder.setAlpha(speakingUsers.contains(user.userId) ? 1 : 0);
+				((UserViewHolder)h).speakerBorder.setAlpha(speakingUsers.contains(user.userId) ? 1 : 0);
 			}
 			i++;
 		}

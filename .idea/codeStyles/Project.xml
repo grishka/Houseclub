@@ -22,6 +22,8 @@
       </option>
     </JetCodeStyleSettings>
     <codeStyleSettings language="JAVA">
+      <option name="BLANK_LINES_AROUND_METHOD" value="0" />
+      <option name="BLANK_LINES_AROUND_METHOD_IN_INTERFACE" value="0" />
       <option name="SPACE_AROUND_ASSIGNMENT_OPERATORS" value="false" />
       <option name="SPACE_AROUND_EQUALITY_OPERATORS" value="false" />
       <option name="SPACE_AROUND_RELATIONAL_OPERATORS" value="false" />

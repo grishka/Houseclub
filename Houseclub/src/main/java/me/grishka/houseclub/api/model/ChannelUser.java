@@ -22,11 +22,11 @@ public class ChannelUser extends User{
 	@Override
 	public void writeToParcel(Parcel dest, int flags){
 		super.writeToParcel(dest, flags);
-		dest.writeByte(this.isSpeaker ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isModerator ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isFollowedBySpeaker ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isInvitedAsSpeaker ? (byte) 1 : (byte) 0);
-		dest.writeByte(this.isNew ? (byte) 1 : (byte) 0);
+		dest.writeByte(this.isSpeaker ? (byte)1 : (byte)0);
+		dest.writeByte(this.isModerator ? (byte)1 : (byte)0);
+		dest.writeByte(this.isFollowedBySpeaker ? (byte)1 : (byte)0);
+		dest.writeByte(this.isInvitedAsSpeaker ? (byte)1 : (byte)0);
+		dest.writeByte(this.isNew ? (byte)1 : (byte)0);
 		dest.writeString(this.timeJoinedAsSpeaker);
 		dest.writeString(this.firstName);
 	}
