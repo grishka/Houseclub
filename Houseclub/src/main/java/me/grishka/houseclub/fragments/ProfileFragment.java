@@ -1,9 +1,11 @@
 package me.grishka.houseclub.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -17,13 +19,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.text.DateFormat;
 
+import androidx.annotation.NonNull;
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.Callback;
 import me.grishka.appkit.api.ErrorResponse;
@@ -34,14 +34,12 @@ import me.grishka.houseclub.R;
 import me.grishka.houseclub.VoiceService;
 import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseSession;
-import me.grishka.houseclub.api.methods.Follow;
-import me.grishka.houseclub.api.methods.GetProfile;
-import me.grishka.houseclub.api.methods.Unfollow;
-import me.grishka.houseclub.api.methods.UpdateBio;
+import me.grishka.houseclub.api.methods.*;
 import me.grishka.houseclub.api.model.FullUser;
 
 public class ProfileFragment extends LoaderFragment{
 
+	private static final int IMAGE_PICKER = 1337;
 	private FullUser user;
 
 	private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram;
@@ -49,6 +47,8 @@ public class ProfileFragment extends LoaderFragment{
 	private Button followBtn;
 	private View socialButtons;
 	private boolean self;
+
+	public static int AVATAR_PERMISSION = 1338;
 
 	@Override
 	public void onAttach(Activity activity){
@@ -85,8 +85,32 @@ public class ProfileFragment extends LoaderFragment{
 		v.findViewById(R.id.inviter_btn).setOnClickListener(this::onInviterClick);
 		if(self)
 			bio.setOnClickListener(this::onBioClick);
+		photo.setOnClickListener(this::onAvatarClick);
 
 		return v;
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+		if (requestCode == ProfileFragment.AVATAR_PERMISSION && grantResults[0]== PackageManager.PERMISSION_GRANTED) {
+			choosePhoto();
+		}
+	}
+
+
+	public void choosePhoto() {
+		Intent intent = new Intent();
+		intent.setType("image/jpeg");
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		startActivityForResult(Intent.createChooser(intent, "Select Picture"), IMAGE_PICKER);
+	}
+
+	private void onAvatarClick(View v) {
+		if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
+			choosePhoto();
+		} else {
+			requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ProfileFragment.AVATAR_PERMISSION);
+		}
 	}
 
 	@Override
@@ -294,5 +318,41 @@ public class ProfileFragment extends LoaderFragment{
 				})
 				.setNegativeButton(R.string.cancel, null)
 				.show();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (requestCode == ProfileFragment.IMAGE_PICKER) {
+			if (data == null) {
+				return;
+			}
+			Uri u = data.getData();
+			updateAvatar(u);
+		}
+	}
+
+
+	public void setAvatar(Uri uri) {
+		photo.setImageURI(uri);
+	}
+
+	public void updateAvatar(Uri file) {
+		new UpdatePhoto(file)
+				.wrapProgress(getActivity())
+				.setCallback(new SimpleCallback<BaseResponse>(this){
+					@Override
+					public void onSuccess(BaseResponse result){
+						if (!result.success) {
+							Toast.makeText(
+									getActivity().getApplicationContext(),
+									result.errorMessage,
+									Toast.LENGTH_LONG
+							).setGravity(Gravity.CENTER, 0, 0);
+						}
+					}
+				})
+				.exec();
+		setAvatar(file);
 	}
 }
