@@ -2,6 +2,8 @@ Unofficial Clubhouse app for Android forked and rewritten to Kotlin. Inspired by
 
 <img alt="Kotlin" src="https://img.shields.io/badge/kotlin-%230095D5.svg?&style=for-the-badge&logo=kotlin&logoColor=white"/>
 
+Not to be taken seriously.
+
 # FAQ
 ### What works?
 * Login
