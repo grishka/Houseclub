@@ -84,15 +84,15 @@ class MainActivity : FragmentStackActivity() {
 
     private fun joinChannelFromIntent() {
         val data = intent.data
-        val id = data!!.lastPathSegment!!
+        val id = data?.lastPathSegment.orEmpty()
         GetChannel(id)
             .wrapProgress(this)
-            .setCallback(object : Callback<Channel?> {
-                override fun onSuccess(result: Channel?) {
+            .setCallback(object : Callback<Channel> {
+                override fun onSuccess(result: Channel) {
                     AlertDialog.Builder(this@MainActivity)
                         .setTitle(R.string.join_this_room)
-                        .setMessage(result!!.topic)
-                        .setPositiveButton(R.string.join) { dialogInterface, i -> joinChannel(result) }
+                        .setMessage(result.topic)
+                        .setPositiveButton(R.string.join) { _, _ -> joinChannel(result) }
                         .setNegativeButton(R.string.cancel, null)
                         .show()
                 }

@@ -12,6 +12,4 @@ class ChannelUser(
     var timeJoinedAsSpeaker: String? = null,
     var firstName: String? = null,
     @Transient var isMuted: Boolean = false
-) : User() {
-
-}
+) : User()

@@ -18,17 +18,17 @@ class ContentUriRequestBody(private val uri: Uri) : RequestBody() {
     }
 
     override fun contentType(): MediaType? {
-        return MediaType.get(App.applicationContext!!.contentResolver.getType(uri))
+        return MediaType.get(App.applicationContext.contentResolver.getType(uri))
     }
 
     @Throws(IOException::class)
     override fun writeTo(sink: BufferedSink) {
-        Okio.source(App.applicationContext!!.contentResolver.openInputStream(uri))
+        Okio.source(App.applicationContext.contentResolver.openInputStream(uri))
             .use { source -> sink.writeAll(source) }
     }
 
     init {
-        App.applicationContext!!.contentResolver.query(uri, null, null, null, null).use { cursor ->
+        App.applicationContext.contentResolver.query(uri, null, null, null, null).use { cursor ->
             cursor!!.moveToFirst()
             size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
             fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))

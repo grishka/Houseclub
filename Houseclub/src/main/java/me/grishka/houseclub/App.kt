@@ -14,6 +14,6 @@ class App : Application() {
     }
 
     companion object {
-        @JvmField var applicationContext: Context? = null
+        lateinit var applicationContext: Context
     }
 }

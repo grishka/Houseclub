@@ -12,7 +12,7 @@ import java.lang.reflect.Type
 import java.util.HashMap
 
 abstract class ClubhouseAPIRequest<T>(var method: String, var path: String, var responseClass: Type) : APIRequest<T>() {
-    var queryParams: HashMap<String, String>? = null
+    var queryParams = mutableMapOf<String, String>()
     var requestBody: Any? = null
     var fileToUpload: File? = null
     var contentUriToUpload: Uri? = null

@@ -38,16 +38,6 @@ abstract class UserListFragment : BaseRecyclerFragment<FullUser?>(50) {
         return adapter
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        toolbar.elevation = 0f
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        toolbar.elevation = 0f
-    }
-
     private inner class UserListAdapter : RecyclerView.Adapter<UserViewHolder>(), ImageLoaderRecyclerAdapter {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
             return UserViewHolder()

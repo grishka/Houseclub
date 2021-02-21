@@ -33,8 +33,8 @@ class ClubhouseAPIController private constructor() {
                 val uri = API_URL.buildUpon().appendPath(
                     req.path
                 )
-                if (req.queryParams != null) {
-                    for ((key, value) in req.queryParams!!) {
+                if (req.queryParams.isNotEmpty()) {
+                    for ((key, value) in req.queryParams) {
                         uri.appendQueryParameter(key, value)
                     }
                 }
