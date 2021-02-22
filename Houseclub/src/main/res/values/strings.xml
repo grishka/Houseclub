@@ -54,4 +54,10 @@
 	<string name="save">Save</string>
 	<string name="event_not_started">This event hasn\'t started yet</string>
 	<string name="event_expired">This event has already ended</string>
+
+	<string name="search_people_hint">Find People</string>
+	<string name="search_clubs_hint">Find Clubs</string>
+	<string name="search_btn_cancel">Cancel</string>
+	<string name="search_error_no_users">No users found</string>
+	<string name="search_error_no_clubs">No clubs found</string>
 </resources>
