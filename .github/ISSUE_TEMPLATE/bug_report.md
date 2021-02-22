@@ -7,7 +7,8 @@ assignees: ''
 
 ---
 
-<!-- Please make sure that you understand that this issue is related to the app itself as opposed to the Clubhouse API or third-party components, including the Agora voice SDK. Issues that aren't related to the app will be closed without further consideration. -->
+<!-- IMPORTANT: please make sure that this issue is related to the app itself as opposed to the Clubhouse API or third-party components, including the Agora voice SDK. Issues that aren't related to the app will be closed without further consideration. Do not remove this comment. -->
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
