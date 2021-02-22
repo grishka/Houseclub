@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:paddingLeft="16dp"
-	android:paddingTop="8dp"
-	android:paddingBottom="8dp"
-	android:paddingRight="16dp"
-	android:orientation="horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    android:paddingTop="8dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="8dp">
 
-	<me.grishka.houseclub.views.SquircleImageView
-		android:id="@+id/photo"
-		android:layout_width="48dp"
-		android:layout_height="48dp"
-		android:layout_marginRight="12dp"
-		tools:src="#0f0"/>
+    <me.grishka.houseclub.views.SquircleImageView
+        android:id="@+id/photo"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginRight="12dp"
+        tools:src="#0f0" />
 
-	<LinearLayout
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_weight="1"
-		android:layout_gravity="center_vertical"
-		android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-	<TextView
-		android:id="@+id/name"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:textSize="14dp"
-		android:fontFamily="sans-serif-medium"
-		android:singleLine="true"
-		android:ellipsize="end"
-		tools:text="User Name"/>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:textSize="14dp"
+            tools:text="User Name" />
 
-		<TextView
-			android:id="@+id/bio"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:maxLines="2"
-			android:ellipsize="end"
-			android:textSize="13dp"
-			tools:text="bio"/>
+        <TextView
+            android:id="@+id/bio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="13dp"
+            tools:text="bio" />
 
-	</LinearLayout>
+    </LinearLayout>
 
-	<Button
-		android:id="@+id/follow_btn"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/follow"/>
+    <Button
+        android:id="@+id/follow_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/follow" />
 
 </LinearLayout>
