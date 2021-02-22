@@ -2,6 +2,8 @@ Unofficial Clubhouse app for Android. Inspired by [this](https://github.com/styp
 
 Not to be taken seriously.
 
+**Any issues about audio quality will be closed immediately, so please don't bother posting those.**
+
 # FAQ
 ### What works?
 * Login
