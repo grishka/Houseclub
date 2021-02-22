@@ -323,7 +323,7 @@ public class ProfileFragment extends LoaderFragment{
 
 	private void onBioClick(View v){
 		final EditText edit=new EditText(getActivity());
-		edit.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+		edit.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE | edit.getInputType());
 		edit.setSingleLine(false);
 		edit.setMinLines(3);
 		edit.setMaxLines(6);
