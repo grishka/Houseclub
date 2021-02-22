@@ -284,6 +284,9 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 		raiseBtn.setEnabled(channel.isHandraiseEnabled);
 		raiseBtn.setVisibility(svc.isSelfSpeaker() ? View.GONE : View.VISIBLE);
 		muteBtn.setVisibility(svc.isSelfSpeaker() ? View.VISIBLE : View.GONE);
+		if(svc.isSelfSpeaker()){
+			onUserMuteChanged(Integer.parseInt(ClubhouseSession.userID), svc.isMuted());
+		}
 	}
 
 	@Override
