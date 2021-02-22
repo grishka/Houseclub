@@ -35,5 +35,6 @@
 			</intent-filter>
 		</activity>
 		<service android:name=".VoiceService" />
+		<receiver android:name=".notification.NotificationHandlerBroadcastReceiver" />
 	</application>
 </manifest>

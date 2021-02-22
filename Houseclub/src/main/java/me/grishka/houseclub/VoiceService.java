@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -46,6 +47,7 @@ import me.grishka.houseclub.api.methods.JoinChannel;
 import me.grishka.houseclub.api.methods.LeaveChannel;
 import me.grishka.houseclub.api.model.Channel;
 import me.grishka.houseclub.api.model.ChannelUser;
+import me.grishka.houseclub.notification.NotificationHandlerBroadcastReceiver;
 
 public class VoiceService extends Service{
 
@@ -112,12 +114,22 @@ public class VoiceService extends Service{
 			channel=DataProvider.getChannel(id);
 			updateChannel(channel);
 
+			Intent snoozeIntent = new Intent(this, NotificationHandlerBroadcastReceiver.class);
+			snoozeIntent.setAction(NotificationHandlerBroadcastReceiver.ACTION_LEAVE_ROOM);
+			PendingIntent leaveRoomPendingIntent = PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+			Notification.Action leaveRoomAction = new Notification.Action.Builder(
+					Icon.createWithResource(this, R.drawable.ic_leave),
+					getString(R.string.leave_room),
+					leaveRoomPendingIntent
+			).build();
+
 			NotificationManager nm=getSystemService(NotificationManager.class);
 			Notification.Builder n=new Notification.Builder(this)
 					.setSmallIcon(R.drawable.ic_phone_in_talk)
 					.setContentTitle(getString(R.string.ongoing_call))
 					.setContentText(intent.getStringExtra("topic"))
-					.setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class).putExtra("openCurrentChannel", true), PendingIntent.FLAG_UPDATE_CURRENT));
+					.setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class).putExtra("openCurrentChannel", true), PendingIntent.FLAG_UPDATE_CURRENT))
+					.addAction(leaveRoomAction);
 			if(Build.VERSION.SDK_INT>=26){
 				if(nm.getNotificationChannel("ongoing")==null){
 					NotificationChannel nc=new NotificationChannel("ongoing", "Ongoing calls", NotificationManager.IMPORTANCE_LOW);
@@ -227,6 +239,14 @@ public class VoiceService extends Service{
 		uiHandler.removeCallbacks(pinger);
 		pubnub.unsubscribeAll();
 		pubnub.destroy();
+	}
+
+	public void leaveCurrentChannel(){
+		uiHandler.post(() -> {
+			for(ChannelEventListener l:listeners)
+				l.onChannelEnded();
+		});
+		leaveChannel();
 	}
 
 	public void rejoinChannel(){
