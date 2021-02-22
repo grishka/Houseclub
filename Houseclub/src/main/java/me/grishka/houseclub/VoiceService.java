@@ -170,6 +170,9 @@ public class VoiceService extends Service{
 					case "leave_channel":
 						onUserLeft(msg);
 						break;
+					case "end_channel":
+						onEndChannel(msg);
+						break;
 				}
 			}
 
@@ -377,6 +380,20 @@ public class VoiceService extends Service{
 		});
 	}
 
+	private void onEndChannel(JsonObject msg){
+		String ch=msg.get("channel").getAsString();
+		if(!ch.equals(channel.channel))
+			return;
+		uiHandler.post(new Runnable(){
+			@Override
+			public void run(){
+				for(ChannelEventListener l:listeners)
+					l.onChannelEnded();
+			}
+		});
+		leaveChannel();
+	}
+
 	public interface ChannelEventListener{
 		void onUserMuteChanged(int id, boolean muted);
 		void onUserJoined(ChannelUser user);
@@ -384,6 +401,7 @@ public class VoiceService extends Service{
 		void onCanSpeak(String inviterName, int inviterID);
 		void onChannelUpdated(Channel channel);
 		void onSpeakingUsersChanged(List<Integer> ids);
+		void onChannelEnded();
 	}
 
 	private class RtcEngineEventHandler extends IRtcEngineEventHandler{
