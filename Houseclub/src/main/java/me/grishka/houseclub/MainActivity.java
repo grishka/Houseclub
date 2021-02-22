@@ -9,6 +9,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
+
+import java.util.Date;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -18,6 +22,7 @@ import me.grishka.appkit.api.ErrorResponse;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.CheckWaitlistStatus;
 import me.grishka.houseclub.api.methods.GetChannel;
+import me.grishka.houseclub.api.methods.GetEvent;
 import me.grishka.houseclub.api.methods.JoinChannel;
 import me.grishka.houseclub.api.model.Channel;
 import me.grishka.houseclub.fragments.HomeFragment;
@@ -101,7 +106,36 @@ public class MainActivity extends FragmentStackActivity{
 
 	private void joinChannelFromIntent(){
 		Uri data=getIntent().getData();
-		String id=data.getLastPathSegment();
+		List<String> path=data.getPathSegments();
+		String id=path.get(path.size()-1);
+		if(path.get(0).equals("room")){
+			joinChannelById(id);
+		}else if(path.get(0).equals("event")){
+			new GetEvent(id)
+					.wrapProgress(this)
+					.setCallback(new Callback<GetEvent.Response>(){
+						@Override
+						public void onSuccess(GetEvent.Response result){
+							if(result.event.channel!=null){
+								joinChannelById(result.event.channel);
+							}else{
+								if(result.event.isExpired)
+									Toast.makeText(MainActivity.this, R.string.event_expired, Toast.LENGTH_SHORT).show();
+								else if(result.event.timeStart.after(new Date()))
+									Toast.makeText(MainActivity.this, R.string.event_not_started, Toast.LENGTH_SHORT).show();
+							}
+						}
+
+						@Override
+						public void onError(ErrorResponse error){
+							error.showToast(MainActivity.this);
+						}
+					})
+					.exec();
+		}
+	}
+
+	private void joinChannelById(String id){
 		new GetChannel(id)
 				.wrapProgress(this)
 				.setCallback(new Callback<Channel>(){

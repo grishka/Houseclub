@@ -93,7 +93,6 @@ public class VoiceService extends Service{
 			return;
 		}
 
-		engine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
 		engine.setDefaultAudioRoutetoSpeakerphone(true);
 		engine.enableAudioVolumeIndication(500, 3, false);
 		engine.muteLocalAudioStream(true);
@@ -135,6 +134,7 @@ public class VoiceService extends Service{
 	}
 
 	private void doJoinChannel(){
+		engine.setChannelProfile(isSelfSpeaker ? Constants.CHANNEL_PROFILE_COMMUNICATION : Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
 		engine.joinChannel(channel.token, channel.channel, "", Integer.parseInt(ClubhouseSession.userID));
 		uiHandler.postDelayed(pinger, 30000);
 		for(ChannelEventListener l:listeners)
@@ -229,6 +229,7 @@ public class VoiceService extends Service{
 
 	public void rejoinChannel(){
 		engine.leaveChannel();
+		pubnub.unsubscribeAll();
 		new LeaveChannel(channel.channel)
 				.setCallback(new Callback<BaseResponse>(){
 					@Override
