@@ -63,10 +63,18 @@ public class MainActivity extends FragmentStackActivity{
 								if(!result.isWaitlisted){
 									ClubhouseSession.isWaitlisted=false;
 									ClubhouseSession.write();
-									if(result.isOnboarding)
-										showFragmentClearingBackStack(new RegisterFragment());
-									else
+									if(result.isOnboarding){
+//										showFragmentClearingBackStack(new RegisterFragment());
+										new AlertDialog.Builder(MainActivity.this)
+												.setMessage(R.string.log_in_to_activate)
+												.setPositiveButton(R.string.ok, null)
+												.show();
+										ClubhouseSession.userID=ClubhouseSession.userToken=null;
+										ClubhouseSession.write();
+										showFragmentClearingBackStack(new LoginFragment());
+									}else{
 										showFragmentClearingBackStack(new HomeFragment());
+									}
 //									if(Intent.ACTION_VIEW.equals(getIntent().getAction())){
 //										joinChannelFromIntent();
 //									}

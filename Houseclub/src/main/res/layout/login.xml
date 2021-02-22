@@ -31,6 +31,8 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginStart="8dp"
+				app:ccp_enableHint="false"
+				app:ccp_hidePhoneCode="true"
 				app:ccp_hideNameCode="true" />
 
 			<EditText
@@ -41,7 +43,7 @@
 				android:layout_marginEnd="8dp"
 				android:background="@null"
 				android:hint="@string/phone_number"
-				android:inputType="numberSigned"
+				android:inputType="phone"
 				android:textColorHint="@color/hint" />
 		</LinearLayout>
 
