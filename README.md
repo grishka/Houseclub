@@ -16,6 +16,8 @@ Not to be taken seriously.
 * Following and unfollowing people
 * Followers/following lists
 * Updating your "bio"
+* Uploading a profile picture
+* Changing your name (but the official app says you can only do this once — not sure if there's a limitation on the server side)
 
 The rest isn't implemented. In particular, there are no notifications, and you can't create and moderate rooms. There's probably a hundred bugs in the existing functionality too.
 

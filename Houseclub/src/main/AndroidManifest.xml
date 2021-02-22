@@ -30,8 +30,11 @@
 				<category android:name="android.intent.category.DEFAULT" />
 				<data android:host="ios.joinclubhouse.com" android:pathPrefix="/room/" android:scheme="https"/>
 				<data android:host="ios.joinclubhouse.com" android:pathPrefix="/event/" android:scheme="https"/>
+				<data android:host="www.joinclubhouse.com" android:pathPrefix="/room/" android:scheme="https"/>
+				<data android:host="www.joinclubhouse.com" android:pathPrefix="/event/" android:scheme="https"/>
 			</intent-filter>
 		</activity>
 		<service android:name=".VoiceService" />
+		<receiver android:name=".notification.NotificationHandlerBroadcastReceiver" />
 	</application>
 </manifest>
