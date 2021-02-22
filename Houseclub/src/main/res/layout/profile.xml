@@ -132,6 +132,10 @@
 				tools:text="instagram"/>
 
 		</LinearLayout>
+		<WebView
+			android:id="@+id/webView"
+			android:layout_width="match_parent"
+			android:layout_height="240dp"/>
 
 		<LinearLayout
 			android:id="@+id/inviter_btn"
@@ -155,7 +159,6 @@
 				tools:text="Joined 1/2/3\nNominated by whomever"/>
 
 		</LinearLayout>
-
 	</LinearLayout>
 
 </ScrollView>

@@ -31,9 +31,9 @@ public class ClubhouseAPIController{
 
 	private static final Uri API_URL=Uri.parse("https://www.clubhouseapi.com/api");
 //	private static final Uri API_URL=Uri.parse("http://192.168.0.51:8080/");
-	private static final String API_BUILD_ID="304";
-	private static final String API_BUILD_VERSION="0.1.28";
-	private static final String API_UA="clubhouse/"+API_BUILD_ID+" (iPhone; iOS 13.5.1; Scale/3.00)";
+	public static final String API_BUILD_ID="304";
+	public static final String API_BUILD_VERSION="0.1.28";
+	public static final String API_UA="clubhouse/"+API_BUILD_ID+" (iPhone; iOS 13.5.1; Scale/3.00)";
 
 	public static final String PUBNUB_PUB_KEY = "pub-c-6878d382-5ae6-4494-9099-f930f938868b";
 	public static final String PUBNUB_SUB_KEY = "sub-c-a4abea84-9ca3-11ea-8e71-f2b83ac9263d";

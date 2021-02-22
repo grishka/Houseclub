@@ -18,12 +18,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.util.HashMap;
 
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.Callback;
@@ -31,14 +36,17 @@ import me.grishka.appkit.api.ErrorResponse;
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.fragments.LoaderFragment;
 import me.grishka.appkit.imageloader.ViewImageLoader;
+import me.grishka.houseclub.BuildConfig;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.VoiceService;
 import me.grishka.houseclub.api.BaseResponse;
+import me.grishka.houseclub.api.ClubhouseAPIController;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.Follow;
 import me.grishka.houseclub.api.methods.GetProfile;
 import me.grishka.houseclub.api.methods.Unfollow;
 import me.grishka.houseclub.api.methods.UpdateBio;
+import me.grishka.houseclub.api.methods.UpdateInstagram;
 import me.grishka.houseclub.api.methods.UpdatePhoto;
 import me.grishka.houseclub.api.methods.UpdateName;
 import me.grishka.houseclub.api.model.FullUser;
@@ -53,6 +61,7 @@ public class ProfileFragment extends LoaderFragment{
 	private ImageView photo, inviterPhoto;
 	private Button followBtn;
 	private View socialButtons;
+	private WebView webView;
 	private boolean self;
 
 	@Override
@@ -81,6 +90,7 @@ public class ProfileFragment extends LoaderFragment{
 		twitter=v.findViewById(R.id.twitter);
 		instagram=v.findViewById(R.id.instagram);
 		socialButtons=v.findViewById(R.id.social);
+		webView=v.findViewById(R.id.webView);
 
 		followBtn.setOnClickListener(this::onFollowClick);
 		instagram.setOnClickListener(this::onInstagramClick);
@@ -93,6 +103,9 @@ public class ProfileFragment extends LoaderFragment{
 			photo.setOnClickListener(this::onPhotoClick);
 			name.setOnClickListener(this::onNameClick);
 		}
+
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
 		return v;
 	}
@@ -127,16 +140,18 @@ public class ProfileFragment extends LoaderFragment{
 						else
 							followBtn.setText(user.isFollowed() ? R.string.following : R.string.follow);
 
-						if(user.twitter==null && user.instagram==null){
+						if(!self && user.twitter==null && user.instagram==null){
 							socialButtons.setVisibility(View.GONE);
 						}else{
 							socialButtons.setVisibility(View.VISIBLE);
 							twitter.setVisibility(user.twitter==null ? View.GONE : View.VISIBLE);
-							instagram.setVisibility(user.instagram==null ? View.GONE : View.VISIBLE);
+							instagram.setVisibility(user.instagram==null && !self ? View.GONE : View.VISIBLE);
 							if(user.twitter!=null)
 								twitter.setText(user.twitter);
 							if(user.instagram!=null)
 								instagram.setText(user.instagram);
+							if(self && user.instagram==null)
+								instagram.setText(R.string.add_instagram);
 						}
 
 						String joined=getString(R.string.joined_date, DateFormat.getDateInstance().format(user.timeCreated));
@@ -258,7 +273,64 @@ public class ProfileFragment extends LoaderFragment{
 	}
 
 	private void onInstagramClick(View v){
+		if (self){
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put("CH-AppBuild", ClubhouseAPIController.API_BUILD_ID);
+			headers.put("CH-AppVersion", ClubhouseAPIController.API_BUILD_VERSION);
+			headers.put("User-Agent", ClubhouseAPIController.API_UA);
+
+			headers.put("CH-DeviceId", ClubhouseSession.deviceID);
+			headers.put("Authorization", "Token "+ClubhouseSession.userToken);
+			headers.put("CH-UserID", ClubhouseSession.userID);
+
+			webView.setWebViewClient(new WebViewClient() {
+				@Override
+				public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+					Boolean redirect = checkRedirect(request.getUrl().toString());
+					view.loadUrl(request.getUrl().toString());
+					return redirect;
+				}
+
+				public boolean shouldOverrideUrlLoading(WebView view, String url){
+					Boolean redirect = checkRedirect(url);
+					view.loadUrl(url);
+					return redirect;
+				}
+			});
+			webView.loadUrl(
+					"https://www.instagram.com/oauth/authorize?client_id="+
+							BuildConfig.INSTAGRAM_APP_ID +
+							"&redirect_uri=https://www.clubhouseapi.com/api/update_instagram_username" +
+							"&scope=user_profile" +
+							"&response_type=code",
+					headers
+			);
+		} else
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/"+user.instagram)));
+	}
+
+	private Boolean checkRedirect(String url){
+		if (url.startsWith("https://www.clubhouseapi.com/api/update_instagram_username")) {
+
+			new UpdateInstagram(url.substring("https://www.clubhouseapi.com/api/update_instagram_username?code=".length()-1, url.length()-2)) // last2 chars is #_ by docs https://developers.facebook.com/docs/instagram-basic-display-api/getting-started
+					.wrapProgress(getActivity())
+					.setCallback(new Callback<BaseResponse>(){
+						@Override
+						public void onSuccess(BaseResponse result){
+							user.notificationType=0;
+							instagram.setText("instagram linked");
+						}
+
+						@Override
+						public void onError(ErrorResponse error){
+							error.showToast(getActivity());
+						}
+					})
+					.exec();
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	private void onTwitterClick(View v){
