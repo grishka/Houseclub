@@ -2,7 +2,7 @@ package me.grishka.houseclub.api.model;
 
 import java.util.Date;
 
-public class FullUser extends User{
+public class FullUser extends User {
 	public String dsplayname, bio, twitter, instagram;
 	public int numFollowers, numFollowing;
 	public boolean followsMe, isBlockedByNetwork;
@@ -13,7 +13,7 @@ public class FullUser extends User{
 	// other values = ?
 	public int notificationType;
 
-	public boolean isFollowed(){
-		return notificationType==2;
+	public boolean isFollowed() {
+		return notificationType == 2;
 	}
 }

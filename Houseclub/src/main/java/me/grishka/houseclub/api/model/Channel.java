@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-public class Channel implements Parcelable{
+public class Channel implements Parcelable {
 	/*
 	* "channels":[
 {
@@ -82,12 +82,12 @@ public class Channel implements Parcelable{
 
 
 	@Override
-	public int describeContents(){
+	public int describeContents() {
 		return 0;
 	}
 
 	@Override
-	public void writeToParcel(Parcel dest, int flags){
+	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(this.creatorUserProfileId);
 		dest.writeInt(this.channelId);
 		dest.writeString(this.channel);
@@ -108,59 +108,59 @@ public class Channel implements Parcelable{
 		dest.writeInt(this.pubnubHeartbeatInterval);
 	}
 
-	public void readFromParcel(Parcel source){
-		this.creatorUserProfileId=source.readInt();
-		this.channelId=source.readInt();
-		this.channel=source.readString();
-		this.topic=source.readString();
-		this.isPrivate=source.readByte()!=0;
-		this.isSocialMode=source.readByte()!=0;
-		this.url=source.readString();
-		this.numOther=source.readInt();
-		this.hasBlockedSpeakers=source.readByte()!=0;
-		this.isExploreChannel=source.readByte()!=0;
-		this.numSpeakers=source.readInt();
-		this.numAll=source.readInt();
-		this.users=source.createTypedArrayList(ChannelUser.CREATOR);
-		this.token=source.readString();
-		this.isHandraiseEnabled=source.readByte()!=0;
-		this.pubnubToken=source.readString();
-		this.pubnubHeartbeatValue=source.readInt();
-		this.pubnubHeartbeatInterval=source.readInt();
+	public void readFromParcel(Parcel source) {
+		this.creatorUserProfileId = source.readInt();
+		this.channelId = source.readInt();
+		this.channel = source.readString();
+		this.topic = source.readString();
+		this.isPrivate = source.readByte() != 0;
+		this.isSocialMode = source.readByte() != 0;
+		this.url = source.readString();
+		this.numOther = source.readInt();
+		this.hasBlockedSpeakers = source.readByte() != 0;
+		this.isExploreChannel = source.readByte() != 0;
+		this.numSpeakers = source.readInt();
+		this.numAll = source.readInt();
+		this.users = source.createTypedArrayList(ChannelUser.CREATOR);
+		this.token = source.readString();
+		this.isHandraiseEnabled = source.readByte() != 0;
+		this.pubnubToken = source.readString();
+		this.pubnubHeartbeatValue = source.readInt();
+		this.pubnubHeartbeatInterval = source.readInt();
 	}
 
-	public Channel(){
+	public Channel() {
 	}
 
-	protected Channel(Parcel in){
-		this.creatorUserProfileId=in.readInt();
-		this.channelId=in.readInt();
-		this.channel=in.readString();
-		this.topic=in.readString();
-		this.isPrivate=in.readByte()!=0;
-		this.isSocialMode=in.readByte()!=0;
-		this.url=in.readString();
-		this.numOther=in.readInt();
-		this.hasBlockedSpeakers=in.readByte()!=0;
-		this.isExploreChannel=in.readByte()!=0;
-		this.numSpeakers=in.readInt();
-		this.numAll=in.readInt();
-		this.users=in.createTypedArrayList(ChannelUser.CREATOR);
-		this.token=in.readString();
-		this.isHandraiseEnabled=in.readByte()!=0;
-		this.pubnubToken=in.readString();
-		this.pubnubHeartbeatValue=in.readInt();
-		this.pubnubHeartbeatInterval=in.readInt();
+	protected Channel(Parcel in) {
+		this.creatorUserProfileId = in.readInt();
+		this.channelId = in.readInt();
+		this.channel = in.readString();
+		this.topic = in.readString();
+		this.isPrivate = in.readByte() != 0;
+		this.isSocialMode = in.readByte() != 0;
+		this.url = in.readString();
+		this.numOther = in.readInt();
+		this.hasBlockedSpeakers = in.readByte() != 0;
+		this.isExploreChannel = in.readByte() != 0;
+		this.numSpeakers = in.readInt();
+		this.numAll = in.readInt();
+		this.users = in.createTypedArrayList(ChannelUser.CREATOR);
+		this.token = in.readString();
+		this.isHandraiseEnabled = in.readByte() != 0;
+		this.pubnubToken = in.readString();
+		this.pubnubHeartbeatValue = in.readInt();
+		this.pubnubHeartbeatInterval = in.readInt();
 	}
 
-	public static final Creator<Channel> CREATOR=new Creator<Channel>(){
+	public static final Creator<Channel> CREATOR = new Creator<Channel>() {
 		@Override
-		public Channel createFromParcel(Parcel source){
+		public Channel createFromParcel(Parcel source) {
 			return new Channel(source);
 		}
 
 		@Override
-		public Channel[] newArray(int size){
+		public Channel[] newArray(int size) {
 			return new Channel[size];
 		}
 	};
