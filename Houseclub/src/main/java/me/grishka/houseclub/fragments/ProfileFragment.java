@@ -287,11 +287,7 @@ public class ProfileFragment extends LoaderFragment{
 
 	private void onNameClick(View v) {
 		final EditText edit = new EditText(getActivity());
-		edit.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-		edit.setSingleLine(false);
-		edit.setMinLines(3);
-		edit.setMaxLines(6);
-		edit.setGravity(Gravity.TOP);
+		edit.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
 		edit.setText(user.name);
 		new AlertDialog.Builder(getActivity())
 				.setTitle(R.string.update_name)
