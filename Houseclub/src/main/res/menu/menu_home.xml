@@ -9,12 +9,6 @@
         tools:ignore="AlwaysShowAction" />
 
     <item
-        android:id="@+id/homeMenuSearchClubs"
-        android:icon="@drawable/ic_search_clubs"
-        android:showAsAction="always"
-        android:title="" />
-
-    <item
         android:id="@+id/homeMenuProfile"
         android:icon="@drawable/ic_baseline_person_24"
         android:showAsAction="always"

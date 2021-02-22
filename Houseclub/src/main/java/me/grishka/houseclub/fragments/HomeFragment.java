@@ -122,10 +122,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 	    	args.putInt(BaseSearchFragment.KEY_SEARCH_TYPE, BaseSearchFragment.SearchType.PEOPLE.ordinal());
 	    	Nav.go(getActivity(), SearchPeopleFragment.class, args);
             return true;
-        } else if (item.getItemId() == R.id.homeMenuSearchClubs) {
-//			Nav.go(getActivity(), SearchPeopleFragment.class, null);
-//			return true;
-		}
+        }
 		return false;
 	}
 
