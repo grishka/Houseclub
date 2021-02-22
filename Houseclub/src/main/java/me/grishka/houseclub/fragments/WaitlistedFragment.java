@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import me.grishka.appkit.Nav;
-import me.grishka.appkit.fragments.ToolbarFragment;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.api.ClubhouseSession;
 

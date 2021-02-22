@@ -1,6 +1,5 @@
 package me.grishka.houseclub.api.methods;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 
 import me.grishka.houseclub.api.BaseResponse;

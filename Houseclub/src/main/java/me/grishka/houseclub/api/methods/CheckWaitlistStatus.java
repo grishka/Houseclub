@@ -1,6 +1,5 @@
 package me.grishka.houseclub.api.methods;
 
-import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseAPIRequest;
 
 public class CheckWaitlistStatus extends ClubhouseAPIRequest<CheckWaitlistStatus.Response>{

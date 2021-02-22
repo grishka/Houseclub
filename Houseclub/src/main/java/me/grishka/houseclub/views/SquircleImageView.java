@@ -1,18 +1,13 @@
 package me.grishka.houseclub.views;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Outline;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
-import me.grishka.appkit.utils.V;
 
 public class SquircleImageView extends ImageView{
 

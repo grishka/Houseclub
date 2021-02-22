@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.houseclub.R;
-import me.grishka.houseclub.api.methods.GetFollowers;
 import me.grishka.houseclub.api.methods.GetFollowing;
 
 public class FollowingFragment extends UserListFragment{

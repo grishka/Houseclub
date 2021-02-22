@@ -2,8 +2,6 @@ package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.telecom.Call;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,8 @@ import android.widget.Toast;
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.Callback;
 import me.grishka.appkit.api.ErrorResponse;
-import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.api.BaseResponse;
-import me.grishka.houseclub.api.ClubhouseSession;
-import me.grishka.houseclub.api.methods.CompletePhoneNumberAuth;
-import me.grishka.houseclub.api.methods.ResendPhoneNumberAuth;
-import me.grishka.houseclub.api.methods.StartPhoneNumberAuth;
 import me.grishka.houseclub.api.methods.UpdateName;
 import me.grishka.houseclub.api.methods.UpdateUsername;
 
