@@ -1,0 +1,16 @@
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  auto_close_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Automatically close issues that don't follow the issue template
+        uses: roots/issue-closer@v1.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-close-message: "@${issue.user.login}, this issue is being automatically closed because it does not follow the issue template."
+          issue-pattern: ".*please make sure that this issue is related to the app itself.*"

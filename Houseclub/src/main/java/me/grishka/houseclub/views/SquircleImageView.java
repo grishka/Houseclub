@@ -49,6 +49,7 @@ public class SquircleImageView extends ImageView{
 	}
 
 	private void init(){
+		setScaleType(ScaleType.CENTER_CROP);
 		setOutlineProvider(squircleOutline);
 		setClipToOutline(true);
 	}
