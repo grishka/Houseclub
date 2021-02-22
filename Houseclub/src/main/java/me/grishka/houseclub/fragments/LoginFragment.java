@@ -3,6 +3,9 @@ package me.grishka.houseclub.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.LocaleList;
+import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +17,17 @@ import android.widget.Toast;
 
 import com.rilixtech.widget.countrycodepicker.CountryCodePicker;
 
+import io.michaelrocks.libphonenumber.android.NumberParseException;
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
+import io.michaelrocks.libphonenumber.android.Phonenumber;
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.ErrorResponse;
 import me.grishka.appkit.api.SimpleCallback;
+import me.grishka.appkit.fragments.ToolbarFragment;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseSession;
+import me.grishka.houseclub.api.methods.CheckForUpdate;
 import me.grishka.houseclub.api.methods.CompletePhoneNumberAuth;
 import me.grishka.houseclub.api.methods.ResendPhoneNumberAuth;
 import me.grishka.houseclub.api.methods.StartPhoneNumberAuth;
@@ -31,6 +39,7 @@ public class LoginFragment extends BaseToolbarFragment{
 	private CountryCodePicker countryCodePicker;
 	private LinearLayout resendCodeLayout;
 	private boolean sentCode=false;
+	private PhoneNumberUtil phoneNumberUtil;
 
 	@Override
 	public void onAttach(Activity activity){
@@ -42,6 +51,7 @@ public class LoginFragment extends BaseToolbarFragment{
 	public View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		View view=inflater.inflate(R.layout.login, container, false);
 
+		phoneNumberUtil=PhoneNumberUtil.createInstance(getActivity());
 		phoneInput=view.findViewById(R.id.phone_input);
 		codeInput=view.findViewById(R.id.code_input);
 		resendBtn=view.findViewById(R.id.resend_code);
@@ -52,15 +62,36 @@ public class LoginFragment extends BaseToolbarFragment{
 		codeInput.setVisibility(View.GONE);
 		resendCodeLayout.setVisibility(View.GONE);
 
+		countryCodePicker.registerPhoneNumberTextView(phoneInput);
 		nextBtn.setOnClickListener(this::onNextClick);
 		resendBtn.setOnClickListener(this::onResendClick);
+		phoneInput.addTextChangedListener(new TextWatcher(){
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2){
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2){
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable){
+				try{
+					Phonenumber.PhoneNumber number=phoneNumberUtil.parse(phoneInput.getText().toString(), countryCodePicker.getSelectedCountryNameCode());
+					String country=phoneNumberUtil.getRegionCodeForNumber(number);
+					if(country!=null)
+						countryCodePicker.setCountryForNameCode(country);
+				}catch(NumberParseException igonre){}
+			}
+		});
 
 		return view;
 	}
 
 	private String getCleanPhoneNumber(){
-		String number=countryCodePicker.getFullNumber()+phoneInput.getText().toString();
-		return '+'+number;
+		return countryCodePicker.getNumber();
 	}
 
 	private void onNextClick(View v){

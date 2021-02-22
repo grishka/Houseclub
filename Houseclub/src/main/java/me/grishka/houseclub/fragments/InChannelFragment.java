@@ -285,6 +285,9 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 		raiseBtn.setEnabled(channel.isHandraiseEnabled);
 		raiseBtn.setVisibility(svc.isSelfSpeaker() ? View.GONE : View.VISIBLE);
 		muteBtn.setVisibility(svc.isSelfSpeaker() ? View.VISIBLE : View.GONE);
+		if(svc.isSelfSpeaker()){
+			onUserMuteChanged(Integer.parseInt(ClubhouseSession.userID), svc.isMuted());
+		}
 	}
 
 	@Override
@@ -300,6 +303,11 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 			}
 			i++;
 		}
+	}
+
+	@Override
+	public void onChannelEnded(){
+		Nav.finish(this);
 	}
 
 	private class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> implements ImageLoaderRecyclerAdapter{
