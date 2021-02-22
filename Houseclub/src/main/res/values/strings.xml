@@ -51,6 +51,7 @@
 	<string name="joined_date">Joined %s</string>
 	<string name="invited_by">Nominated by %s</string>
 	<string name="update_bio">Update bio</string>
+	<string name="update_name">Update name</string>
 	<string name="save">Save</string>
 	<string name="event_not_started">This event hasn\'t started yet</string>
 	<string name="event_expired">This event has already ended</string>
