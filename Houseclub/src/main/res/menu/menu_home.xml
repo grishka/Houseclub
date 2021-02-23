@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/homeMenuSearchPeople"
+        android:icon="@drawable/ic_search_people"
+        android:showAsAction="always"
+        android:title=""
+        tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/homeMenuProfile"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:showAsAction="always"
+        android:title="" />
+</menu>
