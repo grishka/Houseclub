@@ -4,7 +4,7 @@ android {
 	compileSdkVersion 30
 	buildToolsVersion "30.0.3"
 	defaultConfig {
-		applicationId "me.grishka.houseclub"
+		applicationId "ru.turbominer.houseclub"
 		minSdkVersion 24
 		targetSdkVersion 30
 		versionCode 8

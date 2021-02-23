@@ -149,57 +149,8 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			return true;
 		} else if(item.getItemId() == R.id.homeMenuInvite) {
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-			builder.setTitle("Send invite");
-			final LinearLayout view = new LinearLayout(getContext());
-			view.setOrientation(LinearLayout.VERTICAL);
-
-			final EditText name = new EditText(getContext());
-			name.setInputType(InputType.TYPE_CLASS_TEXT);
-			name.setText(R.string.invite_default_name);
-			name.setHint("name");
-			view.addView(name);
-
-			final EditText phone = new EditText(getContext());
-			phone.setInputType(InputType.TYPE_CLASS_TEXT);
-			phone.setHint("phone #");
-			view.addView(phone);
-
-			builder.setView(view);
-
-			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					String m_phone = phone.getText().toString();
-					String m_name = name.getText().toString();
-
-					new InviteToApp(m_name, m_phone, "hi friend")
-							.wrapProgress(getActivity())
-							.setCallback(new Callback<BaseResponse>(){
-								@Override
-								public void onSuccess(BaseResponse result){
-									Toast.makeText(getContext(), result.toString(), Toast.LENGTH_SHORT).show();
-								}
-
-								@Override
-								public void onError(ErrorResponse error){
-									error.showToast(getActivity());
-								}
-							})
-							.exec();
-
-
-				}
-			});
-			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
-					Toast.makeText(getContext(), "cancel", Toast.LENGTH_SHORT).show();
-				}
-			});
-
-			builder.show();
+			Bundle args = new Bundle();
+			Nav.go(getActivity(), InviteListFragment.class, args);
 
 		}
 		return false;

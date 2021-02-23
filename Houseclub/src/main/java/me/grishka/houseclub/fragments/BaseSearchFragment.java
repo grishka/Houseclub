@@ -16,6 +16,7 @@ abstract class BaseSearchFragment extends LoaderFragment {
 
     public static final String KEY_SEARCH_TYPE = "key_search_type";
     private static final long DELAY = 200;
+    protected static int min_query = 2;
 
     private RecyclerView recyclerView;
     private TextView errorTextView;
@@ -105,14 +106,14 @@ abstract class BaseSearchFragment extends LoaderFragment {
         }
     }
 
-    private void onQueryChanged(String query) {
+    protected void onQueryChanged(String query) {
         long currentTimeStamp = System.currentTimeMillis();
         if (currentTimeStamp - timestamp < DELAY) {
             timestamp = currentTimeStamp;
             return;
         }
 
-        if (query == null || query.length() <= 2) {
+        if (query == null || query.length() <= min_query) {
             timestamp = currentTimeStamp;
             return;
         }
