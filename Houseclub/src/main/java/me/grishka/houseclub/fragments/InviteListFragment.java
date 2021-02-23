@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,8 +107,9 @@ public class InviteListFragment extends SearchListFragment {
         int i =0;
         for (Contact contact : contacts) {
 
+            Pattern pattern = Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE);
             if (query.equals("") || (
-                    Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE).matcher(contact.name + contact.phone).find())) {
+                    pattern.matcher(contact.name + contact.phone).find())) {
 
                 FullUser user = new FullUser();
                 user.name = contact.name;
@@ -194,7 +196,8 @@ public class InviteListFragment extends SearchListFragment {
                 else
                     searchContacts("");
 
-
+                if(searchQuery != null)
+                    Log.d("tag", searchQuery);
 
 
             }
