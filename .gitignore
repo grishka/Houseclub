@@ -15,6 +15,9 @@
 .cxx
 /Houseclub/release
 /Houseclub/build
+.github/workflows
+gradle/wrapper
 *.jks
 *.gradle
 *.md
+*.bat
