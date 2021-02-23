@@ -195,10 +195,7 @@ public class InviteListFragment extends SearchListFragment {
                     searchContacts(searchQuery);
                 else
                     searchContacts("");
-
-                if(searchQuery != null)
-                    Log.d("tag", searchQuery);
-
+                
 
             }
         };
