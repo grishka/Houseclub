@@ -1,28 +1,21 @@
 package me.grishka.houseclub.fragments;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,10 +30,8 @@ import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.Callback;
 import me.grishka.appkit.api.ErrorResponse;
 import me.grishka.appkit.api.SimpleCallback;
-import me.grishka.appkit.fragments.BaseRecyclerFragment;
 import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
 import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
-import me.grishka.appkit.imageloader.ViewImageLoader;
 import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.views.UsableRecyclerView;
 import me.grishka.houseclub.R;
@@ -49,33 +40,25 @@ import me.grishka.houseclub.api.methods.InviteToApp;
 import me.grishka.houseclub.api.methods.SearchPeople;
 import me.grishka.houseclub.api.model.FullUser;
 import me.grishka.houseclub.api.model.InviteUser;
-import me.grishka.houseclub.api.model.SearchUser;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-public class InviteListFragment extends BaseSearchFragment {
+public class InviteListFragment extends SearchListFragment {
+
+    private InviteListAdapter adapter;
 
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    private InviteListRecyclerAdapter adapter;
-
     public InviteListFragment() {
-        min_query = 0;
+        min_query_lenght = 0;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected <VH extends RecyclerView.ViewHolder> RecyclerView.Adapter<VH> getRecyclerAdapter() {
-        if (adapter == null) {
-            adapter = new InviteListFragment.InviteListRecyclerAdapter();
+    protected RecyclerView.Adapter getAdapter(){
+        if(adapter==null){
+            adapter=new InviteListAdapter();
         }
-        return (RecyclerView.Adapter<VH>) adapter;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        readContacts();
+        return adapter;
     }
 
     @Override
@@ -97,17 +80,17 @@ public class InviteListFragment extends BaseSearchFragment {
         return false;
     }
 
-    private void readContacts() {
+    private void readContacts(String query) {
         if (!askContactsPermission()) {
             return;
         } else {
-            getContactList("");
+            getContactList(query);
         }
     }
 
     private void getContactList(String query) {
 
-        List<InviteUser> users = new ArrayList<>();
+        List<FullUser> users = new ArrayList<>();
         int count = 0, limit = 10;
 
         ContentResolver cr = getContext().getContentResolver();
@@ -123,96 +106,141 @@ public class InviteListFragment extends BaseSearchFragment {
                 String name = cur.getString(cur.getColumnIndex(
                         ContactsContract.Contacts.DISPLAY_NAME));
 
-                    if (cur.getInt(cur.getColumnIndex(
-                            ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                        Cursor pCur = cr.query(
-                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                                null,
-                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                                new String[]{id}, null);
-                        while (pCur.moveToNext()) {
-                            String phoneNo = pCur.getString(pCur.getColumnIndex(
-                                    ContactsContract.CommonDataKinds.Phone.NUMBER));
+                if (cur.getInt(cur.getColumnIndex(
+                        ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                    Cursor pCur = cr.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            new String[]{id}, null);
+                    while (pCur.moveToNext()) {
+                        String phoneNo = pCur.getString(pCur.getColumnIndex(
+                                ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                            if(query.equals("") || (
-                                    Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE).matcher(name).find() ||
-                                    Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE).matcher(phoneNo).find())) {
+                        if (query.equals("") || (
+                                Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE).matcher(name).find() ||
+                                        Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE).matcher(phoneNo).find())) {
 
-                                InviteUser u = new InviteUser();
-                                u.name = name;
-                                u.phone = phoneNo;
-                                users.add(u);
+                            FullUser u = new FullUser();
+                            u.name = name;
+                            u.bio = phoneNo;
+                            users.add(u);
 
-                                count++;
-                                if (count > limit) {
-                                    pCur.moveToLast();
-                                    cur.moveToLast();
-                                }
-
+                            count++;
+                            if (count > limit) {
+                                pCur.moveToLast();
+                                cur.moveToLast();
                             }
+
                         }
-                        pCur.close();
                     }
+                    pCur.close();
+                }
 
 
             }
         }
-        if(cur!=null){
+        if (cur != null) {
             cur.close();
         }
 
 
-        dataLoaded();
-        if (adapter != null && users != null && !users.isEmpty()) {
-            onUsersFound();
-            adapter.updateUsers(users);
-        } else {
-            onUsersNotFound();
-        }
+        data.clear();
+        onDataLoaded(users, false);
 
     }
 
 
     @Override
-    protected void doLoadData() {
-        String query = searchQuery;
-        if (query == null) {
-            return;
-        }
-        if (currentRequest != null) {
-            currentRequest.cancel();
-        }
-        getContactList(query);
+    protected void doLoadData(int offset, int count) {
+
+    if(searchQuery != null)
+        readContacts(searchQuery);
+    else
+        readContacts("");
+
+
+
     }
 
-    @Override
-    public void onRefresh() {
-    }
 
-    private class InviteListRecyclerAdapter extends RecyclerView.Adapter<InviteListFragment.InviteListRecyclerAdapter.UserViewHolder> {
 
-        private final List<InviteUser> userList = new ArrayList<>();
+
+
+    private class InviteListAdapter extends RecyclerView.Adapter<IviteViewHolder> implements ImageLoaderRecyclerAdapter {
 
         @NonNull
         @Override
-        public InviteListFragment.InviteListRecyclerAdapter.UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_user, parent, false);
-            return new InviteListFragment.InviteListRecyclerAdapter.UserViewHolder(view);
+        public IviteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+            return new IviteViewHolder();
         }
 
         @Override
-        public void onBindViewHolder(@NonNull InviteListFragment.InviteListRecyclerAdapter.UserViewHolder holder, int position) {
-            InviteUser user = userList.get(position);
-            holder.itemView.setOnClickListener(v -> {
+        public void onBindViewHolder(@NonNull IviteViewHolder holder, int position){
+            holder.bind(data.get(position));
+        }
+
+        @Override
+        public int getItemCount(){
+            return data.size();
+        }
+
+        @Override
+        public int getImageCountForItem(int position){
+            return data.get(position).photoUrl!=null ? 1 : 0;
+        }
+
+        @Override
+        public String getImageURL(int position, int image){
+            return data.get(position).photoUrl;
+        }
+    }
+
+    private class IviteViewHolder extends BindableViewHolder<FullUser> implements ImageLoaderViewHolder, UsableRecyclerView.Clickable{
+
+        public TextView name, bio;
+        public Button followBtn;
+        public ImageView photo;
+        private Drawable placeholder=new ColorDrawable(0xFF808080);
+
+        public IviteViewHolder(){
+            super(getActivity(), R.layout.user_list_row);
+
+            name=findViewById(R.id.name);
+            bio=findViewById(R.id.bio);
+            followBtn=findViewById(R.id.follow_btn);
+            photo=findViewById(R.id.photo);
+        }
+
+        @Override
+        public void onBind(FullUser item){
+            name.setText(item.name);
+            bio.setText(item.bio);
+            followBtn.setVisibility(View.GONE);
+            photo.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void setImage(int index, Bitmap bitmap){
+            photo.setImageBitmap(bitmap);
+        }
+
+        @Override
+        public void clearImage(int index){
+            photo.setImageDrawable(placeholder);
+        }
+
+        @Override
+        public void onClick(){
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 			builder.setTitle(R.string.invite_dialog_title);
-			builder.setMessage(getString(R.string.invite_dialog_text, user.name, user.phone));
+			builder.setMessage(getString(R.string.invite_dialog_text, item.name, item.bio));
 
 			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					new InviteToApp(user.name, user.phone, "")
+					new InviteToApp(item.name, item.bio, "")
 							.wrapProgress(getActivity())
 
 							.setCallback(new Callback<BaseResponse>(){
@@ -234,48 +262,12 @@ public class InviteListFragment extends BaseSearchFragment {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.cancel();
-					Toast.makeText(getContext(), "cancel", Toast.LENGTH_SHORT).show();
 				}
 			});
 
 			builder.show();
-
-
-            });
-            holder.bind(user);
-        }
-
-        @Override
-        public int getItemCount() {
-            return userList.size();
-        }
-
-        public void updateUsers(List<InviteUser> users) {
-            userList.clear();
-            userList.addAll(users);
-            notifyDataSetChanged();
-        }
-
-        private class UserViewHolder extends RecyclerView.ViewHolder {
-            private final TextView userNameView, userBioView;
-
-            UserViewHolder(View view) {
-                super(view);
-
-                userNameView = view.findViewById(R.id.tvUsername);
-                userBioView = view.findViewById(R.id.tvUserBio);
-
-            }
-
-            void bind(InviteUser user) {
-                userNameView.setText(user.name);
-                userBioView.setText(user.phone);
-
-            }
         }
     }
-
-
 
 
 

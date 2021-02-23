@@ -1,10 +1,6 @@
 package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
@@ -12,31 +8,20 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import me.grishka.appkit.Nav;
-import me.grishka.appkit.api.Callback;
-import me.grishka.appkit.api.ErrorResponse;
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.fragments.BaseRecyclerFragment;
 import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
@@ -45,13 +30,8 @@ import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.utils.V;
 import me.grishka.houseclub.MainActivity;
 import me.grishka.houseclub.R;
-import me.grishka.houseclub.VoiceService;
-import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.GetChannels;
-import me.grishka.houseclub.api.methods.InviteToApp;
-import me.grishka.houseclub.api.methods.UpdateName;
-import me.grishka.houseclub.api.methods.UpdateUsername;
 import me.grishka.houseclub.api.model.Channel;
 
 public class HomeFragment extends BaseRecyclerFragment<Channel>{
@@ -139,8 +119,9 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			return true;
 		} else if (item.getItemId() == R.id.homeMenuSearchPeople) {
 			Bundle args = new Bundle();
-			args.putInt(BaseSearchFragment.KEY_SEARCH_TYPE, BaseSearchFragment.SearchType.PEOPLE.ordinal());
-			Nav.go(getActivity(), SearchPeopleFragment.class, args);
+			//args.putInt(BaseSearchFragment.KEY_SEARCH_TYPE, BaseSearchFragment.SearchType.PEOPLE.ordinal());
+			//Nav.go(getActivity(), SearchPeopleFragment.class, args);
+			Nav.go(getActivity(), SearchListFragment.class, args);
 			return true;
 		} else if (item.getItemId() == R.id.homeMenuNotifications) {
 			Bundle args = new Bundle();

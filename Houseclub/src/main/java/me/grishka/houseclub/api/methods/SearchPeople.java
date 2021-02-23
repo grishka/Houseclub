@@ -3,7 +3,7 @@ package me.grishka.houseclub.api.methods;
 import java.util.List;
 
 import me.grishka.houseclub.api.ClubhouseAPIRequest;
-import me.grishka.houseclub.api.model.SearchUser;
+import me.grishka.houseclub.api.model.FullUser;
 
 public class SearchPeople extends ClubhouseAPIRequest<SearchPeople.Resp> {
 
@@ -24,6 +24,7 @@ public class SearchPeople extends ClubhouseAPIRequest<SearchPeople.Resp> {
     }
 
     public static class Resp {
-        public List<SearchUser> users;
+        public List<FullUser> users;
+        public int count;
     }
 }
