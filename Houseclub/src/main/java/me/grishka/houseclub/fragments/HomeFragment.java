@@ -24,6 +24,7 @@ import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,57 +90,6 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState){
 		super.onViewCreated(view, savedInstanceState);
-
-		Button inv_btn = new Button(getContext());
-		inv_btn.setText("invite");
-		inv_btn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-				builder.setTitle("phone #:");
-				final EditText input = new EditText(getContext());
-				input.setInputType(InputType.TYPE_CLASS_TEXT);
-				builder.setView(input);
-
-				builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						String m_Text = input.getText().toString();
-
-						new InviteToApp("Сергей", m_Text, "hi friend")
-								.wrapProgress(getActivity())
-								.setCallback(new Callback<BaseResponse>(){
-									@Override
-									public void onSuccess(BaseResponse result){
-										Toast.makeText(getContext(), result.toString(), Toast.LENGTH_SHORT).show();
-									}
-
-									@Override
-									public void onError(ErrorResponse error){
-										error.showToast(getActivity());
-									}
-								})
-								.exec();
-
-
-					}
-				});
-				builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-						Toast.makeText(getContext(), "cancel", Toast.LENGTH_SHORT).show();
-					}
-				});
-
-				builder.show();
-
-
-			}
-		});
-		getToolbar().addView(inv_btn);
-
 		list.addItemDecoration(new RecyclerView.ItemDecoration(){
 			@Override
 			public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state){
@@ -192,6 +142,65 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			args.putInt(BaseSearchFragment.KEY_SEARCH_TYPE, BaseSearchFragment.SearchType.PEOPLE.ordinal());
 			Nav.go(getActivity(), SearchPeopleFragment.class, args);
 			return true;
+		} else if (item.getItemId() == R.id.homeMenuNotifications) {
+			Bundle args = new Bundle();
+			args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
+			Nav.go(getActivity(), NotificationListFragment.class, args);
+			return true;
+		} else if(item.getItemId() == R.id.homeMenuInvite) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+			builder.setTitle("Send invite");
+			final LinearLayout view = new LinearLayout(getContext());
+			view.setOrientation(LinearLayout.VERTICAL);
+
+			final EditText name = new EditText(getContext());
+			name.setInputType(InputType.TYPE_CLASS_TEXT);
+			name.setText(R.string.invite_default_name);
+			name.setHint("name");
+			view.addView(name);
+
+			final EditText phone = new EditText(getContext());
+			phone.setInputType(InputType.TYPE_CLASS_TEXT);
+			phone.setHint("phone #");
+			view.addView(phone);
+
+			builder.setView(view);
+
+			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String m_phone = phone.getText().toString();
+					String m_name = name.getText().toString();
+
+					new InviteToApp(m_name, m_phone, "hi friend")
+							.wrapProgress(getActivity())
+							.setCallback(new Callback<BaseResponse>(){
+								@Override
+								public void onSuccess(BaseResponse result){
+									Toast.makeText(getContext(), result.toString(), Toast.LENGTH_SHORT).show();
+								}
+
+								@Override
+								public void onError(ErrorResponse error){
+									error.showToast(getActivity());
+								}
+							})
+							.exec();
+
+
+				}
+			});
+			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+					Toast.makeText(getContext(), "cancel", Toast.LENGTH_SHORT).show();
+				}
+			});
+
+			builder.show();
+
 		}
 		return false;
 	}
