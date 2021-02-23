@@ -53,7 +53,7 @@
     <string name="confirm_unfollow">Вы уверены, что желаете отписаться от <b>%s</b>?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="joined_date">Присоедилися %s</string>
+    <string name="joined_date">Присоединился %s</string>
     <string name="invited_by">Приглашен пользователем %s</string>
     <string name="update_bio">Обновить информацию о себе</string>
     <string name="save">Сохранить</string>
