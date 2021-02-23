@@ -69,7 +69,13 @@
 	<string name="invite_dialog_text">Invite %s (%s) to Clubhouse</string>
 	<string name="invite_ok">Invite sent successfully</string>
 	<string name="invite_err">Unexpected error: %s</string>
-	
+
+	<string name="contact_invites">You have %d invites</string>
+	<string name="contact_in_app">In Clubhouse: %s</string>
+	<string name="contact_is_invited">Is invited: %s</string>
+	<string name="contact_num_friends">%d friends on Clubhouse</string>
+	<string name="contact_separator" translatable="false">,&#160;</string>
+
 	<string name="button_positive">Ok</string>
 	<string name="button_negative">Cancel</string>
 </resources>

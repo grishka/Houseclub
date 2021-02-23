@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class Contact {
 	public String name, phone_number;
+	public boolean in_app, is_invited;
+	public int num_friends;
 
 	public Contact(){
 	}
