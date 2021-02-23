@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -38,19 +40,26 @@ import me.grishka.houseclub.R;
 import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.methods.InviteToApp;
 import me.grishka.houseclub.api.methods.SearchPeople;
+import me.grishka.houseclub.api.model.Contact;
 import me.grishka.houseclub.api.model.FullUser;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 public class InviteListFragment extends SearchListFragment {
 
-    private InviteListAdapter adapter;
+    private List<Contact> contacts = null;
 
     private static final int REQUEST_READ_CONTACTS = 0;
+
+    private static final int limit = 50;
 
     public InviteListFragment() {
         min_query_lenght = 0;
     }
+
+    private InviteListAdapter adapter;
+
+
 
     @Override
     protected RecyclerView.Adapter getAdapter(){
@@ -65,7 +74,7 @@ public class InviteListFragment extends SearchListFragment {
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getContactList("");
+                getContactList();
             }
         }
     }
@@ -79,25 +88,60 @@ public class InviteListFragment extends SearchListFragment {
         return false;
     }
 
-    private void readContacts(String query) {
+    private void readContacts() {
         if (!askContactsPermission()) {
             return;
         } else {
-            getContactList(query);
+            getContactList();
         }
     }
 
-    private void getContactList(String query) {
+
+    private void searchContacts(String query) {
 
         List<FullUser> users = new ArrayList<>();
-        int count = 0, limit = 10;
+
+        users.clear();
+
+        int i =0;
+        for (Contact contact : contacts) {
+
+            if (query.equals("") || (
+                    Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE).matcher(contact.name + contact.phone).find())) {
+
+                FullUser user = new FullUser();
+                user.name = contact.name;
+                user.bio = contact.phone;
+                users.add(user);
+
+                i++;
+                if(i > limit) break;
+            }
+
+        }
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                data.clear();
+                onDataLoaded(users, false);
+            }
+        });
+
+
+
+    }
+
+    private List<Contact> getContactList() {
+
+        List<Contact> m_contacts = new ArrayList<>();
 
         ContentResolver cr = getContext().getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
 
         if ((cur != null ? cur.getCount() : 0) > 0) {
-            while (cur != null && cur.moveToNext()) {
+            while (cur.moveToNext()) {
 
                 String id = cur.getString(
                         cur.getColumnIndex(ContactsContract.Contacts._ID));
@@ -116,22 +160,8 @@ public class InviteListFragment extends SearchListFragment {
                         String phoneNo = pCur.getString(pCur.getColumnIndex(
                                 ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                        if (query.equals("") || (
-                                Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE).matcher(name).find() ||
-                                        Pattern.compile(Pattern.quote(query), Pattern.CASE_INSENSITIVE).matcher(phoneNo).find())) {
+                        m_contacts.add(new Contact(name, phoneNo));
 
-                            FullUser u = new FullUser();
-                            u.name = name;
-                            u.bio = phoneNo;
-                            users.add(u);
-
-                            count++;
-                            if (count > limit) {
-                                pCur.moveToLast();
-                                cur.moveToLast();
-                            }
-
-                        }
                     }
                     pCur.close();
                 }
@@ -143,9 +173,7 @@ public class InviteListFragment extends SearchListFragment {
             cur.close();
         }
 
-
-        data.clear();
-        onDataLoaded(users, false);
+        return m_contacts;
 
     }
 
@@ -153,12 +181,26 @@ public class InviteListFragment extends SearchListFragment {
     @Override
     protected void doLoadData(int offset, int count) {
 
-    if(searchQuery != null)
-        readContacts(searchQuery);
-    else
-        readContacts("");
+        showProgress();
+
+        Runnable r = new Runnable() {
+            public void run() {
+
+                if(contacts == null)
+                    contacts = getContactList();
+
+                if(searchQuery != null)
+                    searchContacts(searchQuery);
+                else
+                    searchContacts("");
 
 
+
+
+            }
+        };
+
+        new Thread(r).start();
 
     }
 
@@ -236,7 +278,7 @@ public class InviteListFragment extends SearchListFragment {
 			builder.setTitle(R.string.invite_dialog_title);
 			builder.setMessage(getString(R.string.invite_dialog_text, item.name, item.bio));
 
-			builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(R.string.button_positive, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					new InviteToApp(item.name, item.bio, "")
@@ -257,7 +299,7 @@ public class InviteListFragment extends SearchListFragment {
 							.exec();
 				}
 			});
-			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			builder.setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.cancel();
