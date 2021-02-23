@@ -69,4 +69,7 @@
 	<string name="invite_dialog_text">Invite %s (%s) to Clubhouse</string>
 	<string name="invite_ok">Invite sent successfully</string>
 	<string name="invite_err">Unexpected error: %s</string>
+	
+	<string name="button_positive">Ok</string>
+	<string name="button_negative">Cancel</string>
 </resources>
