@@ -15,3 +15,4 @@
 /Houseclub/release
 /Houseclub/build
 *.jks
+*.gradle
