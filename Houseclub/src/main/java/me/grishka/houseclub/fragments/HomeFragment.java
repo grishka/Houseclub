@@ -125,8 +125,6 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			return true;
 		} else if (item.getItemId() == R.id.homeMenuSearchPeople) {
 			Bundle args = new Bundle();
-			//args.putInt(BaseSearchFragment.KEY_SEARCH_TYPE, BaseSearchFragment.SearchType.PEOPLE.ordinal());
-			//Nav.go(getActivity(), SearchPeopleFragment.class, args);
 			Nav.go(getActivity(), SearchListFragment.class, args);
 			return true;
 		} else if (item.getItemId() == R.id.homeMenuNotifications) {
@@ -135,12 +133,11 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			Nav.go(getActivity(), NotificationListFragment.class, args);
 			return true;
 		} else if(item.getItemId() == R.id.homeMenuInvite) {
-
 			Bundle args = new Bundle();
 			Nav.go(getActivity(), InviteListFragment.class, args);
-
+			return true;
 		}
-		return false;
+		return super.onOptionsItemSelected(item);
 	}
 
 	private class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> implements ImageLoaderRecyclerAdapter{
