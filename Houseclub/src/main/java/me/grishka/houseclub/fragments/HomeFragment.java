@@ -271,7 +271,6 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 			itemView.setOutlineProvider(roundedCornersOutline);
 			itemView.setClipToOutline(true);
-			itemView.setElevation(V.dp(2));
 			itemView.setOnClickListener(this);
 		}
 
