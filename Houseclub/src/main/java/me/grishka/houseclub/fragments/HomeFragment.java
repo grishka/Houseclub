@@ -131,16 +131,18 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 		public void onChannelEnded() {
 			hideReturnBar();
 		}
+
+		@Override
+		public void onSelfLeft() {
+			hideReturnBar();
+		}
+
 	};
 
     private void hideReturnBar() {
-        try {
-            if (returnView != null) {
-                returnView.setVisibility(View.GONE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		if (returnView != null) {
+    		returnView.setVisibility(View.GONE);
+    	}
     }
 
     private void checkReturnBar() {
