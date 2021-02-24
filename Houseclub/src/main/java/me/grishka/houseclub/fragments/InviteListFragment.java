@@ -325,7 +325,7 @@ public class InviteListFragment extends SearchListFragment {
 
 								@Override
 								public void onError(ErrorResponse error){
-                                    Toast.makeText(getContext(), getString(R.string.invite_err, ""), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.invite_err, Toast.LENGTH_SHORT).show();
                                     error.showToast(getContext());
 								}
 							})
