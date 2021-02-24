@@ -17,7 +17,7 @@ public class InviteToApp extends ClubhouseAPIRequest<BaseResponse> {
         public String message;
 
         public Body(String name, String phone_number, String message){
-            this.name=name;
+	this.name=name;
             this.phone_number=phone_number;
             this.message=message;
         }
