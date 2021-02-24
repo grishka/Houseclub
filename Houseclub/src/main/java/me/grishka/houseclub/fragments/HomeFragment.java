@@ -87,18 +87,18 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 		getToolbar().setElevation(0);
 
 		// add Return to "channel" bar to bottom of toolbar
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View returnBar = inflater.inflate(R.layout.return_row_bar, null);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		LayoutInflater inflater = LayoutInflater.from(getActivity());
+		View returnBar = inflater.inflate(R.layout.return_row_bar, null);
+		ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
 		((ViewGroup) getView()).addView(returnBar, 1, layoutParams);
 		returnBar.setOnClickListener((it) -> {
-            Channel channel = DataProvider.getCachedChannel();
-            if (channel != null)
-                ((MainActivity) getActivity()).joinChannel(channel);
+			Channel channel = DataProvider.getCachedChannel();
+			if (channel != null)
+				((MainActivity) getActivity()).joinChannel(channel);
 		});
 		returnView = getView().findViewById(R.id.return_container);
-        VoiceService.addListener(channelEventListener);
+		VoiceService.addListener(channelEventListener);
 	}
 
 	private final VoiceService.ChannelEventListener channelEventListener = new VoiceService.ChannelEventListener() {
@@ -152,13 +152,13 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
                 if (channel != null) {
                     TextView title = returnView.findViewById(R.id.return_title);
                     if (title != null) {
-			String channelNameShortened;
-			if (channel.topic == null) channelNameShortened = "the channel";
-			else {
-				channelNameShortened = channel.topic.substring(0, Math.min(channel.topic.length(), 16));
-				if (channelNameShortened.length() < channel.topic.length())
-					channelNameShortened += "...";
-			}
+                        String channelNameShortened;
+                        if (channel.topic == null) channelNameShortened = "the channel";
+                        else {
+                            channelNameShortened = channel.topic.substring(0, Math.min(channel.topic.length(), 16));
+                            if (channelNameShortened.length() < channel.topic.length())
+                                channelNameShortened += "...";
+                        }
                         title.setText(getString(R.string.return_to_channel, channelNameShortened));
                     }
                     returnView.setVisibility(View.VISIBLE);
