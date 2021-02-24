@@ -114,7 +114,7 @@ public class NotificationListFragment extends BaseRecyclerFragment<Notification>
 		public TextView name, message, time;
 		public Button followBtn;
 		public ImageView photo;
-		private Drawable placeholder=new ColorDrawable(0xFF808080);
+		private Drawable placeholder=new ColorDrawable(getResources().getColor(R.color.grey));
 
 		public NotificationViewHolder(){
 			super(getActivity(), R.layout.notification_list_row);

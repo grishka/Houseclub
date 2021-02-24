@@ -109,7 +109,7 @@ public class ProfileFragment extends LoaderFragment{
 
 						name.setText(user.name);
 						username.setText('@'+user.username);
-						ColorDrawable d=new ColorDrawable(0xFF808080);
+						ColorDrawable d=new ColorDrawable(getResources().getColor(R.color.grey));
 						if(user.photoUrl!=null)
 							ViewImageLoader.load(photo, d, user.photoUrl);
 						else
@@ -141,7 +141,7 @@ public class ProfileFragment extends LoaderFragment{
 
 						String joined=getString(R.string.joined_date, DateFormat.getDateInstance().format(user.timeCreated));
 						if(user.invitedByUserProfile!=null){
-							ColorDrawable d2=new ColorDrawable(0xFF808080);
+							ColorDrawable d2=new ColorDrawable(getResources().getColor(R.color.grey));
 							joined+="\n"+getString(R.string.invited_by, user.invitedByUserProfile.name);
 							if(user.invitedByUserProfile.photoUrl!=null)
 								ViewImageLoader.load(inviterPhoto, d2, user.invitedByUserProfile.photoUrl);

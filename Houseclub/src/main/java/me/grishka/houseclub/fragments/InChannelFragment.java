@@ -356,7 +356,7 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 		private ImageView photo, muted;
 		private TextView name;
 		private View speakerBorder;
-		private Drawable placeholder=new ColorDrawable(0xFF808080);
+		private Drawable placeholder=new ColorDrawable(getResources().getColor(R.color.grey));
 
 		public UserViewHolder(boolean large){
 			super(getActivity(), R.layout.channel_user_cell, list);
