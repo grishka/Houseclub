@@ -58,4 +58,5 @@
 	<string name="event_expired">This event has already ended</string>
 	<string name="log_in_to_activate">Please log in again to activate your account.</string>
 	<string name="ok">OK</string>
+    <string name="return_to_channel">Return to %1$s</string>
 </resources>
