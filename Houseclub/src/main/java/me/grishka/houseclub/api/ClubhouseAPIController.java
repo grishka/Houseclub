@@ -150,6 +150,12 @@ public class ClubhouseAPIController{
 						if(DEBUG)
 							Log.i(TAG, "Raw response: "+respStr);
 						BaseResponse br=gson.fromJson(respStr, BaseResponse.class);
+
+						String error;
+						if (!br.errorMessage.isEmpty()) error=br.errorMessage;
+						else error="ERROR with code " +resp.code();
+						br.errorMessage = error;
+
 						req.onError(new ClubhouseErrorResponse(br));
 					}
 				}

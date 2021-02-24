@@ -300,7 +300,7 @@ public class ProfileFragment extends LoaderFragment{
 			webView.loadUrl(
 					"https://www.instagram.com/oauth/authorize?client_id="+
 							BuildConfig.INSTAGRAM_APP_ID +
-							"&redirect_uri=https://www.clubhouseapi.com/api/update_instagram_username" +
+							"&redirect_uri=" + UpdateInstagram.REDIRECT_INSTAGRAM_URL +
 							"&scope=user_profile" +
 							"&response_type=code",
 					headers
@@ -310,9 +310,9 @@ public class ProfileFragment extends LoaderFragment{
 	}
 
 	private Boolean checkRedirect(String url){
-		if (url.startsWith("https://www.clubhouseapi.com/api/update_instagram_username")) {
+		if (url.startsWith(UpdateInstagram.REDIRECT_INSTAGRAM_URL)) {
 
-			new UpdateInstagram(url.substring("https://www.clubhouseapi.com/api/update_instagram_username?code=".length()-1, url.length()-2)) // last2 chars is #_ by docs https://developers.facebook.com/docs/instagram-basic-display-api/getting-started
+			new UpdateInstagram(url.substring((UpdateInstagram.REDIRECT_INSTAGRAM_URL+ "?code=").length()-1, url.length()-2)) // last2 chars is #_ by docs https://developers.facebook.com/docs/instagram-basic-display-api/getting-started
 					.wrapProgress(getActivity())
 					.setCallback(new Callback<BaseResponse>(){
 						@Override
