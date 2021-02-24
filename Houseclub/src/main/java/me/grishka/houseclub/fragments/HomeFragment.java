@@ -152,9 +152,13 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
                 if (channel != null) {
                     TextView title = returnView.findViewById(R.id.return_title);
                     if (title != null) {
-                        String channelNameShortened = channel.topic.substring(0, Math.min(channel.topic.length(), 16));
-                        if (channelNameShortened.length() < channel.topic.length())
-                            channelNameShortened += "...";
+			String channelNameShortened;
+			if (channel.topic == null) channelNameShortened = "the channel";
+			else {
+				channelNameShortened = channel.topic.substring(0, Math.min(channel.topic.length(), 16));
+				if (channelNameShortened.length() < channel.topic.length())
+					channelNameShortened += "...";
+			}
                         title.setText(getString(R.string.return_to_channel, channelNameShortened));
                     }
                     returnView.setVisibility(View.VISIBLE);
