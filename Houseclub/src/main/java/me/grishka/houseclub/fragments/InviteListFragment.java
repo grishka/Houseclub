@@ -311,7 +311,7 @@ public class InviteListFragment extends SearchListFragment {
 			builder.setTitle(R.string.invite_dialog_title);
 			builder.setMessage(getString(R.string.invite_dialog_text, item.name, item.dsplayname));
 
-			builder.setPositiveButton(R.string.button_positive, new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					new InviteToApp(item.name, item.dsplayname, "")
@@ -332,7 +332,7 @@ public class InviteListFragment extends SearchListFragment {
 							.exec();
 				}
 			});
-			builder.setNegativeButton(R.string.button_negative, new DialogInterface.OnClickListener() {
+			builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.cancel();
