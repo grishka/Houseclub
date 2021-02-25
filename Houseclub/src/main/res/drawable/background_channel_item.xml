@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transition xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <ripple android:color="?android:attr/colorControlHighlight">
+            <item>
+                <shape android:id="@android:id/mask">
+                    <solid android:color="#fff" />
+
+                    <padding
+                        android:bottom="0dp"
+                        android:left="8dp"
+                        android:right="8dp"
+                        android:top="0dp" />
+                    <corners
+                        android:radius="25dp" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+    <item>
+        <shape android:id="@android:id/mask">
+            <solid android:color="#aaa" />
+            <padding
+                android:bottom="0dp"
+                android:left="8dp"
+                android:right="8dp"
+                android:top="0dp" />
+            <corners android:radius="25dp" />
+        </shape>
+    </item>
+
+</transition>

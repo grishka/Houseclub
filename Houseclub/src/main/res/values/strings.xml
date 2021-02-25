@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name" translatable="false">Houseclub</string>
+	<string name="app_name">Houseclub</string>
 	<string name="login">Login</string>
 	<string name="phone_number">Phone number</string>
 	<string name="enter_your_phone">Enter your phone #</string>
@@ -75,4 +75,5 @@
 	<string name="contact_is_invited">Is invited: %s</string>
 	<string name="contact_num_friends">%d friends on Clubhouse</string>
 	<string name="contact_separator" translatable="false">,&#160;</string>
+    <string name="return_to_channel">Return to %1$s</string>
 </resources>
