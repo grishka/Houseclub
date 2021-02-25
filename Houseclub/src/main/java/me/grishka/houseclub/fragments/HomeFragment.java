@@ -1,8 +1,6 @@
 package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
@@ -20,7 +18,6 @@ import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,16 +30,20 @@ import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
 import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
 import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.utils.V;
+import me.grishka.houseclub.DataProvider;
 import me.grishka.houseclub.MainActivity;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.VoiceService;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.GetChannels;
 import me.grishka.houseclub.api.model.Channel;
+import me.grishka.houseclub.api.model.ChannelUser;
 
 public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 	private ChannelAdapter adapter;
+	private View returnView;
+
 	private ViewOutlineProvider roundedCornersOutline=new ViewOutlineProvider(){
 		@Override
 		public void getOutline(View view, Outline outline){
@@ -84,7 +85,89 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			}
 		});
 		getToolbar().setElevation(0);
+
+		// add Return to "channel" bar to bottom of toolbar
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View returnBar = inflater.inflate(R.layout.return_row_bar, null);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+		((ViewGroup) getView()).addView(returnBar, 1, layoutParams);
+		returnBar.setOnClickListener((it) -> {
+            Channel channel = DataProvider.getCachedChannel();
+            if (channel != null)
+                ((MainActivity) getActivity()).joinChannel(channel);
+		});
+		returnView = getView().findViewById(R.id.return_container);
+        VoiceService.addListener(channelEventListener);
 	}
+
+	private final VoiceService.ChannelEventListener channelEventListener = new VoiceService.ChannelEventListener() {
+		@Override
+		public void onUserMuteChanged(int id, boolean muted) {
+		}
+
+		@Override
+		public void onUserJoined(ChannelUser user) {
+		}
+
+		@Override
+		public void onUserLeft(int id) {
+		}
+
+		@Override
+		public void onCanSpeak(String inviterName, int inviterID) {
+		}
+
+		@Override
+		public void onChannelUpdated(Channel channel) {
+			checkReturnBar();
+		}
+
+		@Override
+		public void onSpeakingUsersChanged(List<Integer> ids) {
+		}
+
+		@Override
+		public void onChannelEnded() {
+			hideReturnBar();
+		}
+
+		@Override
+		public void onSelfLeft() {
+			hideReturnBar();
+		}
+
+	};
+
+    private void hideReturnBar() {
+		if (returnView != null) {
+    		returnView.setVisibility(View.GONE);
+    	}
+    }
+
+    private void checkReturnBar() {
+        try {
+            Channel channel = DataProvider.getCachedChannel();
+            if (returnView != null) {
+                if (channel != null) {
+                    TextView title = returnView.findViewById(R.id.return_title);
+                    if (title != null) {
+			String channelNameShortened;
+			if (channel.topic == null) channelNameShortened = "the channel";
+			else {
+				channelNameShortened = channel.topic.substring(0, Math.min(channel.topic.length(), 16));
+				if (channelNameShortened.length() < channel.topic.length())
+					channelNameShortened += "...";
+			}
+                        title.setText(getString(R.string.return_to_channel, channelNameShortened));
+                    }
+                    returnView.setVisibility(View.VISIBLE);
+                } else returnView.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig){
@@ -100,7 +183,6 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 		}
 		return adapter;
 	}
-
 	@Override
 	public boolean wantsLightNavigationBar(){
 		return true;
@@ -195,7 +277,6 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 			itemView.setOutlineProvider(roundedCornersOutline);
 			itemView.setClipToOutline(true);
-			itemView.setElevation(V.dp(2));
 			itemView.setOnClickListener(this);
 		}
 
