@@ -40,6 +40,12 @@
 		<item quantity="one">%d following</item>
 		<item quantity="other">%d following</item>
 	</plurals>
+	<plurals name="invites">
+		<item quantity="one">You have %d invite</item>
+		<item quantity="other">You have %d invites</item>
+	</plurals>
+	<string name="invite_button_label">Invite</string>
+	<string name="invite_phone_hint">Enter phone number</string>
 	<string name="follows_you">Follows you</string>
 	<string name="follow">Follow</string>
 	<string name="following">Following</string>
