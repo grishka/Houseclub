@@ -2,13 +2,12 @@ package me.grishka.houseclub.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Outline;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -16,22 +15,8 @@ import me.grishka.appkit.utils.V;
 
 public class SquircleImageView extends ImageView{
 
-	private static final ViewOutlineProvider squircleOutline=new ViewOutlineProvider(){
-		@Override
-		public void getOutline(View view, Outline outline){
-			if(view.getWidth()==0 || view.getHeight()==0)
-				return;
-//			Path path=new Path();
-//			path.moveTo(0, view.getHeight()/2f);
-//			path.cubicTo(0f, 0f, 0f, 0f, view.getWidth()/2f, 0f);
-//			path.cubicTo(view.getWidth(), 0f, view.getWidth(), 0f, view.getWidth(), view.getHeight()/2f);
-//			path.cubicTo(view.getWidth(), view.getHeight(), view.getWidth(), view.getHeight(), view.getWidth()/2f, view.getHeight());
-//			path.cubicTo(0f, view.getHeight(), 0f, view.getHeight(), 0f, view.getHeight()/2f);
-//			path.close();
-//			outline.setConvexPath(path);
-			outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), view.getWidth()*0.42f);
-		}
-	};
+	private Path clipPath, borderPath=new Path();
+	private Paint clipPaint, borderPaint;
 
 	public SquircleImageView(Context context){
 		super(context);
@@ -49,8 +34,44 @@ public class SquircleImageView extends ImageView{
 	}
 
 	private void init(){
+		// Why not clipToOutline? Because clipping isn't supported for arbitrary paths ¯\_(ツ)_/¯
 		setScaleType(ScaleType.CENTER_CROP);
-		setOutlineProvider(squircleOutline);
-		setClipToOutline(true);
+		setLayerType(LAYER_TYPE_HARDWARE, null); // important so that CLEAR xfermode doesn't put a hole through the entire window
+		clipPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
+		clipPaint.setColor(0xFF000000);
+		clipPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+		borderPaint=new Paint(Paint.ANTI_ALIAS_FLAG);
+		borderPaint.setColor(0x20000000);
+	}
+
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh){
+		super.onSizeChanged(w, h, oldw, oldh);
+		clipPath=new Path();
+		clipPath.moveTo(0.0f, 100.0f);
+		clipPath.cubicTo(0.0f, 33.0f, 33.0f, 0.0f, 100.0f, 0.0f);
+		clipPath.cubicTo(167.0f, 0.0f, 200.0f, 33.0f, 200.0f, 100.0f);
+		clipPath.cubicTo(200.0f, 167.0f, 167.0f, 200.0f, 100.0f, 200.0f);
+		clipPath.cubicTo(33.0f, 200.0f, 0.0f, 167.0f, 0.0f, 100.0f);
+		clipPath.close();
+
+		Matrix m=new Matrix();
+		m.setScale(w/200f, h/200f, 0f, 0f);
+		clipPath.transform(m);
+
+		m.setScale((float)(w-V.dp(1))/w, (float)(w-V.dp(1))/h, w/2f, h/2f);
+		clipPath.transform(m, borderPath);
+
+		clipPath.toggleInverseFillType();
+		borderPath.toggleInverseFillType();
+	}
+
+	@Override
+	protected void dispatchDraw(Canvas canvas){
+		super.dispatchDraw(canvas);
+		if(clipPath!=null){
+			canvas.drawPath(borderPath, borderPaint);
+			canvas.drawPath(clipPath, clipPaint);
+		}
 	}
 }

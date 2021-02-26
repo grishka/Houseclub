@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +16,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.fragments.BaseRecyclerFragment;
 import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
@@ -22,15 +27,16 @@ import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
 import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.views.UsableRecyclerView;
 import me.grishka.houseclub.R;
+import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.houseclub.api.ClubhouseSession;
+import me.grishka.houseclub.api.methods.GetNotifications;
 import me.grishka.houseclub.api.model.FullUser;
+import me.grishka.houseclub.api.model.Notification;
 
-public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
+public class NotificationListFragment extends BaseRecyclerFragment<Notification>{
+	private NotificationListAdapter adapter;
 
-	private int selfID=Integer.parseInt(ClubhouseSession.userID);
-	private UserListAdapter adapter;
-
-	public UserListFragment(){
+	public NotificationListFragment(){
 		super(50);
 	}
 
@@ -38,12 +44,13 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
 		loadData();
+		setTitle(R.string.notifications_title);
 	}
 
 	@Override
 	protected RecyclerView.Adapter getAdapter(){
 		if(adapter==null){
-			adapter=new UserListAdapter();
+			adapter=new NotificationListAdapter();
 		}
 		return adapter;
 	}
@@ -60,16 +67,29 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 		getToolbar().setElevation(0);
 	}
 
-	private class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> implements ImageLoaderRecyclerAdapter{
+	@Override
+	protected void doLoadData(int offset, int count){
+		currentRequest=new GetNotifications(getArguments().getInt("id"), 50, offset/50+1)
+				.setCallback(new SimpleCallback<GetNotifications.Response>(this){
+					@Override
+					public void onSuccess(GetNotifications.Response result){
+						currentRequest=null;
+						onDataLoaded(result.notifications, data.size()+preloadedData.size()+result.notifications.size()<result.count);
+					}
+				})
+				.exec();
+	}
+
+	private class NotificationListAdapter extends RecyclerView.Adapter<NotificationViewHolder> implements ImageLoaderRecyclerAdapter{
 
 		@NonNull
 		@Override
-		public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-			return new UserViewHolder();
+		public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+			return new NotificationViewHolder();
 		}
 
 		@Override
-		public void onBindViewHolder(@NonNull UserViewHolder holder, int position){
+		public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position){
 			holder.bind(data.get(position));
 		}
 
@@ -80,49 +100,39 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 
 		@Override
 		public int getImageCountForItem(int position){
-			return data.get(position).photoUrl!=null ? 1 : 0;
+			return data.get(position).userProfile.photoUrl!=null ? 1 : 0;
 		}
 
 		@Override
 		public String getImageURL(int position, int image){
-			return data.get(position).photoUrl;
+			return data.get(position).userProfile.photoUrl;
 		}
 	}
 
-	private class UserViewHolder extends BindableViewHolder<FullUser> implements ImageLoaderViewHolder, UsableRecyclerView.Clickable{
+	private class NotificationViewHolder extends BindableViewHolder<Notification> implements ImageLoaderViewHolder, UsableRecyclerView.Clickable{
 
-		public TextView name, bio;
+		public TextView name, message, time;
 		public Button followBtn;
 		public ImageView photo;
 		private Drawable placeholder=new ColorDrawable(getResources().getColor(R.color.grey));
 
-		public UserViewHolder(){
-			super(getActivity(), R.layout.user_list_row);
+		public NotificationViewHolder(){
+			super(getActivity(), R.layout.notification_list_row);
 
 			name=findViewById(R.id.name);
-			bio=findViewById(R.id.bio);
-			followBtn=findViewById(R.id.follow_btn);
+			message=findViewById(R.id.message);
+			time=findViewById(R.id.time);
 			photo=findViewById(R.id.photo);
 		}
 
 		@Override
-		public void onBind(FullUser item){
-			name.setText(item.name);
-			if(TextUtils.isEmpty(item.bio)){
-				bio.setVisibility(View.GONE);
-			}else{
-				bio.setVisibility(View.VISIBLE);
-				bio.setText(item.bio);
-			}
-			// TODO get_followers/get_following don't return current follow status?
-//			if(item.userId==selfID){
-				followBtn.setVisibility(View.GONE);
-//			}else{
-//				followBtn.setVisibility(View.VISIBLE);
-//				followBtn.setText(item.isFollowed() ? R.string.following : R.string.follow);
-//			}
+		public void onBind(Notification item){
+			itemView.setAlpha(item.inUnread?1F:0.5F);
+			name.setText(item.userProfile.name);
+			message.setText(item.message);
+			time.setText(DateUtils.getRelativeTimeSpanString(item.timeCreated.getTime()));
 
-			if(item.photoUrl!=null)
+			if(item.userProfile.photoUrl!=null)
 				imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
 			else
 				photo.setImageDrawable(placeholder);
@@ -141,7 +151,7 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 		@Override
 		public void onClick(){
 			Bundle args=new Bundle();
-			args.putInt("id", item.userId);
+			args.putInt("id", item.userProfile.userId);
 			Nav.go(getActivity(), ProfileFragment.class, args);
 		}
 	}
