@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -38,11 +41,13 @@ import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.GetChannels;
 import me.grishka.houseclub.api.model.Channel;
 import me.grishka.houseclub.api.model.ChannelUser;
+import me.grishka.houseclub.utils.AndroidUtils;
 
 public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 	private ChannelAdapter adapter;
 	private View returnView;
+	private boolean hasLeft = false;
 
 	private ViewOutlineProvider roundedCornersOutline=new ViewOutlineProvider(){
 		@Override
@@ -85,19 +90,25 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			}
 		});
 		getToolbar().setElevation(0);
-
 		// add Return to "channel" bar to bottom of toolbar
 		LayoutInflater inflater = LayoutInflater.from(getActivity());
-		View returnBar = inflater.inflate(R.layout.return_row_bar, null);
-		ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		returnView = inflater.inflate(R.layout.return_row_bar, null);
+		final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		ViewGroup parent = ((ViewGroup) getView().getParent());
+		parent.addView(returnView, params);
+		returnView.post(() -> {
+			final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) returnView.getLayoutParams();
+			layoutParams.gravity = Gravity.BOTTOM;
+			if (AndroidUtils.hasNavigationBar(getActivity())) {
+				layoutParams.bottomMargin = AndroidUtils.getNavigationBarSize(getContext());
+			}
+		});
 
-		((ViewGroup) getView()).addView(returnBar, 1, layoutParams);
-		returnBar.setOnClickListener((it) -> {
+		returnView.findViewById(R.id.return_container).setOnClickListener((it) -> {
 			Channel channel = DataProvider.getCachedChannel();
 			if (channel != null)
 				((MainActivity) getActivity()).joinChannel(channel);
 		});
-		returnView = getView().findViewById(R.id.return_container);
 		VoiceService.addListener(channelEventListener);
 	}
 
@@ -120,6 +131,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 		@Override
 		public void onChannelUpdated(Channel channel) {
+			hasLeft = false;
 			checkReturnBar();
 		}
 
@@ -134,15 +146,17 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 		@Override
 		public void onSelfLeft() {
+			hasLeft = true;
 			hideReturnBar();
 		}
 
 	};
 
     private void hideReturnBar() {
-		if (returnView != null) {
-    		returnView.setVisibility(View.GONE);
-    	}
+        if (returnView != null) {
+            returnView.setVisibility(View.INVISIBLE);
+        }
+        list.setPadding(list.getPaddingLeft(), list.getPaddingTop(), list.getPaddingRight(), 0);
     }
 
     private void checkReturnBar() {
@@ -152,28 +166,28 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
                 if (channel != null) {
                     TextView title = returnView.findViewById(R.id.return_title);
                     if (title != null) {
-                        String channelNameShortened;
-                        if (channel.topic == null) channelNameShortened = "the channel";
-                        else {
-                            channelNameShortened = channel.topic.substring(0, Math.min(channel.topic.length(), 16));
-                            if (channelNameShortened.length() < channel.topic.length())
-                                channelNameShortened += "...";
-                        }
-                        title.setText(getString(R.string.return_to_channel, channelNameShortened));
+                        String channelName = (channel.topic == null) ? "the channel" : channel.topic;
+                        title.setText(getString(R.string.return_to_channel, channelName));
                     }
                     returnView.setVisibility(View.VISIBLE);
-                } else returnView.setVisibility(View.GONE);
+					list.setPadding(list.getPaddingLeft(), list.getPaddingTop(), list.getPaddingRight(), returnView.getHeight());
+				} else hideReturnBar();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig){
-		super.onConfigurationChanged(newConfig);
-		getToolbar().setElevation(0);
-	}
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        getToolbar().setElevation(0);
+        // return bar with navigation bar will look ugly
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+                && AndroidUtils.hasNavigationBar(getActivity()))
+            hideReturnBar();
+        else if (returnView.getVisibility() == View.INVISIBLE && !hasLeft) checkReturnBar();
+    }
 
 	@Override
 	protected RecyclerView.Adapter getAdapter(){
