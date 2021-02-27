@@ -307,14 +307,16 @@ public class InviteListFragment extends SearchListFragment {
 		@Override
 		public void onClick(){
 
+			String numberOnly= item.dsplayname.replaceAll("[^0-9+]", "");
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 			builder.setTitle(R.string.invite_dialog_title);
-			builder.setMessage(getString(R.string.invite_dialog_text, item.name, item.dsplayname));
+			builder.setMessage(getString(R.string.invite_dialog_text, item.name, numberOnly));
 
 			builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					new InviteToApp(item.name, item.dsplayname, "")
+					new InviteToApp("", numberOnly, "")
 							.wrapProgress(getActivity())
 
 							.setCallback(new Callback<BaseResponse>(){
