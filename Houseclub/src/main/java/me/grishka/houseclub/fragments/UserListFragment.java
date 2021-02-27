@@ -94,7 +94,7 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 		public TextView name, bio;
 		public Button followBtn;
 		public ImageView photo;
-		private Drawable placeholder=new ColorDrawable(0xFF808080);
+		private Drawable placeholder=new ColorDrawable(getResources().getColor(R.color.grey));
 
 		public UserViewHolder(){
 			super(getActivity(), R.layout.user_list_row);
