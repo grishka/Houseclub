@@ -156,6 +156,38 @@
 
 		</LinearLayout>
 
+		<LinearLayout
+			android:id="@+id/invite_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:paddingTop="16dp"
+			android:visibility="gone"
+			tools:visibility="visible">
+
+			<TextView
+				android:id="@+id/num_of_invites"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				tools:text="You have 3 invites" />
+
+			<EditText
+				android:id="@+id/invite_phone_num"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/invite_phone_hint"
+				android:importantForAutofill="no"
+				android:inputType="phone" />
+
+			<Button
+				android:id="@+id/invite_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:text="@string/invite_button_label" />
+
+		</LinearLayout>
+
 	</LinearLayout>
 
 </ScrollView>
