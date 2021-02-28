@@ -225,8 +225,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			topic.setText(item.topic);
 			numMembers.setText(""+item.numAll);
 			numSpeakers.setText(""+item.numSpeakers);
-			speakers.setText(item.users.stream().map(user->user.isSpeaker ? (user.name+" 💬") : user.name)
-					.collect(Collectors.joining("\n")) );
+			speakers.setText(item.users.stream().map(user->user.isSpeaker ? (user.name+" 💬") : user.name).collect(Collectors.joining("\n")) );
 
 			imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
 		}
