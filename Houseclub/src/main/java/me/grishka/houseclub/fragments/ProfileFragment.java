@@ -18,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -99,7 +98,7 @@ public class ProfileFragment extends LoaderFragment{
 		inviteButton = v.findViewById(R.id.invite_button);
 		invites = v.findViewById(R.id.num_of_invites);
 		invitePhoneNum = v.findViewById(R.id.invite_phone_num);
-		webView=v.findViewById(R.id.webView);
+		webView = v.findViewById(R.id.webView);
 
 		followBtn.setOnClickListener(this::onFollowClick);
 		instagram.setOnClickListener(this::onInstagramClick);
@@ -114,6 +113,7 @@ public class ProfileFragment extends LoaderFragment{
 			inviteButton.setOnClickListener(this::onInviteClick);
 		}
 
+		webView.setVisibility(View.GONE);
 		webView.getSettings().setJavaScriptEnabled(true);
 		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
@@ -313,28 +313,57 @@ public class ProfileFragment extends LoaderFragment{
 			headers.put("Authorization", "Token "+ClubhouseSession.userToken);
 			headers.put("CH-UserID", ClubhouseSession.userID);
 
-			webView.setWebViewClient(new WebViewClient() {
-				@Override
-				public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-					Boolean redirect = checkRedirect(request.getUrl().toString());
-					view.loadUrl(request.getUrl().toString());
-					return redirect;
-				}
+			if (user.instagram == null) {
+				webView.setVisibility(View.VISIBLE);
+				webView.setWebViewClient(new WebViewClient() {
+					@Override
+					public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+						Boolean redirect = checkRedirect(request.getUrl().toString());
+						view.loadUrl(request.getUrl().toString());
+						return redirect;
+					}
 
-				public boolean shouldOverrideUrlLoading(WebView view, String url){
-					Boolean redirect = checkRedirect(url);
-					view.loadUrl(url);
-					return redirect;
-				}
-			});
-			webView.loadUrl(
-					"https://www.instagram.com/oauth/authorize?client_id="+
-							BuildConfig.INSTAGRAM_APP_ID +
-							"&redirect_uri=" + UpdateInstagram.REDIRECT_INSTAGRAM_URL +
-							"&scope=user_profile" +
-							"&response_type=code",
-					headers
-			);
+					public boolean shouldOverrideUrlLoading(WebView view, String url) {
+						Boolean redirect = checkRedirect(url);
+						view.loadUrl(url);
+						return redirect;
+					}
+				});
+				webView.loadUrl(
+						"https://www.instagram.com/oauth/authorize?client_id=" +
+								BuildConfig.INSTAGRAM_APP_ID +
+								"&redirect_uri=" + UpdateInstagram.REDIRECT_INSTAGRAM_URL +
+								"&scope=user_profile" +
+								"&response_type=code",
+						headers
+				);
+			} else {
+				new AlertDialog.Builder(getActivity())
+						.setMessage(getString(R.string.confirm_unlink_instagram_title))
+						.setMessage(getString(R.string.confirm_unlink_instagram))
+						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i){
+								new UpdateInstagram(null)
+										.wrapProgress(getActivity())
+										.setCallback(new Callback<BaseResponse>(){
+											@Override
+											public void onSuccess(BaseResponse result){
+												instagram.setText(R.string.add_instagram);
+												webView.setVisibility(View.GONE);
+											}
+
+											@Override
+											public void onError(ErrorResponse error){
+												error.showToast(getActivity());
+											}
+										})
+										.exec();
+							}
+						})
+						.setNegativeButton(R.string.no, null)
+						.show();
+			}
 		} else
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/"+user.instagram)));
 	}
@@ -342,13 +371,16 @@ public class ProfileFragment extends LoaderFragment{
 	private Boolean checkRedirect(String url){
 		if (url.startsWith(UpdateInstagram.REDIRECT_INSTAGRAM_URL)) {
 
-			new UpdateInstagram(url.substring((UpdateInstagram.REDIRECT_INSTAGRAM_URL+ "?code=").length()-1, url.length()-2)) // last2 chars is #_ by docs https://developers.facebook.com/docs/instagram-basic-display-api/getting-started
+			// last2 chars is #_ by docs https://developers.facebook.com/docs/instagram-basic-display-api/getting-started
+			String code = url.substring((UpdateInstagram.REDIRECT_INSTAGRAM_URL+ "?code=").length(), url.length()-2);
+
+			new UpdateInstagram(code)
 					.wrapProgress(getActivity())
 					.setCallback(new Callback<BaseResponse>(){
 						@Override
 						public void onSuccess(BaseResponse result){
-							user.notificationType=0;
-							instagram.setText("instagram linked");
+							instagram.setText(R.string.instagram_linked);
+							webView.setVisibility(View.GONE);
 						}
 
 						@Override
