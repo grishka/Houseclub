@@ -113,14 +113,19 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		menu.add("").setIcon(R.drawable.ic_baseline_person_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0,0,0,"").setIcon(R.drawable.ic_notifications).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0,1,0,"").setIcon(R.drawable.ic_baseline_person_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		Bundle args=new Bundle();
 		args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
-		Nav.go(getActivity(), ProfileFragment.class, args);
+		if(item.getItemId()==0) {
+			Nav.go(getActivity(), NotificationListFragment.class, args);
+		} else if(item.getItemId()==1){
+			Nav.go(getActivity(), ProfileFragment.class, args);
+		}
 		return true;
 	}
 
@@ -177,7 +182,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 		private TextView topic, speakers, numMembers, numSpeakers;
 		private ImageView pic1, pic2;
-		private Drawable placeholder=new ColorDrawable(0xFF808080);
+		private Drawable placeholder=new ColorDrawable(getResources().getColor(R.color.grey));
 
 		public ChannelViewHolder(){
 			super(getActivity(), R.layout.channel_row);
