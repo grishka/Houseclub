@@ -20,7 +20,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="8dp"
-			android:inputType="textPersonName"
+			android:inputType="textPersonName|textCapWords"
 			android:hint="@string/first_name"/>
 
 		<EditText
@@ -28,7 +28,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="8dp"
-			android:inputType="textPersonName"
+			android:inputType="textPersonName|textCapWords"
 			android:hint="@string/last_name"/>
 
 		<EditText
