@@ -5,7 +5,8 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:padding="16dp"
 	android:background="#FFF"
-	android:foreground="?android:selectableItemBackground">
+	android:foreground="?android:selectableItemBackground"
+	>
 
 	<TextView
 		android:id="@+id/topic"

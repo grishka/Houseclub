@@ -1,3 +1,9 @@
+# Fork maintained by mkljczk
+
+Just a fork of Houseclub, I don't really know Java, just merged a few PRs: [#199](https://github.com/grishka/Houseclub/pull/199), [#62](https://github.com/grishka/Houseclub/pull/62), [#200](https://github.com/grishka/Houseclub/pull/200), [#144](https://github.com/grishka/Houseclub/pull/144), [#147](https://github.com/grishka/Houseclub/pull/147) and [#176](https://github.com/grishka/Houseclub/pull/176) in a dirty way and built an apk. Can't do anything about bugs if you encounter anything. If you want to contribute, make a PR to the original repo and I'll grab your code changes.
+
+---
+
 Unofficial Clubhouse app for Android. Inspired by [this](https://github.com/stypr/clubhouse-py).
 
 Not to be taken seriously.
@@ -21,6 +27,7 @@ Not to be taken seriously.
 * Uploading a profile picture
 * Changing your name (but the official app says you can only do this once — not sure if there's a limitation on the server side)
 * Notifications
+* mutual followers, user search, invites, upcoming event list
 
 The rest isn't implemented. In particular you can't create and moderate rooms. There's probably a hundred bugs in the existing functionality too.
 
