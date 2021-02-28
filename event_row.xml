@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:padding="16dp"
+	android:background="#FFF"
+	android:foreground="?android:selectableItemBackground">
+
+
+	<TextView
+		android:id="@+id/event_start_time"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="16dp"
+		android:textColor="#A69E9E"
+		android:textSize="12dp"
+		tools:text="Monday 10:00 AM"/>
+
+	<TextView
+		android:id="@+id/topic"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="20dp"
+		android:layout_marginBottom="16dp"
+		android:fontFamily="sans-serif-medium"
+		tools:text="Event topic"/>
+
+	<me.grishka.houseclub.views.SquircleImageView
+		android:id="@+id/pic1"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_below="@id/topic"
+		tools:src="#0f0"/>
+
+	<me.grishka.houseclub.views.SquircleImageView
+		android:id="@+id/pic2"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_alignLeft="@id/pic1"
+		android:layout_marginLeft="45dp"
+		android:layout_below="@id/topic"
+		tools:src="#00f"/>
+
+
+	<TextView
+		android:id="@+id/hosts"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/pic2"
+		android:layout_marginLeft="16dp"
+		android:layout_below="@id/topic"
+		tools:text="Host list"/>
+
+
+	<TextView
+		android:id="@+id/description"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="40dp"
+		android:layout_marginBottom="16dp"
+		android:fontFamily="sans-serif-medium"
+		android:textFontWeight="300"
+		android:textSize="14dp"
+		android:layout_below="@+id/hosts"
+		tools:text="Event Description "/>
+
+
+
+
+</RelativeLayout>
