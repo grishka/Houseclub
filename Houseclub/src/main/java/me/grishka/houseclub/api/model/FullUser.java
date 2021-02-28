@@ -1,6 +1,7 @@
 package me.grishka.houseclub.api.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class FullUser extends User{
 	public String dsplayname, bio, twitter, instagram;
@@ -8,6 +9,8 @@ public class FullUser extends User{
 	public boolean followsMe, isBlockedByNetwork;
 	public Date timeCreated;
 	public User invitedByUserProfile;
+	public List<FullUser> mutualFollows;
+
 	// null = not following
 	// 2 = following
 	// other values = ?

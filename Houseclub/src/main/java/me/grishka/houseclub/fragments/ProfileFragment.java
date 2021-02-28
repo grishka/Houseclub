@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,7 +25,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
+import java.util.stream.Collectors;
 
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.Callback;
@@ -53,8 +58,8 @@ public class ProfileFragment extends LoaderFragment{
 	private FullUser user;
 
 	private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram,
-			invites;
-	private ImageView photo, inviterPhoto;
+			invites , mutuals , followed_by;
+	private ImageView photo, inviterPhoto , pic1 , pic2 , pic3 ;
 	private Button followBtn, inviteButton;
 	private EditText invitePhoneNum;
 	private View socialButtons, inviteLayout;
@@ -82,6 +87,10 @@ public class ProfileFragment extends LoaderFragment{
 		inviteInfo=v.findViewById(R.id.invite_info);
 		photo=v.findViewById(R.id.photo);
 		inviterPhoto=v.findViewById(R.id.inviter_photo);
+		pic1=v.findViewById(R.id.pic1);
+		pic2=v.findViewById(R.id.pic2);
+		pic3=v.findViewById(R.id.pic3);
+
 		followBtn=v.findViewById(R.id.follow_btn);
 		twitter=v.findViewById(R.id.twitter);
 		instagram=v.findViewById(R.id.instagram);
@@ -89,6 +98,8 @@ public class ProfileFragment extends LoaderFragment{
 		inviteLayout = v.findViewById(R.id.invite_layout);
 		inviteButton = v.findViewById(R.id.invite_button);
 		invites = v.findViewById(R.id.num_of_invites);
+		mutuals = v.findViewById(R.id.mutuals);
+		followed_by = v.findViewById(R.id.followed_by);
 		invitePhoneNum = v.findViewById(R.id.invite_phone_num);
 
 		followBtn.setOnClickListener(this::onFollowClick);
@@ -160,14 +171,91 @@ public class ProfileFragment extends LoaderFragment{
 						}else{
 							inviterPhoto.setVisibility(View.GONE);
 						}
+
+						if(user.mutualFollows.size() > 0){
+
+							followed_by.setText(" Followed by ");
+
+							String usernames = "";
+							for(int i = 0 ; i< user.mutualFollows.size(); i++){
+
+								if(i>0){
+									usernames += ", "+user.mutualFollows.get(i).username;
+								}else{
+									usernames += user.mutualFollows.get(i).username;
+
+								}
+
+								if(i == 0){
+									if(user.mutualFollows.get(i).photoUrl != null){
+										ColorDrawable d2=new ColorDrawable(getResources().getColor(R.color.grey));
+										if(user.mutualFollows.get(i).photoUrl!=null) {
+											pic1.setVisibility(View.VISIBLE);
+											ViewImageLoader.load(pic1, d2, user.mutualFollows.get(i).photoUrl);
+										}else{
+											pic1.setImageDrawable(d2);
+										}
+									}else{
+										pic1.setVisibility(View.GONE);
+									}
+								}
+
+								if(i == 1){
+									if(user.mutualFollows.get(i).photoUrl !=null){
+										ColorDrawable d2=new ColorDrawable(getResources().getColor(R.color.grey));
+										if(user.mutualFollows.get(i).photoUrl!=null) {
+											pic2.setVisibility(View.VISIBLE);
+											ViewImageLoader.load(pic2, d2, user.mutualFollows.get(i).photoUrl);
+										}else{
+											pic2.setImageDrawable(d2);
+										}
+									}else{
+										pic2.setVisibility(View.GONE);
+									}
+								}
+
+								if(i == 2){
+
+									if(user.mutualFollows.size() > 3){
+										usernames += "and " + String.valueOf(user.mutualFollows.size() - 3) + "others";
+									}
+
+									if( user.mutualFollows.get(i).photoUrl !=null){
+										ColorDrawable d2=new ColorDrawable(getResources().getColor(R.color.grey));
+										if(user.mutualFollows.get(i).photoUrl!=null) {
+											pic3.setVisibility(View.VISIBLE);
+											ViewImageLoader.load(pic3, d2, user.mutualFollows.get(i).photoUrl);
+										}else{
+											pic3.setImageDrawable(d2);
+										}
+									}else{
+										pic3.setVisibility(View.GONE);
+									}
+
+								}
+
+							}
+
+							mutuals.setText(usernames);
+
+						}
+
 						inviteInfo.setText(joined);
 
+
+
+
+
+
 						dataLoaded();
+
 					}
 				})
 				.exec();
 		loadInvites();
 	}
+
+
 
 	@Override
 	public void onRefresh(){
