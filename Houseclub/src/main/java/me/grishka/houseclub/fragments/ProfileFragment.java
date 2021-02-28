@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.HashMap;
@@ -44,6 +45,8 @@ import me.grishka.houseclub.api.ClubhouseAPIController;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.Follow;
 import me.grishka.houseclub.api.methods.GetProfile;
+import me.grishka.houseclub.api.methods.InviteToApp;
+import me.grishka.houseclub.api.methods.Me;
 import me.grishka.houseclub.api.methods.Unfollow;
 import me.grishka.houseclub.api.methods.UpdateBio;
 import me.grishka.houseclub.api.methods.UpdateInstagram;
@@ -57,10 +60,12 @@ public class ProfileFragment extends LoaderFragment{
 
 	private FullUser user;
 
-	private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram;
+	private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram,
+			invites;
 	private ImageView photo, inviterPhoto;
-	private Button followBtn;
-	private View socialButtons;
+	private Button followBtn, inviteButton;
+	private EditText invitePhoneNum;
+	private View socialButtons, inviteLayout;
 	private WebView webView;
 	private boolean self;
 
@@ -90,6 +95,10 @@ public class ProfileFragment extends LoaderFragment{
 		twitter=v.findViewById(R.id.twitter);
 		instagram=v.findViewById(R.id.instagram);
 		socialButtons=v.findViewById(R.id.social);
+		inviteLayout = v.findViewById(R.id.invite_layout);
+		inviteButton = v.findViewById(R.id.invite_button);
+		invites = v.findViewById(R.id.num_of_invites);
+		invitePhoneNum = v.findViewById(R.id.invite_phone_num);
 		webView=v.findViewById(R.id.webView);
 
 		followBtn.setOnClickListener(this::onFollowClick);
@@ -102,6 +111,7 @@ public class ProfileFragment extends LoaderFragment{
 			bio.setOnClickListener(this::onBioClick);
 			photo.setOnClickListener(this::onPhotoClick);
 			name.setOnClickListener(this::onNameClick);
+			inviteButton.setOnClickListener(this::onInviteClick);
 		}
 
 		webView.getSettings().setJavaScriptEnabled(true);
@@ -122,7 +132,7 @@ public class ProfileFragment extends LoaderFragment{
 
 						name.setText(user.name);
 						username.setText('@'+user.username);
-						ColorDrawable d=new ColorDrawable(0xFF808080);
+						ColorDrawable d=new ColorDrawable(getResources().getColor(R.color.grey));
 						if(user.photoUrl!=null)
 							ViewImageLoader.load(photo, d, user.photoUrl);
 						else
@@ -156,7 +166,7 @@ public class ProfileFragment extends LoaderFragment{
 
 						String joined=getString(R.string.joined_date, DateFormat.getDateInstance().format(user.timeCreated));
 						if(user.invitedByUserProfile!=null){
-							ColorDrawable d2=new ColorDrawable(0xFF808080);
+							ColorDrawable d2=new ColorDrawable(getResources().getColor(R.color.grey));
 							joined+="\n"+getString(R.string.invited_by, user.invitedByUserProfile.name);
 							if(user.invitedByUserProfile.photoUrl!=null)
 								ViewImageLoader.load(inviterPhoto, d2, user.invitedByUserProfile.photoUrl);
@@ -171,6 +181,7 @@ public class ProfileFragment extends LoaderFragment{
 					}
 				})
 				.exec();
+		loadInvites();
 	}
 
 	@Override
@@ -225,6 +236,25 @@ public class ProfileFragment extends LoaderFragment{
 					})
 					.exec();
 		}
+	}
+
+	private void loadInvites() {
+		new Me().setCallback(new Callback<Me.Response>() {
+			@Override
+			public void onSuccess(Me.Response result) {
+				if (self && result.num_invites > 0) {
+					invites.setText(getResources().getQuantityString(R.plurals.invites, result.num_invites, result.num_invites));
+					inviteLayout.setVisibility(View.VISIBLE);
+				} else {
+					inviteLayout.setVisibility(View.GONE);
+				}
+			}
+
+			@Override
+			public void onError(ErrorResponse error) {
+				inviteLayout.setVisibility(View.GONE);
+			}
+		}).exec();
 	}
 
 	private void onFollowClick(View v){
@@ -391,6 +421,26 @@ public class ProfileFragment extends LoaderFragment{
 				})
 				.setNegativeButton(R.string.cancel, null)
 				.show();
+	}
+
+	private void onInviteClick(View v) {
+		final String numberToInvite = invitePhoneNum.getText().toString();
+		new InviteToApp("", numberToInvite, "")
+				.wrapProgress(getContext())
+				.setCallback(new Callback<BaseResponse>() {
+					@Override
+					public void onSuccess(BaseResponse result) {
+						Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+						loadInvites();
+					}
+
+					@Override
+					public void onError(ErrorResponse error) {
+						Toast.makeText(getContext(), "failed", Toast.LENGTH_SHORT).show();
+						loadInvites();
+					}
+				})
+				.exec();
 	}
 
 	private void onBioClick(View v){

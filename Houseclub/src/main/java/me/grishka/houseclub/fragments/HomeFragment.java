@@ -182,7 +182,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 		private TextView topic, speakers, numMembers, numSpeakers;
 		private ImageView pic1, pic2;
-		private Drawable placeholder=new ColorDrawable(0xFF808080);
+		private Drawable placeholder=new ColorDrawable(getResources().getColor(R.color.grey));
 
 		public ChannelViewHolder(){
 			super(getActivity(), R.layout.channel_row);
