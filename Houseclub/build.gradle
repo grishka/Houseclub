@@ -3,6 +3,10 @@ apply plugin: 'com.android.application'
 android {
 	compileSdkVersion 30
 	buildToolsVersion "30.0.3"
+
+	// SigningConfigs
+	apply from: '../signingConfigs/debug.gradle', to: android
+
 	defaultConfig {
 		applicationId "me.grishka.houseclub"
 		minSdkVersion 24
