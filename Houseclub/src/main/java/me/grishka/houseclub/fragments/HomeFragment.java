@@ -119,6 +119,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 		inflater.inflate(R.menu.menu_home, menu);
 
 
+
 	}
 
 	@Override

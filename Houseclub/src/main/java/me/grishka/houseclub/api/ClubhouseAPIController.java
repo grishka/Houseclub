@@ -31,15 +31,18 @@ public class ClubhouseAPIController{
 
 	private static final Uri API_URL=Uri.parse("https://www.clubhouseapi.com/api");
 //	private static final Uri API_URL=Uri.parse("http://192.168.0.51:8080/");
-	private static final String API_BUILD_ID="304";
-	private static final String API_BUILD_VERSION="0.1.28";
-	private static final String API_UA="clubhouse/"+API_BUILD_ID+" (iPhone; iOS 13.5.1; Scale/3.00)";
+	public static final String API_BUILD_ID="304";
+	public static final String API_BUILD_VERSION="0.1.28";
+	public static final String API_UA="clubhouse/"+API_BUILD_ID+" (iPhone; iOS 13.5.1; Scale/3.00)";
 
 	public static final String PUBNUB_PUB_KEY = "pub-c-6878d382-5ae6-4494-9099-f930f938868b";
 	public static final String PUBNUB_SUB_KEY = "sub-c-a4abea84-9ca3-11ea-8e71-f2b83ac9263d";
 
 	public static final String TWITTER_ID = "NyJhARWVYU1X3qJZtC2154xSI";
 	public static final String TWITTER_SECRET = "ylFImLBFaOE362uwr4jut8S8gXGWh93S1TUKbkfh7jDIPse02o";
+
+	public static final String INSTAGRAM_ID = "1352866981588597";
+	public static final String INSTAGRAM_CALLBACK = "https://www.joinclubhouse.com/callback/instagram";
 
 	public static final String AGORA_KEY = "938de3e8055e42b281bb8c6f69c21f78";
 	public static final String SENTRY_KEY = "5374a416cd2d4009a781b49d1bd9ef44@o325556.ingest.sentry.io/5245095";
@@ -150,6 +153,12 @@ public class ClubhouseAPIController{
 						if(DEBUG)
 							Log.i(TAG, "Raw response: "+respStr);
 						BaseResponse br=gson.fromJson(respStr, BaseResponse.class);
+
+						String error;
+						if (!br.errorMessage.isEmpty()) error=br.errorMessage;
+						else error="ERROR with code " +resp.code();
+						br.errorMessage = error;
+
 						req.onError(new ClubhouseErrorResponse(br));
 					}
 				}

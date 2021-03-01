@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,8 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 	public InChannelFragment(){
 		super(10);
 		setListLayoutId(R.layout.in_channel);
+
+
 	}
 
 	@Override
@@ -154,7 +157,7 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 	}
 
 	private void onRaiseClick(View v){
-		VoiceService svc=VoiceService.getInstance();
+		VoiceService svc = VoiceService.getInstance();
 		if(svc.isHandRaised())
 			svc.unraiseHand();
 		else

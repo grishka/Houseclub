@@ -19,6 +19,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +32,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import me.grishka.appkit.Nav;
@@ -37,9 +41,11 @@ import me.grishka.appkit.api.ErrorResponse;
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.fragments.LoaderFragment;
 import me.grishka.appkit.imageloader.ViewImageLoader;
+import me.grishka.houseclub.BuildConfig;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.VoiceService;
 import me.grishka.houseclub.api.BaseResponse;
+import me.grishka.houseclub.api.ClubhouseAPIController;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.Follow;
 import me.grishka.houseclub.api.methods.GetProfile;
@@ -47,6 +53,7 @@ import me.grishka.houseclub.api.methods.InviteToApp;
 import me.grishka.houseclub.api.methods.Me;
 import me.grishka.houseclub.api.methods.Unfollow;
 import me.grishka.houseclub.api.methods.UpdateBio;
+import me.grishka.houseclub.api.methods.UpdateInstagram;
 import me.grishka.houseclub.api.methods.UpdatePhoto;
 import me.grishka.houseclub.api.methods.UpdateName;
 import me.grishka.houseclub.api.model.FullUser;
@@ -63,6 +70,8 @@ public class ProfileFragment extends LoaderFragment{
 	private Button followBtn, inviteButton;
 	private EditText invitePhoneNum;
 	private View socialButtons, inviteLayout;
+	private WebView webView;
+
 	private boolean self;
 
 	@Override
@@ -94,6 +103,8 @@ public class ProfileFragment extends LoaderFragment{
 		followBtn=v.findViewById(R.id.follow_btn);
 		twitter=v.findViewById(R.id.twitter);
 		instagram=v.findViewById(R.id.instagram);
+		webView = v.findViewById(R.id.webView);
+
 		socialButtons=v.findViewById(R.id.social);
 		inviteLayout = v.findViewById(R.id.invite_layout);
 		inviteButton = v.findViewById(R.id.invite_button);
@@ -114,6 +125,11 @@ public class ProfileFragment extends LoaderFragment{
 			name.setOnClickListener(this::onNameClick);
 			inviteButton.setOnClickListener(this::onInviteClick);
 		}
+
+
+		webView.setVisibility(View.GONE);
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
 		return v;
 	}
@@ -148,16 +164,18 @@ public class ProfileFragment extends LoaderFragment{
 						else
 							followBtn.setText(user.isFollowed() ? R.string.following : R.string.follow);
 
-						if(user.twitter==null && user.instagram==null){
+						if(!self && user.twitter==null && user.instagram==null){
 							socialButtons.setVisibility(View.GONE);
 						}else{
 							socialButtons.setVisibility(View.VISIBLE);
 							twitter.setVisibility(user.twitter==null ? View.GONE : View.VISIBLE);
-							instagram.setVisibility(user.instagram==null ? View.GONE : View.VISIBLE);
+							instagram.setVisibility(user.instagram==null && !self ? View.GONE : View.VISIBLE);
 							if(user.twitter!=null)
 								twitter.setText(user.twitter);
 							if(user.instagram!=null)
 								instagram.setText(user.instagram);
+							if(self && user.instagram==null)
+								instagram.setText(R.string.add_instagram);
 						}
 
 						String joined=getString(R.string.joined_date, DateFormat.getDateInstance().format(user.timeCreated));
@@ -183,7 +201,6 @@ public class ProfileFragment extends LoaderFragment{
 									usernames += ", "+user.mutualFollows.get(i).username;
 								}else{
 									usernames += user.mutualFollows.get(i).username;
-
 								}
 
 								if(i == 0){
@@ -256,7 +273,6 @@ public class ProfileFragment extends LoaderFragment{
 	}
 
 
-
 	@Override
 	public void onRefresh(){
 		loadData();
@@ -273,7 +289,6 @@ public class ProfileFragment extends LoaderFragment{
 		super.onConfigurationChanged(newConfig);
 		getToolbar().setElevation(0);
 	}
-
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
@@ -376,7 +391,96 @@ public class ProfileFragment extends LoaderFragment{
 	}
 
 	private void onInstagramClick(View v){
+		if (self){
+			HashMap<String, String> headers = new HashMap<>();
+			headers.put("CH-AppBuild", ClubhouseAPIController.API_BUILD_ID);
+			headers.put("CH-AppVersion", ClubhouseAPIController.API_BUILD_VERSION);
+			headers.put("User-Agent", ClubhouseAPIController.API_UA);
+
+			headers.put("CH-DeviceId", ClubhouseSession.deviceID);
+			headers.put("Authorization", "Token "+ClubhouseSession.userToken);
+			headers.put("CH-UserID", ClubhouseSession.userID);
+
+			if (user.instagram == null) {
+				webView.setVisibility(View.VISIBLE);
+				webView.setWebViewClient(new WebViewClient() {
+					@Override
+					public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+						Boolean redirect = checkRedirect(request.getUrl().toString());
+						view.loadUrl(request.getUrl().toString());
+						return redirect;
+					}
+
+					public boolean shouldOverrideUrlLoading(WebView view, String url) {
+						Boolean redirect = checkRedirect(url);
+						view.loadUrl(url);
+						return redirect;
+					}
+				});
+				webView.loadUrl(
+						"https://www.instagram.com/oauth/authorize?client_id=" +
+								"1352866981588597" +
+								"&redirect_uri=" + UpdateInstagram.REDIRECT_INSTAGRAM_URL +
+								"&scope=user_profile" +
+								"&response_type=code",
+						headers
+				);
+			} else {
+				new AlertDialog.Builder(getActivity())
+						.setMessage(getString(R.string.confirm_unlink_instagram_title))
+						.setMessage(getString(R.string.confirm_unlink_instagram))
+						.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+							@Override
+							public void onClick(DialogInterface dialogInterface, int i){
+								new UpdateInstagram(null)
+										.wrapProgress(getActivity())
+										.setCallback(new Callback<BaseResponse>(){
+											@Override
+											public void onSuccess(BaseResponse result){
+												instagram.setText(R.string.add_instagram);
+												webView.setVisibility(View.GONE);
+											}
+
+											@Override
+											public void onError(ErrorResponse error){
+												error.showToast(getActivity());
+											}
+										})
+										.exec();
+							}
+						})
+						.setNegativeButton(R.string.no, null)
+						.show();
+			}
+		} else
 		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/"+user.instagram)));
+	}
+
+	private Boolean checkRedirect(String url){
+		if (url.startsWith(UpdateInstagram.REDIRECT_INSTAGRAM_URL)) {
+
+			// last2 chars is #_ by docs https://developers.facebook.com/docs/instagram-basic-display-api/getting-started
+			String code = url.substring((UpdateInstagram.REDIRECT_INSTAGRAM_URL+ "?code=").length(), url.length()-2);
+
+			new UpdateInstagram(code)
+					.wrapProgress(getActivity())
+					.setCallback(new Callback<BaseResponse>(){
+						@Override
+						public void onSuccess(BaseResponse result){
+							instagram.setText(R.string.instagram_linked);
+							webView.setVisibility(View.GONE);
+						}
+
+						@Override
+						public void onError(ErrorResponse error){
+							error.showToast(getActivity());
+						}
+					})
+					.exec();
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	private void onTwitterClick(View v){

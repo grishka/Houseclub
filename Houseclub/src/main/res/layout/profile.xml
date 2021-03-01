@@ -197,11 +197,13 @@
 				tools:text="username "/>
 
 
-
-
-
-
 		</LinearLayout>
+
+		<WebView
+			android:id="@+id/webView"
+			android:layout_width="match_parent"
+			android:visibility="gone"
+			android:layout_height="540dp"/>
 
 		<LinearLayout
 			android:id="@+id/inviter_btn"

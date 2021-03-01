@@ -127,7 +127,7 @@ public class NotificationListFragment extends BaseRecyclerFragment<Notification>
 
 		@Override
 		public void onBind(Notification item){
-			itemView.setAlpha(item.inUnread?1F:0.5F);
+			itemView.setAlpha(item.inUnread?1F:0.7F);
 			name.setText(item.userProfile.name);
 			message.setText(item.message);
 			time.setText(DateUtils.getRelativeTimeSpanString(item.timeCreated.getTime()));
