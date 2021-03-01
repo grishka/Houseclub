@@ -7,7 +7,7 @@ import android.widget.SearchView;
 
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.houseclub.R;
-import me.grishka.houseclub.api.methods.SearchPeople;
+import me.grishka.houseclub.api.methods.SearchUsers;
 
 public class SearchListFragment extends UserListFragment {
 
@@ -88,10 +88,10 @@ public class SearchListFragment extends UserListFragment {
 			currentRequest.cancel();
 		}
 
-		currentRequest = new SearchPeople(searchQuery)
-				.setCallback(new SimpleCallback<SearchPeople.Resp>(this) {
+		currentRequest = new SearchUsers(searchQuery)
+				.setCallback(new SimpleCallback<SearchUsers.Resp>(this) {
 					@Override
-					public void onSuccess(SearchPeople.Resp result) {
+					public void onSuccess(SearchUsers.Resp result) {
 						currentRequest=null;
 						data.clear();
 						onDataLoaded(result.users, false);
