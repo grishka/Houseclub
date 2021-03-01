@@ -57,8 +57,9 @@ public class ProfileFragment extends LoaderFragment{
 			invites, mutualfollowers;
 	private ImageView photo, inviterPhoto;
 
-	private Button followBtn;
-	private View socialButtons;
+	private Button followBtn, inviteButton;
+  private EditText invitePhoneNum;
+	private View socialButtons, inviteLayout;
 	private boolean self, isImageFitToScreen;
 
 
