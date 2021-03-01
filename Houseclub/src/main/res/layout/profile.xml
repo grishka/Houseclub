@@ -88,7 +88,13 @@
 				android:layout_marginLeft="16dp"
 				android:textSize="13dp"
 				tools:text="25 following"/>
-
+			<TextView
+				android:id="@+id/mutualfollowers"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="16dp"
+				android:textSize="13dp"
+				tools:text="25 mutual followers"/>
 		</LinearLayout>
 
 		<TextView
