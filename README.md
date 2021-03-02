@@ -2,6 +2,8 @@ Unofficial Clubhouse app for Android. Inspired by [this](https://github.com/styp
 
 Not to be taken seriously.
 
+**This app is NOT available in Google Play. The only right place to download it is here in the releases section.**
+
 **Any issues about audio quality will be closed immediately, so please don't bother posting those.**
 
 # FAQ
