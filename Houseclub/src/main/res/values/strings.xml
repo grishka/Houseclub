@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">Houseclub</string>
+	<string name="app_name" translatable="false">Houseclub</string>
 	<string name="login">Login</string>
 	<string name="phone_number">Phone number</string>
 	<string name="enter_your_phone">Enter your phone #</string>
@@ -64,4 +64,24 @@
 	<string name="event_expired">This event has already ended</string>
 	<string name="log_in_to_activate">Please log in again to activate your account.</string>
 	<string name="ok">OK</string>
+  <string name="return_to_channel">Return to %1$s</string>
+  <string name="mutual_followers_title">Mutual Followers</string>
+	<string name="search_people_hint">Find people</string>
+	<string name="search_clubs_hint">Find clubs</string>
+	<string name="search_btn_cancel">Cancel</string>
+	<string name="search_error_no_users">No users found</string>
+	<string name="search_error_no_clubs">No clubs found</string>
+	<string name="invite_dialog_title">Send invite</string>
+	<string name="invite_dialog_text">Invite %s (%s) to Clubhouse</string>
+	<string name="invite_ok">Invite sent successfully</string>
+	<string name="invite_err">Unexpected error: %s</string>
+	<string name="contact_invites">You have %d invites</string>
+	<string name="contact_in_app">In Clubhouse: %s</string>
+	<string name="contact_is_invited">Is invited: %s</string>
+	<string name="contact_num_friends">%d friends on Clubhouse</string>
+	<string name="contact_separator" translatable="false">,&#160;</string>
+	<string name="add_instagram">Link instagram</string>
+	<string name="confirm_unlink_instagram_title">Unlink instagram?</string>
+	<string name="confirm_unlink_instagram">Are you sure want to unlink instagram? It can be linked in future</string>
+	<string name="instagram_linked">Instagram linked, reopen page to see</string>
 </resources>
