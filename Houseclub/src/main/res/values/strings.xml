@@ -15,6 +15,7 @@
 	<string name="waitlist">Wait list</string>
 	<string name="waitlist_text">You\'re waiting for someone to invite you to Clubhouse. Your account is currently inactive.</string>
 	<string name="log_out">Log out</string>
+	<string name="event_title">Upcoming Events</string>
 	<string name="ongoing_call">Ongoing call</string>
 	<string name="leave_room">✌ Leave room</string>
 	<string name="join_this_room">Join this room?</string>

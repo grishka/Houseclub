@@ -7,7 +7,7 @@ import android.widget.SearchView;
 
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.houseclub.R;
-import me.grishka.houseclub.api.methods.SearchUsers;
+import me.grishka.houseclub.api.methods.SearchPeople;
 
 public class SearchListFragment extends UserListFragment {
 
@@ -71,14 +71,12 @@ public class SearchListFragment extends UserListFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		searchView.setOnQueryTextListener(onQueryTextListener);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-
 		searchView.setOnQueryTextListener(null);
 	}
 
@@ -88,17 +86,18 @@ public class SearchListFragment extends UserListFragment {
 			currentRequest.cancel();
 		}
 
-		currentRequest = new SearchUsers(searchQuery)
-				.setCallback(new SimpleCallback<SearchUsers.Resp>(this) {
+		currentRequest = new SearchPeople(searchQuery)
+				.setCallback(new SimpleCallback<SearchPeople.Resp>(this) {
 					@Override
-					public void onSuccess(SearchUsers.Resp result) {
+					public void onSuccess(SearchPeople.Resp result) {
 						currentRequest=null;
 						data.clear();
 						onDataLoaded(result.users, false);
 					}
-				})
-				.exec();
+				}).exec();
 	}
+
+
 
 
 }
