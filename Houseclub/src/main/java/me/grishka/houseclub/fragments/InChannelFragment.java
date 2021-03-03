@@ -48,7 +48,6 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 	private MergeRecyclerAdapter adapter;
 	private UserListAdapter speakersAdapter, followedAdapter, othersAdapter;
 	private ImageButton muteBtn;
-	private ImageButton muteSpeakerBtn;
 	private Button raiseBtn;
 	private Channel channel;
 	private ArrayList<ChannelUser> speakers=new ArrayList<>(), followedBySpeakers=new ArrayList<>(), otherUsers=new ArrayList<>();
@@ -71,11 +70,9 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 
 		raiseBtn=view.findViewById(R.id.raise);
 		muteBtn=view.findViewById(R.id.mute);
-		muteSpeakerBtn=view.findViewById(R.id.mute_speaker);
 
 		raiseBtn.setOnClickListener(this::onRaiseClick);
 		muteBtn.setOnClickListener(this::onMuteClick);
-		muteSpeakerBtn.setOnClickListener(this::onMuteSpeakerClick);
 
 		GridLayoutManager lm=new GridLayoutManager(getActivity(), 12);
 		lm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
@@ -100,7 +97,6 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 		VoiceService svc=VoiceService.getInstance();
 		if(svc!=null){
 			muteBtn.setImageResource(svc.isMuted() ? R.drawable.ic_mic_off : R.drawable.ic_mic);
-			muteSpeakerBtn.setImageResource(svc.isSpeakerMuted() ? R.drawable.ic_baseline_volume_off_24 : R.drawable.ic_baseline_volume_up_24);
 			onUserMuteChanged(Integer.parseInt(ClubhouseSession.userID), svc.isMuted());
 		}
 	}
@@ -172,11 +168,6 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 		onUserMuteChanged(Integer.parseInt(ClubhouseSession.userID), svc.isMuted());
 	}
 
-	private void onMuteSpeakerClick(View v){
-		VoiceService svc=VoiceService.getInstance();
-		svc.setSpeakerMuted(!svc.isSpeakerMuted());
-	}
-
 	@Override
 	public void onUserMuteChanged(int id, boolean muted){
 		int i=0;
@@ -196,11 +187,6 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 			}
 			i++;
 		}
-	}
-
-	@Override
-	public void onSpeakerMuted(boolean muted) {
-		muteSpeakerBtn.setImageResource(muted ? R.drawable.ic_baseline_volume_off_24 : R.drawable.ic_baseline_volume_up_24);
 	}
 
 	@Override
@@ -322,9 +308,6 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 	public void onChannelEnded(){
 		Nav.finish(this);
 	}
-
-	@Override
-	public void onSelfLeft() { }
 
 	private class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> implements ImageLoaderRecyclerAdapter{
 

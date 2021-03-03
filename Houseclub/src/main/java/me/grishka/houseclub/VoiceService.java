@@ -54,7 +54,6 @@ public class VoiceService extends Service{
 	private RtcEngine engine;
 	private Channel channel;
 	private boolean muted=true;
-	private boolean isSpeakerMuted=false;
 	private Handler uiHandler=new Handler(Looper.getMainLooper());
 	private Runnable pinger=new Runnable(){
 		@Override
@@ -115,59 +114,37 @@ public class VoiceService extends Service{
 			channel=DataProvider.getChannel(id);
 			updateChannel(channel);
 
-			Notification n=buildNotification();
-			startForeground(10, n);
+			Intent snoozeIntent = new Intent(this, NotificationHandlerBroadcastReceiver.class);
+			snoozeIntent.setAction(NotificationHandlerBroadcastReceiver.ACTION_LEAVE_ROOM);
+			PendingIntent leaveRoomPendingIntent = PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+			Notification.Action leaveRoomAction = new Notification.Action.Builder(
+					Icon.createWithResource(this, R.drawable.ic_leave),
+					getString(R.string.leave_room),
+					leaveRoomPendingIntent
+			).build();
+
+			NotificationManager nm=getSystemService(NotificationManager.class);
+			Notification.Builder n=new Notification.Builder(this)
+					.setSmallIcon(R.drawable.ic_phone_in_talk)
+					.setContentTitle(getString(R.string.ongoing_call))
+					.setContentText(intent.getStringExtra("topic"))
+					.setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class).putExtra("openCurrentChannel", true), PendingIntent.FLAG_UPDATE_CURRENT))
+					.addAction(leaveRoomAction);
+			if(Build.VERSION.SDK_INT>=26){
+				if(nm.getNotificationChannel("ongoing")==null){
+					NotificationChannel nc=new NotificationChannel("ongoing", "Ongoing calls", NotificationManager.IMPORTANCE_LOW);
+					nm.createNotificationChannel(nc);
+				}
+				n.setChannelId("ongoing");
+			}
+			startForeground(10, n.build());
 
 			doJoinChannel();
 		}
 		return START_NOT_STICKY;
 	}
 
-	private Notification buildNotification(){
-		Intent leaveRoomIntent = new Intent(this, NotificationHandlerBroadcastReceiver.class);
-		leaveRoomIntent.setAction(NotificationHandlerBroadcastReceiver.ACTION_LEAVE_ROOM);
-		PendingIntent leaveRoomPendingIntent = PendingIntent.getBroadcast(this, 0, leaveRoomIntent, 0);
-		Notification.Action leaveRoomAction = new Notification.Action.Builder(
-				Icon.createWithResource(this, R.drawable.ic_leave),
-				getString(R.string.leave_room),
-				leaveRoomPendingIntent
-		).build();
-
-		Intent muteSpeakerIntent = new Intent(this, NotificationHandlerBroadcastReceiver.class);
-		muteSpeakerIntent.setAction(NotificationHandlerBroadcastReceiver.ACTION_TOGGLE_MUTE_SPEAKER);
-		PendingIntent muteSpeakerPendingIntent = PendingIntent.getBroadcast(this, 0, muteSpeakerIntent, 0);
-		Notification.Action muteSpeakerAction = new Notification.Action.Builder(
-				Icon.createWithResource(this, isSpeakerMuted?R.drawable.ic_baseline_volume_off_24:R.drawable.ic_baseline_volume_up_24),
-				getString(isSpeakerMuted?R.string.unmute_speaker:R.string.mute_speaker),
-				muteSpeakerPendingIntent
-		).build();
-
-		NotificationManager nm=getSystemService(NotificationManager.class);
-		Notification.Builder n=new Notification.Builder(this)
-				.setSmallIcon(R.drawable.ic_phone_in_talk)
-				.setContentTitle(getString(R.string.ongoing_call))
-				.setContentText(channel.topic)
-				.setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class).putExtra("openCurrentChannel", true), PendingIntent.FLAG_UPDATE_CURRENT))
-				.addAction(leaveRoomAction)
-				.addAction(muteSpeakerAction);
-		if(Build.VERSION.SDK_INT>=26){
-			if(nm.getNotificationChannel("ongoing")==null){
-				NotificationChannel nc=new NotificationChannel("ongoing", "Ongoing calls", NotificationManager.IMPORTANCE_LOW);
-				nm.createNotificationChannel(nc);
-			}
-			n.setChannelId("ongoing");
-		}
-		return n.build();
-	}
-
-	private void updateNotification(){
-		NotificationManager nm=getSystemService(NotificationManager.class);
-		Notification n= buildNotification();
-		nm.notify(10, n);
-	}
-
 	private void doJoinChannel(){
-		engine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY_STEREO, Constants.AUDIO_SCENARIO_GAME_STREAMING);
 		engine.setChannelProfile(isSelfSpeaker ? Constants.CHANNEL_PROFILE_COMMUNICATION : Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
 		engine.joinChannel(channel.token, channel.channel, "", Integer.parseInt(ClubhouseSession.userID));
 		uiHandler.postDelayed(pinger, 30000);
@@ -262,10 +239,6 @@ public class VoiceService extends Service{
 		uiHandler.removeCallbacks(pinger);
 		pubnub.unsubscribeAll();
 		pubnub.destroy();
-		uiHandler.post(() -> {
-			for(ChannelEventListener l:listeners)
-				l.onSelfLeft();
-		});
 	}
 
 	public void leaveCurrentChannel(){
@@ -332,21 +305,8 @@ public class VoiceService extends Service{
 		engine.muteLocalAudioStream(muted);
 	}
 
-	public void setSpeakerMuted(boolean muted){
-		this.isSpeakerMuted=muted;
-		engine.adjustPlaybackSignalVolume(muted?0:100);
-		engine.adjustAudioMixingPlayoutVolume(muted?0:100);
-		updateNotification();
-		for(ChannelEventListener l:listeners)
-			l.onSpeakerMuted(muted);
-	}
-
 	public boolean isMuted(){
 		return muted;
-	}
-
-	public boolean isSpeakerMuted(){
-		return isSpeakerMuted;
 	}
 
 	public Channel getChannel(){
@@ -456,14 +416,12 @@ public class VoiceService extends Service{
 
 	public interface ChannelEventListener{
 		void onUserMuteChanged(int id, boolean muted);
-		void onSpeakerMuted(boolean muted);
 		void onUserJoined(ChannelUser user);
 		void onUserLeft(int id);
 		void onCanSpeak(String inviterName, int inviterID);
 		void onChannelUpdated(Channel channel);
 		void onSpeakingUsersChanged(List<Integer> ids);
 		void onChannelEnded();
-		void onSelfLeft();
 	}
 
 	private class RtcEngineEventHandler extends IRtcEngineEventHandler{
@@ -497,14 +455,14 @@ public class VoiceService extends Service{
 			uiHandler.post(new Runnable(){
 				@Override
 				public void run(){
-					for(ChannelUser u:channel.users){
-						if(u.userId==uid){
-							u.isMuted=muted;
-							break;
-						}
-					}
-					for(ChannelEventListener l:listeners)
-						l.onUserMuteChanged(uid, muted);
+							for(ChannelUser u:channel.users){
+								if(u.userId==uid){
+									u.isMuted=muted;
+									break;
+								}
+							}
+							for(ChannelEventListener l:listeners)
+								l.onUserMuteChanged(uid, muted);
 				}
 			});
 		}

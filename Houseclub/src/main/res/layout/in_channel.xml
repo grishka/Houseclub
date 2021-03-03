@@ -37,15 +37,6 @@
 				style="@style/Widget.Button.Grey"
 				android:text="@string/leave_room"/>
 
-			<ImageButton
-				android:id="@+id/mute_speaker"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:minWidth="0dp"
-				android:layout_marginStart="4dp"
-				android:src="@drawable/ic_baseline_volume_up_24"
-				style="@style/Widget.Button.Grey"/>
-
 			<View
 				android:layout_width="0dp"
 				android:layout_height="1dp"
@@ -63,7 +54,6 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:minWidth="0dp"
-				android:layout_marginStart="4dp"
 				android:src="@drawable/ic_mic_off"
 				style="@style/Widget.Button.Grey"/>
 
