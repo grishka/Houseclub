@@ -34,6 +34,7 @@
 	<style name="Widget.Button.Grey" parent="android:Widget.Material.Button">
 		<item name="android:textColor">#DC4855</item>
 		<item name="android:colorAccent">#E3E0D9</item>
+		<item name="android:background">@drawable/gray_rounded_background</item>
 		<item name="android:stateListAnimator">@null</item>
 		<item name="android:textAllCaps">false</item>
 		<item name="android:background">@drawable/button_grey_background</item>
@@ -43,8 +44,12 @@
 		<item name="android:colorAccent">@color/blue</item>
 	</style>
 
+	<color name="white">#FFF</color>
 	<color name="lightBeige">#F1EEE4</color>
 	<color name="blue">#5b75a6</color>
 	<color name="navBar">#000</color>
 	<color name="grey">#E3E0D9</color>
+    <color name="buttonGray">#f2f2f2</color>
+    <color name="buttonGrayPressed">#C8C8C8</color>
+    <color name="red">#ea5858</color>
 </resources>
