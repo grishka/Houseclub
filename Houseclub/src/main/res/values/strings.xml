@@ -4,8 +4,7 @@
 	<string name="phone_number">Phone number</string>
 	<string name="enter_your_phone">Enter your phone #</string>
 	<string name="sms_code">Code from SMS</string>
-	<string name="resend_code_message">Did not receive it?</string>
-	<string name="resend_code_button">Tap to resend</string>
+	<string name="resend_code_message">Did not receive it?‌ <b>Tap Here</b></string>
 	<string name="next">Next</string>
 	<string name="warning">Warning!</string>
 	<string name="warning_text">This is an <b>unofficial</b> app. Using this might get your Clubhouse account permanently banned. Proceed at your own risk.</string>
@@ -32,6 +31,9 @@
 	<string name="username_limit">Username can\'t be longer than 16 characters</string>
 	<string name="register_warning">Registration in this <b>unofficial</b> app is as experimental a feature as the app itself. There\'s always a non-zero possibility of a ban if you don\'t use the official app to register. It would work better if you borrow an iOS device from someone, but you could still try registering from Android.\n\nPlease be aware that you\'ll only be able to change your name <b>once</b> after you register. Please use your real name.</string>
 	<string name="welcome_to_clubhouse">Welcome to Clubhouse!</string>
+	<string name="resend_code_button">Resend Code</string>
+	<string name="call_me_button">Call Me</string>
+
 	<plurals name="followers">
 		<item quantity="one">%d follower</item>
 		<item quantity="other">%d followers</item>
