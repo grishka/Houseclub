@@ -55,11 +55,11 @@ public class ProfileFragment extends LoaderFragment{
 
 	private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram,
 			invites;
-	private ImageView photo, inviterPhoto;
-
-	private Button followBtn;
-	private View socialButtons;
-	private boolean self, isImageFitToScreen;
+	private ImageView photo, photo_edit_icon,inviterPhoto;
+	private Button followBtn, inviteButton;
+	private EditText invitePhoneNum;
+	private View socialButtons, inviteLayout;
+	private boolean self;
 
 
 	@Override
@@ -101,6 +101,8 @@ public class ProfileFragment extends LoaderFragment{
 		following.setOnClickListener(this::onFollowingClick);
 		v.findViewById(R.id.inviter_btn).setOnClickListener(this::onInviterClick);
 		if(self){
+			photo_edit_icon=v.findViewById(R.id.photo_edit_icon);
+			photo_edit_icon.setVisibility(View.VISIBLE);
 			bio.setOnClickListener(this::onBioClick);
 			photo.setOnClickListener(this::onPhotoClick);
 			name.setOnClickListener(this::onNameClick);
