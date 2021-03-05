@@ -2,4 +2,12 @@
 <resources>
     <color name="hint">#B8B8BA</color>
     <color name="text_gray">#67655F</color>
+
+    <color name="white">#ffffff</color>
+    <color name="red">#CC1414</color>
+    <color name="black">#000000</color>
+
+    <color name="search_btn_cancel">#00C853</color>
+    <color name="search_view_background">#EEEEEE</color>
+
 </resources>

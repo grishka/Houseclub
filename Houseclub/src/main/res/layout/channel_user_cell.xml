@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:padding="8dp"
-	android:clipToPadding="false">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:padding="8dp">
 
-	<View
-		android:id="@+id/speaker_border"
-		android:layout_width="88dp"
-		android:layout_height="88dp"
-		android:layout_marginTop="-8dp"
-		android:layout_centerHorizontal="true"
-		android:alpha="0"
-		android:background="@drawable/speaker_border"/>
+    <View
+        android:id="@+id/speaker_border"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-8dp"
+        android:alpha="0"
+        android:background="@drawable/speaker_border" />
 
-	<me.grishka.houseclub.views.SquircleImageView
-		android:id="@+id/photo"
-		android:layout_width="72dp"
-		android:layout_height="72dp"
-		android:layout_centerHorizontal="true"
-		android:layout_alignParentTop="true"
-		tools:src="#0f0"/>
+    <me.grishka.houseclub.views.SquircleImageView
+        android:id="@+id/photo"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        tools:src="#0f0" />
 
-	<ImageView
-		android:id="@+id/muted"
-		android:layout_width="32dp"
-		android:layout_height="32dp"
-		android:layout_alignRight="@id/photo"
-		android:layout_alignBottom="@id/photo"
-		android:layout_marginRight="-8dp"
-		android:layout_marginBottom="-8dp"
-		android:elevation="1dp"
-		android:scaleType="center"
-		android:background="@drawable/white_circle"
-		android:src="@drawable/ic_mic_off"/>
+    <ImageView
+        android:id="@+id/muted"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignRight="@id/photo"
+        android:layout_alignBottom="@id/photo"
+        android:layout_marginRight="-8dp"
+        android:layout_marginBottom="-8dp"
+        android:background="@drawable/white_circle"
+        android:elevation="1dp"
+        android:scaleType="center"
+        android:src="@drawable/ic_mic_off" />
 
-	<TextView
-		android:id="@+id/name"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center_horizontal"
-		android:layout_below="@id/photo"
-		android:layout_marginTop="8dp"
-		android:singleLine="true"
-		android:ellipsize="end"
-		tools:text="User"/>
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/photo"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:singleLine="true"
+        tools:text="User" />
 
 </RelativeLayout>

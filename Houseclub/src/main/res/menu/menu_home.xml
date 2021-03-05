@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/homeMenuSearchPeople"
+        android:icon="@drawable/ic_search"
+        android:showAsAction="always"
+        android:title=""
+        tools:ignore="AlwaysShowAction" />
+
+
+    <item
+        android:id="@+id/homeMenuNotification"
+        android:icon="@drawable/ic_notifications"
+        android:showAsAction="always"
+        android:title="" />
+
+    <item
+        android:id="@+id/homeMenuProfile"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:showAsAction="always"
+        android:title="" />
+
+
+    <item
+        android:id="@+id/homeMenuAbout"
+        android:showAsAction="never"
+        android:title="About" />
+
+    <item
+        android:id="@+id/homeMenuLogout"
+        android:showAsAction="never"
+        android:title="Logout" />
+
+</menu>
+
