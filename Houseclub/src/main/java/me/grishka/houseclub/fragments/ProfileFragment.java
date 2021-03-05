@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,6 +50,7 @@ import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseAPIController;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.Follow;
+import me.grishka.houseclub.api.methods.GetClub;
 import me.grishka.houseclub.api.methods.GetProfile;
 import me.grishka.houseclub.api.methods.InviteToApp;
 import me.grishka.houseclub.api.methods.Me;
@@ -65,7 +68,7 @@ public class ProfileFragment extends LoaderFragment{
 	private FullUser user;
 
 	private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram,
-			invites , mutuals , followed_by;
+			invites , mutuals , followed_by , user_clubs , member_of_text;
 	private ImageView photo, inviterPhoto , pic1 , pic2 , pic3 ;
 	private Button followBtn, inviteButton;
 	private EditText invitePhoneNum;
@@ -110,6 +113,8 @@ public class ProfileFragment extends LoaderFragment{
 		inviteButton = v.findViewById(R.id.invite_button);
 		invites = v.findViewById(R.id.num_of_invites);
 		mutuals = v.findViewById(R.id.mutuals);
+		user_clubs = v.findViewById(R.id.user_clubs);
+		member_of_text = v.findViewById(R.id.member_of_text);
 		followed_by = v.findViewById(R.id.followed_by);
 		invitePhoneNum = v.findViewById(R.id.invite_phone_num);
 
@@ -142,7 +147,6 @@ public class ProfileFragment extends LoaderFragment{
 					public void onSuccess(GetProfile.Response result){
 						currentRequest=null;
 						user=result.userProfile;
-
 
 						name.setText(user.name);
 						username.setText('@'+user.username);
@@ -190,11 +194,12 @@ public class ProfileFragment extends LoaderFragment{
 							inviterPhoto.setVisibility(View.GONE);
 						}
 
-						if(user.mutualFollows.size() > 0){
+						if( user.mutualFollows.size() > 0 ){
 
 							followed_by.setText(" Followed by ");
 
 							String usernames = "";
+
 							for(int i = 0 ; i< user.mutualFollows.size(); i++){
 
 								if(i>0){
@@ -233,10 +238,6 @@ public class ProfileFragment extends LoaderFragment{
 
 								if(i == 2){
 
-									if(user.mutualFollows.size() > 3){
-										usernames += "and " + String.valueOf(user.mutualFollows.size() - 3) + "others";
-									}
-
 									if( user.mutualFollows.get(i).photoUrl !=null){
 										ColorDrawable d2=new ColorDrawable(getResources().getColor(R.color.grey));
 										if(user.mutualFollows.get(i).photoUrl!=null) {
@@ -253,14 +254,25 @@ public class ProfileFragment extends LoaderFragment{
 
 							}
 
+							if((user.mutual_follows_count - 3) > 0){
+								usernames += " and " + (user.mutual_follows_count - 3) +  " others";
+							}
+
 							mutuals.setText(usernames);
 
 						}
 
 						inviteInfo.setText(joined);
 
+						if(user.clubs.size() > 0){
+
+							member_of_text.setText("Member of");
+							user_clubs.setText(result.userProfile.clubs.stream().map(club->club.name ).
+									collect(Collectors.joining(" . ")) );
 
 
+
+						}
 
 
 
@@ -269,6 +281,7 @@ public class ProfileFragment extends LoaderFragment{
 					}
 				})
 				.exec();
+
 		loadInvites();
 	}
 

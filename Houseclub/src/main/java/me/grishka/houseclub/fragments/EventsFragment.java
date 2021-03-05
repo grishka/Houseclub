@@ -1,34 +1,50 @@
 package me.grishka.houseclub.fragments;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.stream.Collectors;
 
+import me.grishka.appkit.api.Callback;
+import me.grishka.appkit.api.ErrorResponse;
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.fragments.BaseRecyclerFragment;
 import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
 import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
 import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.utils.V;
+import me.grishka.houseclub.MainActivity;
 import me.grishka.houseclub.R;
+import me.grishka.houseclub.VoiceService;
+import me.grishka.houseclub.api.methods.GetChannel;
+import me.grishka.houseclub.api.methods.GetEvent;
 import me.grishka.houseclub.api.methods.GetEvents;
+import me.grishka.houseclub.api.methods.JoinChannel;
+import me.grishka.houseclub.api.model.Channel;
 import me.grishka.houseclub.api.model.Event;
 
 public class EventsFragment extends BaseRecyclerFragment<Event>{
@@ -200,8 +216,36 @@ public class EventsFragment extends BaseRecyclerFragment<Event>{
 
 		@Override
 		public void onClick(View view) {
-
 		}
+
+		private void joinChannelById(String id){
+			new GetChannel(id)
+					.wrapProgress(getActivity())
+					.setCallback(new Callback<Channel>(){
+						@Override
+						public void onSuccess(final Channel result){
+							new AlertDialog.Builder(getActivity())
+									.setTitle(R.string.join_this_room)
+									.setMessage(result.topic)
+									.setPositiveButton(R.string.join, new DialogInterface.OnClickListener(){
+										@Override
+										public void onClick(DialogInterface dialogInterface, int i){
+//											joinChannel(result);
+										}
+									})
+									.setNegativeButton(R.string.cancel, null)
+									.show();
+						}
+
+						@Override
+						public void onError(ErrorResponse error){
+							error.showToast(getActivity());
+						}
+					})
+					.exec();
+		}
+
+
 
 		private ImageView imgForIndex(int index){
 			if(index==0)

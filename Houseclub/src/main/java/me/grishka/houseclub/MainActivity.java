@@ -3,6 +3,7 @@ package me.grishka.houseclub;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,9 +25,12 @@ import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.CheckWaitlistStatus;
 import me.grishka.houseclub.api.methods.GetChannel;
+import me.grishka.houseclub.api.methods.GetClub;
 import me.grishka.houseclub.api.methods.GetEvent;
 import me.grishka.houseclub.api.methods.JoinChannel;
 import me.grishka.houseclub.api.model.Channel;
+import me.grishka.houseclub.api.model.Club;
+import me.grishka.houseclub.fragments.ClubFragment;
 import me.grishka.houseclub.fragments.HomeFragment;
 import me.grishka.houseclub.fragments.InChannelFragment;
 import me.grishka.houseclub.fragments.LoginFragment;
@@ -41,8 +45,8 @@ public class MainActivity extends FragmentStackActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-
 		SharedPreferences prefs=getPreferences(MODE_PRIVATE);
+
 		if(!prefs.getBoolean("warningShown", false)){
 			new AlertDialog.Builder(this)
 					.setTitle(R.string.warning)
@@ -94,6 +98,7 @@ public class MainActivity extends FragmentStackActivity{
 			}
 		}else{
 			showFragment(new LoginFragment());
+
 		}
 	}
 

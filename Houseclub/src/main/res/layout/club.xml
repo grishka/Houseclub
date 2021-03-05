@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:padding="16dp">
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			android:orientation="horizontal">
+
+			<me.grishka.houseclub.views.SquircleImageView
+				android:id="@+id/clubPhoto"
+				android:layout_width="100dp"
+				android:layout_height="100dp"
+				android:layout_centerInParent="true"
+				tools:src="#0f0"/>
+
+
+		</RelativeLayout>
+
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp">
+
+
+			<TextView
+				android:id="@+id/name"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
+				android:layout_centerHorizontal="true"
+				android:textSize="18dp"
+				android:fontFamily="sans-serif-medium"
+				tools:text="Club Name"/>
+
+			<Button
+				android:layout_below="@id/name"
+				android:id="@+id/follow_btn"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerInParent="true"
+				android:layout_marginTop="15dp"
+				android:layout_gravity="center_vertical"
+				android:text="@string/follow"/>
+
+			<TextView
+				android:layout_below="@id/follow_btn"
+				android:id="@+id/description"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:gravity="center"
+				android:textColor="#272323"
+				android:layout_marginTop="20dp"
+				android:layout_marginBottom="32dp"
+				android:textSize="14dp"
+				tools:text="description here" />
+
+			<LinearLayout
+				android:id="@+id/usersLayout"
+				android:layout_below="@+id/description"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerInParent="true">
+
+				<TextView
+					android:id="@+id/members"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textFontWeight="500"
+					android:textSize="13dp"
+					tools:text="25 members"/>
+
+				<TextView
+					android:id="@+id/followers"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="16dp"
+					android:textFontWeight="500"
+					android:textSize="13dp"
+					tools:text="25 followers"/>
+
+			</LinearLayout>
+
+			<TextView
+				android:layout_below="@id/usersLayout"
+				android:id="@+id/topics"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerHorizontal="true"
+				android:layout_marginTop="30dp"
+				android:textSize="14dp"
+				tools:text="topics"/>
+
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
+				android:orientation="horizontal">
+
+
+
+			</LinearLayout>
+
+
+		</RelativeLayout>
+
+
+
+
+	</LinearLayout>
+
+</ScrollView>

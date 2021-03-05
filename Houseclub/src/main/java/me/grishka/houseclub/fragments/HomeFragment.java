@@ -147,6 +147,13 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			Nav.go(getActivity(), EventsFragment.class, args);
 			return true;
 		}
+
+		else if (item.getItemId() == R.id.homeMenuSearchClubs) {
+			Bundle args = new Bundle();
+			args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
+			Nav.go(getActivity(), SearchClubsListFragment.class, args);
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 
 	}

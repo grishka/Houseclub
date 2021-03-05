@@ -54,6 +54,7 @@
 	<string name="following_title">Following</string>
 	<string name="event_title">Upcoming Events</string>
 	<string name="search_people_hint">Search People</string>
+	<string name="search_clubs_hint">Search Clubs</string>
 	<string name="notifications_title">Notifications</string>
 	<string name="confirm_unfollow">Unfollow <b>%s</b>?</string>
 	<string name="yes">Yes</string>

@@ -16,11 +16,19 @@
         android:title="" />
 
     <item
-        android:id="@+id/homeMenuSearchPeople"
+        android:id="@+id/homeMenuSearchClubs"
         android:icon="@drawable/ic_baseline_search_24"
         android:showAsAction="always"
         android:title=""
         tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/homeMenuSearchPeople"
+        android:icon="@drawable/ic_baseline_person_search_24"
+        android:showAsAction="always"
+        android:title=""
+        tools:ignore="AlwaysShowAction" />
+
     <item
         android:id="@+id/homeMenuNotifications"
         android:icon="@drawable/ic_notifications"

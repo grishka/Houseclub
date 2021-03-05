@@ -1,6 +1,7 @@
 package me.grishka.houseclub.api.methods;
 
 import me.grishka.houseclub.api.ClubhouseAPIRequest;
+import me.grishka.houseclub.api.model.Club;
 import me.grishka.houseclub.api.model.FullUser;
 
 public class GetProfile extends ClubhouseAPIRequest<GetProfile.Response>{
