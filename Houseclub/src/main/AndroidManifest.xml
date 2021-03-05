@@ -1,40 +1,57 @@
-<manifest package="me.grishka.houseclub"
-	xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="me.grishka.houseclub">
 
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices.-->
-	<uses-permission android:name="android.permission.BLUETOOTH" />
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- The Agora SDK requires Bluetooth permissions in case users are using Bluetooth devices.-->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-	<application
-		android:allowBackup="true"
-		android:label="@string/app_name"
-		android:theme="@style/AppTheme"
-		android:name=".App"
-		android:icon="@mipmap/ic_launcher"
-		android:roundIcon="@mipmap/ic_launcher_round"
-		android:usesCleartextTraffic="true">
-		<activity android:name=".MainActivity" android:configChanges="screenSize|orientation" android:launchMode="singleTask">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW"/>
-				<category android:name="android.intent.category.BROWSABLE"/>
-				<category android:name="android.intent.category.DEFAULT" />
-				<data android:host="ios.joinclubhouse.com" android:pathPrefix="/room/" android:scheme="https"/>
-				<data android:host="ios.joinclubhouse.com" android:pathPrefix="/event/" android:scheme="https"/>
-				<data android:host="www.joinclubhouse.com" android:pathPrefix="/room/" android:scheme="https"/>
-				<data android:host="www.joinclubhouse.com" android:pathPrefix="/event/" android:scheme="https"/>
-			</intent-filter>
-		</activity>
-		<service android:name=".VoiceService" />
-		<receiver android:name=".notification.NotificationHandlerBroadcastReceiver" />
-	</application>
+    <application
+        android:name=".App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="screenSize|orientation"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="ios.joinclubhouse.com"
+                    android:pathPrefix="/room/"
+                    android:scheme="https" />
+                <data
+                    android:host="ios.joinclubhouse.com"
+                    android:pathPrefix="/event/"
+                    android:scheme="https" />
+                <data
+                    android:host="www.joinclubhouse.com"
+                    android:pathPrefix="/room/"
+                    android:scheme="https" />
+                <data
+                    android:host="www.joinclubhouse.com"
+                    android:pathPrefix="/event/"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <service android:name=".VoiceService" />
+        <receiver android:name=".notification.NotificationHandlerBroadcastReceiver" />
+    </application>
 </manifest>

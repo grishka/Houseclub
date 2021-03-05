@@ -15,7 +15,7 @@ public class DataProvider {
         return Objects.equals(channelCache.channel, id) ? channelCache : null;
     }
 
-    public static Channel getCachedChannel(){
+    public static Channel getCachedChannel() {
         return channelCache;
     }
 

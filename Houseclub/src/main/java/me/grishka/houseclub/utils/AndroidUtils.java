@@ -16,7 +16,7 @@ public class AndroidUtils {
         return displayMetrics.heightPixels != (rectangle.top + rectangle.height());
     }
 
-    public static int getNavigationBarSize(Context context){
+    public static int getNavigationBarSize(Context context) {
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
         if (resourceId > 0) {

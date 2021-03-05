@@ -13,11 +13,8 @@ public class SearchPeople extends ClubhouseAPIRequest<SearchPeople.Resp> {
     }
 
     private static class Body {
-        public boolean cofollowsOnly;
-        public boolean followingOnly;
-        public boolean followersOnly;
-        public String query;
 
+        public String query;
         public Body(String query) {
             this.query = query;
         }

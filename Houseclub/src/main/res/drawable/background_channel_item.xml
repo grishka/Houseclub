@@ -11,8 +11,7 @@
                         android:left="8dp"
                         android:right="8dp"
                         android:top="0dp" />
-                    <corners
-                        android:radius="25dp" />
+                    <corners android:radius="12dp" />
                 </shape>
             </item>
         </ripple>
@@ -25,7 +24,7 @@
                 android:left="8dp"
                 android:right="8dp"
                 android:top="0dp" />
-            <corners android:radius="25dp" />
+            <corners android:radius="12dp" />
         </shape>
     </item>
 

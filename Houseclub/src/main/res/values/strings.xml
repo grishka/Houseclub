@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Houseclub</string>
     <string name="login">Login</string>
     <string name="phone_number">Phone number</string>
@@ -9,6 +9,10 @@
     <string name="next">Next</string>
     <string name="warning">Warning!</string>
     <string name="warning_text">This is an <b>unofficial</b> app. Using this might get your Clubhouse account permanently banned. Proceed at your own risk.</string>
+
+    <string name="about">About</string>
+    <string name="about_text"><b>Unofficial</b> Club House app for Android.</string>
+
     <string name="i_understand">I understand</string>
     <string name="loading">Loading...</string>
     <string name="error_loading">Error loading data</string>

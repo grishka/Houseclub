@@ -1,6 +1,7 @@
 package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
@@ -91,9 +92,11 @@ public class HomeFragment extends BaseRecyclerFragment<Channel> {
             }
         });
         getToolbar().setElevation(0);
+
+
         // add Return to "channel" bar to bottom of toolbar
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        returnView = inflater.inflate(R.layout.return_row_bar, null);
+        returnView = inflater.inflate(R.layout.return_bar, null);
         final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ViewGroup parent = ((ViewGroup) getView().getParent());
         parent.addView(returnView, params);
@@ -105,7 +108,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel> {
             }
         });
 
-        returnView.findViewById(R.id.return_container).setOnClickListener((it) -> {
+        returnView.findViewById(R.id.return_to_channel).setOnClickListener((it) -> {
             Channel channel = DataProvider.getCachedChannel();
             if (channel != null)
                 ((MainActivity) getActivity()).joinChannel(channel);
@@ -165,7 +168,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel> {
             Channel channel = DataProvider.getCachedChannel();
             if (returnView != null) {
                 if (channel != null) {
-                    TextView title = returnView.findViewById(R.id.return_title);
+                    TextView title = returnView.findViewById(R.id.return_to_channel);
                     if (title != null) {
                         String channelName = (channel.topic == null) ? "the channel" : channel.topic;
                         title.setText(getString(R.string.return_to_channel, channelName));
@@ -219,6 +222,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel> {
         Bundle args = new Bundle();
         args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
 
+
         if (item.getItemId() == R.id.homeMenuProfile) {
             Nav.go(getActivity(), ProfileFragment.class, args);
         } else if (item.getItemId() == R.id.homeMenuSearchPeople) {
@@ -226,6 +230,10 @@ public class HomeFragment extends BaseRecyclerFragment<Channel> {
             Nav.go(getActivity(), SearchPeopleFragment.class, args);
         } else if (item.getItemId() == R.id.homeMenuNotification) {
             Nav.go(getActivity(), NotificationListFragment.class, args);
+        } else if (item.getItemId() == R.id.homeMenuAbout) {
+            about();
+        } else if (item.getItemId() == R.id.homeMenuLogout) {
+            logOut();
         }
         return true;
 
@@ -333,4 +341,22 @@ public class HomeFragment extends BaseRecyclerFragment<Channel> {
             imgForIndex(index).setImageDrawable(placeholder);
         }
     }
+
+    private void logOut() {
+        ClubhouseSession.userID = ClubhouseSession.userToken = null;
+        ClubhouseSession.write();
+        Nav.goClearingStack(getActivity(), LoginFragment.class, null);
+    }
+
+    private void about() {
+        new AlertDialog.Builder(this.getActivity())
+                .setTitle(R.string.about)
+                .setMessage(R.string.about_text)
+                .setPositiveButton(R.string.ok, null)
+                .setCancelable(false)
+                .show();
+
+    }
+
+
 }
