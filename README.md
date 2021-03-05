@@ -23,10 +23,10 @@ Not to be taken seriously.
 * Uploading a profile picture
 * Changing your name (but the official app says you can only do this once — not sure if there's a limitation on the server side)
 * Notifications
-** People Search
-** Return to active room
-** Profile photo enlarge
-** Phone call for getting activation code
+* People Search
+* Return to active room
+* Profile photo enlarge
+* Phone call for getting activation code
 
 The rest isn't implemented. In particular you can't create and moderate rooms. There's probably a hundred bugs in the existing functionality too.
 
