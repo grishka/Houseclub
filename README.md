@@ -2,6 +2,10 @@ Unofficial Clubhouse app for Android. Inspired by [this](https://github.com/styp
 
 Not to be taken seriously.
 
+**This app is NOT available in Google Play. The only right place to download it is here in the releases section.**
+
+**Any issues about audio quality will be closed immediately, so please don't bother posting those.**
+
 # FAQ
 ### What works?
 * Login
@@ -18,8 +22,9 @@ Not to be taken seriously.
 * Updating your "bio"
 * Uploading a profile picture
 * Changing your name (but the official app says you can only do this once — not sure if there's a limitation on the server side)
+* Notifications
 
-The rest isn't implemented. In particular, there are no notifications, and you can't create and moderate rooms. There's probably a hundred bugs in the existing functionality too.
+The rest isn't implemented. In particular you can't create and moderate rooms. There's probably a hundred bugs in the existing functionality too.
 
 ### Java? In %year%?! Why not Kotlin? Why are there no jetpack libraries? System fragments?!?! Are you out of your mind?
 Maybe I am. I use tools I'm most familiar with, not ones that are trendy at the particular day I'm starting the project.
