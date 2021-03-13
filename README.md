@@ -5,6 +5,7 @@
   
 **لینک دانلود فایل نصب:**
 - **[دانلود از کافه بازار](https://cafebazaar.ir/app/ir.miladnouri.houseclub)**
+- **[دانلود از گوگل پلی ](https://play.google.com/store/apps/details?id=ir.miladnouri.houseclub)**
 - **[دانلود از گیت‌هاب](https://github.com/miladnouri/Houseclub/releases/download/1.2.0/ClubHouze.apk)**  
     
     
