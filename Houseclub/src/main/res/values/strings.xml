@@ -50,6 +50,7 @@
 	<string name="follows_you">Follows you</string>
 	<string name="follow">Follow</string>
 	<string name="following">Following</string>
+	<string name="invite_to_room">Invite People to Room</string>
 	<string name="followers_title">Followers</string>
 	<string name="following_title">Following</string>
 	<string name="event_title">Upcoming Events</string>

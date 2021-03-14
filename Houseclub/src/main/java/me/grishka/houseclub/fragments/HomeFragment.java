@@ -240,7 +240,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 		@Override
 		public void onClick(View view){
-			((MainActivity)getActivity()).joinChannel(item);
+			((MainActivity)getActivity()).joinChannel(item.channel);
 		}
 
 		private ImageView imgForIndex(int index){

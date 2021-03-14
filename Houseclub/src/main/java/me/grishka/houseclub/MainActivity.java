@@ -39,7 +39,7 @@ import me.grishka.houseclub.fragments.WaitlistedFragment;
 
 public class MainActivity extends FragmentStackActivity{
 
-	private Channel channelToJoin;
+	private String channelToJoin;
 	private static final int PERMISSION_RESULT=270;
 
 	@Override
@@ -162,7 +162,7 @@ public class MainActivity extends FragmentStackActivity{
 								.setPositiveButton(R.string.join, new DialogInterface.OnClickListener(){
 									@Override
 									public void onClick(DialogInterface dialogInterface, int i){
-										joinChannel(result);
+										joinChannel(result.channel);
 									}
 								})
 								.setNegativeButton(R.string.cancel, null)
@@ -177,10 +177,10 @@ public class MainActivity extends FragmentStackActivity{
 				.exec();
 	}
 
-	public void joinChannel(Channel chan){
+	public void joinChannel(String chan){
 		if(VoiceService.getInstance()!=null){
 			Channel current=VoiceService.getInstance().getChannel();
-			if(current.channel.equals(chan.channel)){
+			if(current.channel.equals(chan)){
 				Bundle extras=new Bundle();
 				extras.putBoolean("_can_go_back", true);
 				InChannelFragment fragment=new InChannelFragment();
@@ -191,7 +191,7 @@ public class MainActivity extends FragmentStackActivity{
 			VoiceService.getInstance().leaveChannel();
 		}
 		if(checkSelfPermission(Manifest.permission.RECORD_AUDIO)==PackageManager.PERMISSION_GRANTED){
-			new JoinChannel(chan.channel)
+			new JoinChannel(chan)
 					.wrapProgress(this)
 					.setCallback(new Callback<Channel>(){
 						@Override

@@ -26,10 +26,12 @@ import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
 import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
 import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.views.UsableRecyclerView;
+import me.grishka.houseclub.MainActivity;
 import me.grishka.houseclub.R;
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.GetNotifications;
+import me.grishka.houseclub.api.model.Channel;
 import me.grishka.houseclub.api.model.FullUser;
 import me.grishka.houseclub.api.model.Notification;
 
@@ -150,9 +152,15 @@ public class NotificationListFragment extends BaseRecyclerFragment<Notification>
 
 		@Override
 		public void onClick(){
-			Bundle args=new Bundle();
-			args.putInt("id", item.userProfile.userId);
-			Nav.go(getActivity(), ProfileFragment.class, args);
+
+			if(item.type == 3 || item.type == 9){
+				((MainActivity)getActivity()).joinChannel(item.channel);
+			}else {
+				Bundle args=new Bundle();
+				args.putInt("id", item.userProfile.userId);
+				Nav.go(getActivity(), ProfileFragment.class, args);
+			}
+
 		}
 	}
 }
