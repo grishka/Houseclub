@@ -1,50 +1,36 @@
 package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import me.grishka.appkit.Nav;
-import me.grishka.appkit.api.Callback;
-import me.grishka.appkit.api.ErrorResponse;
-import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.fragments.BaseRecyclerFragment;
 import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
 import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
 import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.views.UsableRecyclerView;
-import me.grishka.houseclub.MainActivity;
 import me.grishka.houseclub.R;
-import me.grishka.houseclub.VoiceService;
-import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseSession;
-import me.grishka.houseclub.api.methods.AudienceReply;
-import me.grishka.houseclub.api.methods.GetFollowers;
-import me.grishka.houseclub.api.methods.InviteToRoom;
-import me.grishka.houseclub.api.methods.JoinChannel;
-import me.grishka.houseclub.api.model.Channel;
-import me.grishka.houseclub.api.model.FullUser;
+import me.grishka.houseclub.api.model.Club;
 
-public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
+public abstract class ClubListFragment extends BaseRecyclerFragment<Club>{
 
-	private int selfID=Integer.parseInt(ClubhouseSession.userID);
-	private UserListAdapter adapter;
+	private int selfID = Integer.parseInt(ClubhouseSession.userID);
+	private ClubListAdapter adapter;
 
-	public UserListFragment(){
+	public ClubListFragment(){
 		super(50);
 	}
 
@@ -57,7 +43,7 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 	@Override
 	protected RecyclerView.Adapter getAdapter(){
 		if(adapter==null){
-			adapter=new UserListAdapter();
+			adapter=new ClubListAdapter();
 		}
 		return adapter;
 	}
@@ -74,16 +60,16 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 		getToolbar().setElevation(0);
 	}
 
-	private class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> implements ImageLoaderRecyclerAdapter{
+	private class ClubListAdapter extends RecyclerView.Adapter<ClubViewHolder> implements ImageLoaderRecyclerAdapter{
 
 		@NonNull
 		@Override
-		public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-			return new UserViewHolder();
+		public ClubViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+			return new ClubViewHolder();
 		}
 
 		@Override
-		public void onBindViewHolder(@NonNull UserViewHolder holder, int position){
+		public void onBindViewHolder(@NonNull ClubViewHolder holder, int position){
 			holder.bind(data.get(position));
 		}
 
@@ -93,41 +79,36 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 		}
 
 		@Override
-		public int getImageCountForItem(int position){
-			return data.get(position).photoUrl!=null ? 1 : 0;
-		}
+		public int getImageCountForItem(int position) { return data.get(position).photo_url!=null ? 1 : 0;}
 
 		@Override
-		public String getImageURL(int position, int image){
-			return data.get(position).photoUrl;
-		}
+		public String getImageURL(int position, int image) {return data.get(position).photo_url;}
+
 	}
 
-	private class UserViewHolder extends BindableViewHolder<FullUser> implements ImageLoaderViewHolder, UsableRecyclerView.Clickable{
+	private class ClubViewHolder extends BindableViewHolder<Club> implements ImageLoaderViewHolder, UsableRecyclerView.Clickable{
 
-		public TextView name, bio;
+		public TextView name, numFollowers, numMembers;
 		public Button followBtn;
 		public ImageView photo;
 		private Drawable placeholder=new ColorDrawable(getResources().getColor(R.color.grey));
 
-		public UserViewHolder(){
-			super(getActivity(), R.layout.user_list_row);
+		public ClubViewHolder(){
+			super(getActivity(), R.layout.club_list_row);
 
 			name=findViewById(R.id.name);
-			bio=findViewById(R.id.bio);
+			numFollowers=findViewById(R.id.followersCount);
+			numMembers=findViewById(R.id.membersCount);
 			followBtn=findViewById(R.id.follow_btn);
 			photo=findViewById(R.id.photo);
 		}
 
 		@Override
-		public void onBind(FullUser item){
+		public void onBind(Club item){
 			name.setText(item.name);
-			if(TextUtils.isEmpty(item.bio)){
-				bio.setVisibility(View.GONE);
-			}else{
-				bio.setVisibility(View.VISIBLE);
-				bio.setText(item.bio);
-			}
+			numMembers.setText(item.num_members + " members");
+			numFollowers.setText(item.num_followers + " followers");
+
 			// TODO get_followers/get_following don't return current follow status?
 //			if(item.userId==selfID){
 				followBtn.setVisibility(View.GONE);
@@ -136,10 +117,13 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 //				followBtn.setText(item.isFollowed() ? R.string.following : R.string.follow);
 //			}
 
-			if(item.photoUrl!=null)
+
+			if(item.photo_url!=null)
 				imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
 			else
 				photo.setImageDrawable(placeholder);
+
+
 		}
 
 		@Override
@@ -154,33 +138,11 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 
 		@Override
 		public void onClick(){
-			if(getArguments().getString("type") == "invite_to_room"){
-				System.out.println("USERPINGED");
-
-				new InviteToRoom(getArguments().getString("channel") , item.userId)
-						.setCallback(new Callback<BaseResponse>() {
-					@Override
-					public void onSuccess(BaseResponse result) {
-
-						Toast.makeText(getActivity(), "User Pinged", Toast.LENGTH_SHORT).show();
-
-					}
-					@Override
-					public void onError(ErrorResponse error) {
-
-						error.showToast(getContext());
-
-					}
-				}).exec();
-
-
-
-			}else {
-				Bundle args=new Bundle();
-				args.putInt("id", item.userId);
-				Nav.go(getActivity(), ProfileFragment.class, args);
-			}
-
+			Bundle args=new Bundle();
+			args.putInt("id", item.club_id);
+			Nav.go(getActivity(), ClubFragment.class, args);
 		}
+
+
 	}
 }

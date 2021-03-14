@@ -91,11 +91,12 @@
 
 		</LinearLayout>
 
+
 		<TextView
 			android:id="@+id/bio"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="32dp"
+			android:layout_marginTop="20dp"
 			android:layout_marginBottom="32dp"
 			android:textSize="15dp"
 			tools:text="bio here"/>
@@ -134,7 +135,110 @@
 		</LinearLayout>
 
 		<LinearLayout
+			android:id="@+id/users_pics"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			android:orientation="horizontal">
+
+
+			<me.grishka.houseclub.views.SquircleImageView
+				android:id="@+id/pic1"
+				android:layout_width="48dp"
+				android:layout_height="48dp"
+				android:layout_marginRight="-28dp"
+				android:visibility="gone"
+				tools:src="#0f0"/>
+
+			<me.grishka.houseclub.views.SquircleImageView
+				android:id="@+id/pic2"
+				android:layout_width="48dp"
+				android:layout_height="48dp"
+				android:layout_marginRight="-8dp"
+				android:visibility="gone"
+				tools:src="#0f0"/>
+
+			<me.grishka.houseclub.views.SquircleImageView
+				android:id="@+id/pic3"
+				android:layout_width="48dp"
+				android:layout_height="48dp"
+				android:layout_marginRight="8dp"
+				android:visibility="gone"
+				tools:src="#0f0"/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			android:orientation="horizontal">
+
+			<TextView
+				android:id="@+id/followed_by"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="13dp"
+				android:textFontWeight="400"
+				android:fontFamily="sans-serif-medium"
+				tools:text=" "/>
+
+			<TextView
+				android:id="@+id/mutuals"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="13dp"
+				android:fontFamily="sans-serif-medium"
+				android:textFontWeight="600"
+				tools:text="username "/>
+
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:orientation="horizontal">
+
+			<TextView
+				android:id="@+id/member_of_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="13dp"
+				android:fontFamily="sans-serif-medium"
+				android:textFontWeight="600"
+				tools:text="Member of "/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/user_clubs"
+				android:layout_marginTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="14dp"
+				android:fontFamily="sans-serif-medium"
+				android:textFontWeight="500"
+				tools:text=" club 1"/>
+
+		</LinearLayout>
+
+
+
+
+		<WebView
+			android:id="@+id/webView"
+			android:layout_width="match_parent"
+			android:visibility="gone"
+			android:layout_height="540dp"/>
+
+		<LinearLayout
 			android:id="@+id/inviter_btn"
+			android:layout_marginTop="25dp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal">
@@ -187,6 +291,8 @@
 				android:text="@string/invite_button_label" />
 
 		</LinearLayout>
+
+
 
 	</LinearLayout>
 

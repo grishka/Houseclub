@@ -113,20 +113,49 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		menu.add(0,0,0,"").setIcon(R.drawable.ic_notifications).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		menu.add(0,1,0,"").setIcon(R.drawable.ic_baseline_person_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add(0,0,0,"").setIcon(R.drawable.ic_notifications).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//		menu.add(0,1,0,"").setIcon(R.drawable.ic_baseline_person_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		inflater.inflate(R.menu.menu_home, menu);
+
+
+
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
-		Bundle args=new Bundle();
-		args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
-		if(item.getItemId()==0) {
-			Nav.go(getActivity(), NotificationListFragment.class, args);
-		} else if(item.getItemId()==1){
+		if (item.getItemId() == R.id.homeMenuProfile) {
+			Bundle args=new Bundle();
+			args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
 			Nav.go(getActivity(), ProfileFragment.class, args);
+			return true;
 		}
-		return true;
+		else if (item.getItemId() == R.id.homeMenuSearchPeople) {
+			Bundle args = new Bundle();
+			Nav.go(getActivity(), SearchListFragment.class, args);
+			return true;
+		}
+		else if (item.getItemId() == R.id.homeMenuNotifications) {
+			Bundle args = new Bundle();
+			args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
+			Nav.go(getActivity(), NotificationListFragment.class, args);
+			return true;
+		}
+		else if (item.getItemId() == R.id.homeMenuEvents) {
+			Bundle args = new Bundle();
+			args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
+			Nav.go(getActivity(), EventsFragment.class, args);
+			return true;
+		}
+
+		else if (item.getItemId() == R.id.homeMenuSearchClubs) {
+			Bundle args = new Bundle();
+			args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
+			Nav.go(getActivity(), SearchClubsListFragment.class, args);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+
 	}
 
 	private class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> implements ImageLoaderRecyclerAdapter{
@@ -204,14 +233,14 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 			topic.setText(item.topic);
 			numMembers.setText(""+item.numAll);
 			numSpeakers.setText(""+item.numSpeakers);
-			speakers.setText(item.users.stream().map(user->user.isSpeaker ? (user.name+" 💬") : user.name).collect(Collectors.joining("\n")));
+			speakers.setText(item.users.stream().map(user->user.isSpeaker ? (user.name+" 💬") : user.name).collect(Collectors.joining("\n")) );
 
 			imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
 		}
 
 		@Override
 		public void onClick(View view){
-			((MainActivity)getActivity()).joinChannel(item);
+			((MainActivity)getActivity()).joinChannel(item.channel);
 		}
 
 		private ImageView imgForIndex(int index){

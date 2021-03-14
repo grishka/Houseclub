@@ -11,5 +11,4 @@ public class Event{
 	public int eventId;
 	public boolean isMemberOnly;
 	public List<FullUser> hosts;
-	public boolean clubIsMember, clubIsFollower;
 }
