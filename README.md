@@ -4,6 +4,9 @@ Not to be taken seriously.
 
 THIS IS AN UPDATED VERSION OF CLUBHOUSE WITH NEWELY ADDED FEATURES 
 
+This app is NOT available in Google Play. The only right place to download it is here in the releases section.
+
+
 NEW FEATURES :
 
 - Search clubs & users
