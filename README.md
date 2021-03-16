@@ -2,6 +2,22 @@ Unofficial Clubhouse app for Android. Inspired by [this](https://github.com/styp
 
 Not to be taken seriously.
 
+THIS IS AN UPDATED VERSION OF CLUBHOUSE WITH NEWELY ADDED FEATURES 
+
+NEW FEATURES :
+
+- Search clubs & users
+- Follow & Unfollow clubs
+- Upcoming events 
+- Show followed by (mutual followers )
+- Open uers's profile image 
+- Ping users to join a room
+- Open rooms from notifications list 
+- Show user's joined clubs 
+- Disable raise hand button if raise hand is not enabled 
+- Alert user if hand is raised or unraised 
+- Link Instagram
+
 **Any issues about audio quality will be closed immediately, so please don't bother posting those.**
 
 # FAQ
