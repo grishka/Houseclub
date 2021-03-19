@@ -5,7 +5,6 @@ import android.os.LocaleList;
 import android.util.Log;
 
 import com.google.gson.FieldNamingPolicy;
-import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -35,16 +34,16 @@ public class ClubhouseAPIController{
 	private static final String API_BUILD_VERSION="0.1.28";
 	private static final String API_UA="clubhouse/"+API_BUILD_ID+" (iPhone; iOS 13.5.1; Scale/3.00)";
 
-	public static final String PUBNUB_PUB_KEY = "pub-c-6878d382-5ae6-4494-9099-f930f938868b";
-	public static final String PUBNUB_SUB_KEY = "sub-c-a4abea84-9ca3-11ea-8e71-f2b83ac9263d";
+	public static final String PUBNUB_PUB_KEY="pub-c-6878d382-5ae6-4494-9099-f930f938868b";
+	public static final String PUBNUB_SUB_KEY="sub-c-a4abea84-9ca3-11ea-8e71-f2b83ac9263d";
 
-	public static final String TWITTER_ID = "NyJhARWVYU1X3qJZtC2154xSI";
-	public static final String TWITTER_SECRET = "ylFImLBFaOE362uwr4jut8S8gXGWh93S1TUKbkfh7jDIPse02o";
+	public static final String TWITTER_ID="NyJhARWVYU1X3qJZtC2154xSI";
+	public static final String TWITTER_SECRET="ylFImLBFaOE362uwr4jut8S8gXGWh93S1TUKbkfh7jDIPse02o";
 
-	public static final String AGORA_KEY = "938de3e8055e42b281bb8c6f69c21f78";
-	public static final String SENTRY_KEY = "5374a416cd2d4009a781b49d1bd9ef44@o325556.ingest.sentry.io/5245095";
-	public static final String INSTABUG_KEY = "4e53155da9b00728caa5249f2e35d6b3";
-	public static final String AMPLITUDE_KEY = "9098a21a950e7cb0933fb5b30affe5be";
+	public static final String AGORA_KEY="938de3e8055e42b281bb8c6f69c21f78";
+	public static final String SENTRY_KEY="5374a416cd2d4009a781b49d1bd9ef44@o325556.ingest.sentry.io/5245095";
+	public static final String INSTABUG_KEY="4e53155da9b00728caa5249f2e35d6b3";
+	public static final String AMPLITUDE_KEY="9098a21a950e7cb0933fb5b30affe5be";
 
 	private WorkerThread apiThread;
 	private Gson gson=new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").disableHtmlEscaping().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
@@ -126,7 +125,7 @@ public class ClubhouseAPIController{
 
 				if(ClubhouseSession.isLoggedIn()){
 					bldr.header("Authorization", "Token "+ClubhouseSession.userToken)
-						.header("CH-UserID", ClubhouseSession.userID);
+							.header("CH-UserID", ClubhouseSession.userID);
 				}
 				Call call=httpClient.newCall(bldr.build());
 				if(DEBUG)

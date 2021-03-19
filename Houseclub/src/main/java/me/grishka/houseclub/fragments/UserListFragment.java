@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.fragments.BaseRecyclerFragment;
 import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
@@ -116,7 +117,7 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 			}
 			// TODO get_followers/get_following don't return current follow status?
 //			if(item.userId==selfID){
-				followBtn.setVisibility(View.GONE);
+			followBtn.setVisibility(View.GONE);
 //			}else{
 //				followBtn.setVisibility(View.VISIBLE);
 //				followBtn.setText(item.isFollowed() ? R.string.following : R.string.follow);

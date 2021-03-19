@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 
 import me.grishka.houseclub.App;
 import me.grishka.houseclub.api.ClubhouseAPIRequest;

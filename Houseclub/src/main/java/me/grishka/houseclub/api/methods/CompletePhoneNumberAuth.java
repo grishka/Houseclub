@@ -1,7 +1,5 @@
 package me.grishka.houseclub.api.methods;
 
-import java.lang.reflect.Type;
-
 import me.grishka.houseclub.api.ClubhouseAPIRequest;
 import me.grishka.houseclub.api.model.User;
 
