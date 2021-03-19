@@ -15,6 +15,7 @@
 	<string name="waitlist">Wait list</string>
 	<string name="waitlist_text">You\'re waiting for someone to invite you to Clubhouse. Your account is currently inactive.</string>
 	<string name="log_out">Log out</string>
+
 	<string name="ongoing_call">Ongoing call</string>
 	<string name="leave_room">Leave room</string>
 	<string name="join_this_room">Join this room?</string>
@@ -49,8 +50,12 @@
 	<string name="follows_you">Follows you</string>
 	<string name="follow">Follow</string>
 	<string name="following">Following</string>
+	<string name="invite_to_room">Invite People to Room</string>
 	<string name="followers_title">Followers</string>
 	<string name="following_title">Following</string>
+	<string name="event_title">Upcoming Events</string>
+	<string name="search_people_hint">Search People</string>
+	<string name="search_clubs_hint">Search Clubs</string>
 	<string name="notifications_title">Notifications</string>
 	<string name="confirm_unfollow">Unfollow <b>%s</b>?</string>
 	<string name="yes">Yes</string>
@@ -61,6 +66,10 @@
 	<string name="update_name">Update name</string>
 	<string name="save">Save</string>
 	<string name="event_not_started">This event hasn\'t started yet</string>
+	<string name="add_instagram">Link instagram</string>
+	<string name="confirm_unlink_instagram_title">Unlink instagram?</string>
+	<string name="confirm_unlink_instagram">Are you sure want to unlink instagram? It can be linked in future</string>
+	<string name="instagram_linked">Instagram linked, reopen page to see</string>
 	<string name="event_expired">This event has already ended</string>
 	<string name="log_in_to_activate">Please log in again to activate your account.</string>
 	<string name="ok">OK</string>

@@ -7,9 +7,9 @@ import android.widget.SearchView;
 
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.houseclub.R;
-import me.grishka.houseclub.api.methods.SearchPeople;
+import me.grishka.houseclub.api.methods.SearchClubs;
 
-public class SearchListFragment extends UserListFragment {
+public class SearchClubsListFragment extends ClubListFragment {
 
 	private SearchView searchView;
 	private SearchView.OnQueryTextListener onQueryTextListener;
@@ -22,7 +22,7 @@ public class SearchListFragment extends UserListFragment {
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
-		setTitle(R.string.search_people_hint);
+		setTitle(R.string.search_clubs_hint);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class SearchListFragment extends UserListFragment {
 		View search_panel = view.inflate(getContext(), R.layout.search_panel, null);
 
 		searchView = search_panel.findViewById(R.id.searchView);
-		searchView.setQueryHint(getString(R.string.search_people_hint));
+		searchView.setQueryHint(getString(R.string.search_clubs_hint));
 		onQueryTextListener = new OnSearchQueryTextListener();
 
 		getToolbar().addView(search_panel);
@@ -86,14 +86,15 @@ public class SearchListFragment extends UserListFragment {
 			currentRequest.cancel();
 		}
 
-		currentRequest = new SearchPeople(searchQuery)
-				.setCallback(new SimpleCallback<SearchPeople.Resp>(this) {
+		currentRequest = new SearchClubs(searchQuery)
+				.setCallback(new SimpleCallback<SearchClubs.Response>(this) {
 					@Override
-					public void onSuccess(SearchPeople.Resp result) {
+					public void onSuccess(SearchClubs.Response result) {
 						currentRequest=null;
 						data.clear();
-						onDataLoaded(result.users, false);
+						onDataLoaded(result.clubs ,  false);
 					}
+
 				}).exec();
 	}
 

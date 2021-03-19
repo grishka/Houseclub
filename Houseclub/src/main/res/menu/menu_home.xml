@@ -4,17 +4,31 @@
 
 
     <item
-        android:id="@+id/homeMenuInvite"
-        android:icon="@drawable/ic_baseline_person_add_24"
+        android:id="@+id/homeMenuEvents"
+        android:icon="@drawable/ic_baseline_calendar_today_24"
         android:showAsAction="always"
         android:title="" />
 
     <item
-        android:id="@+id/homeMenuSearchPeople"
-        android:icon="@drawable/ic_search_people"
+        android:id="@+id/homeMenuInvite"
+        android:icon="@drawable/ic_baseline_mail_outline_24"
+        android:showAsAction="always"
+        android:title="" />
+
+    <item
+        android:id="@+id/homeMenuSearchClubs"
+        android:icon="@drawable/ic_baseline_search_24"
         android:showAsAction="always"
         android:title=""
         tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/homeMenuSearchPeople"
+        android:icon="@drawable/ic_baseline_person_search_24"
+        android:showAsAction="always"
+        android:title=""
+        tools:ignore="AlwaysShowAction" />
+
     <item
         android:id="@+id/homeMenuNotifications"
         android:icon="@drawable/ic_notifications"
@@ -29,4 +43,4 @@
 
 
 
-</menu> 
+</menu>

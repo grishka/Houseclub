@@ -1,10 +1,12 @@
 package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,18 +14,30 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import me.grishka.appkit.Nav;
+import me.grishka.appkit.api.Callback;
+import me.grishka.appkit.api.ErrorResponse;
+import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.fragments.BaseRecyclerFragment;
 import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
 import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
 import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.views.UsableRecyclerView;
+import me.grishka.houseclub.MainActivity;
 import me.grishka.houseclub.R;
+import me.grishka.houseclub.VoiceService;
+import me.grishka.houseclub.api.BaseResponse;
 import me.grishka.houseclub.api.ClubhouseSession;
+import me.grishka.houseclub.api.methods.AudienceReply;
+import me.grishka.houseclub.api.methods.GetFollowers;
+import me.grishka.houseclub.api.methods.InviteToRoom;
+import me.grishka.houseclub.api.methods.JoinChannel;
+import me.grishka.houseclub.api.model.Channel;
 import me.grishka.houseclub.api.model.FullUser;
 
 public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
@@ -141,9 +155,33 @@ public abstract class UserListFragment extends BaseRecyclerFragment<FullUser>{
 
 		@Override
 		public void onClick(){
-			Bundle args=new Bundle();
-			args.putInt("id", item.userId);
-			Nav.go(getActivity(), ProfileFragment.class, args);
+			if(getArguments().getString("type") == "invite_to_room"){
+				System.out.println("USERPINGED");
+
+				new InviteToRoom(getArguments().getString("channel") , item.userId)
+						.setCallback(new Callback<BaseResponse>() {
+					@Override
+					public void onSuccess(BaseResponse result) {
+
+						Toast.makeText(getActivity(), "User Pinged", Toast.LENGTH_SHORT).show();
+
+					}
+					@Override
+					public void onError(ErrorResponse error) {
+
+						error.showToast(getContext());
+
+					}
+				}).exec();
+
+
+
+			}else {
+				Bundle args=new Bundle();
+				args.putInt("id", item.userId);
+				Nav.go(getActivity(), ProfileFragment.class, args);
+			}
+
 		}
 	}
 }
