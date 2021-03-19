@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">Houseclub</string>
+	<string name="app_name" translatable="false">Houseclub</string>
 	<string name="login">Login</string>
 	<string name="phone_number">Phone number</string>
 	<string name="enter_your_phone">Enter your phone #</string>
