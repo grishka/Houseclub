@@ -115,18 +115,26 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
-	    if (item.getItemId() == R.id.homeMenuProfile) {
-            Bundle args=new Bundle();
-            args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
-            Nav.go(getActivity(), ProfileFragment.class, args);
-            return true;
-        } else if (item.getItemId() == R.id.homeMenuSearchPeople) {
-	    	Bundle args = new Bundle();
-	    	args.putInt(BaseSearchFragment.KEY_SEARCH_TYPE, BaseSearchFragment.SearchType.PEOPLE.ordinal());
-	    	Nav.go(getActivity(), SearchPeopleFragment.class, args);
-            return true;
-        }
-		return false;
+		if (item.getItemId() == R.id.homeMenuProfile) {
+			Bundle args=new Bundle();
+			args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
+			Nav.go(getActivity(), ProfileFragment.class, args);
+			return true;
+		} else if (item.getItemId() == R.id.homeMenuSearchPeople) {
+			Bundle args = new Bundle();
+			Nav.go(getActivity(), SearchListFragment.class, args);
+			return true;
+		} else if (item.getItemId() == R.id.homeMenuNotifications) {
+			Bundle args = new Bundle();
+			args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
+			Nav.go(getActivity(), NotificationListFragment.class, args);
+			return true;
+		} else if(item.getItemId() == R.id.homeMenuInvite) {
+			Bundle args = new Bundle();
+			Nav.go(getActivity(), InviteListFragment.class, args);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> implements ImageLoaderRecyclerAdapter{
