@@ -310,6 +310,9 @@ public class InChannelFragment extends BaseRecyclerFragment<ChannelUser> impleme
 		Nav.finish(this);
 	}
 
+	@Override
+	public void onSelfLeft() { }
+
 	private class UserListAdapter extends RecyclerView.Adapter<UserViewHolder> implements ImageLoaderRecyclerAdapter{
 
 		private List<ChannelUser> users;

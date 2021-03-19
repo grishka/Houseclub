@@ -6,8 +6,8 @@ import java.util.Objects;
 
 import me.grishka.houseclub.api.model.Channel;
 
-class DataProvider{
-	private static Channel channelCache=null;
+public class DataProvider {
+    private static Channel channelCache = null;
 
 	@Nullable
 	public static Channel getChannel(String id){
@@ -15,7 +15,11 @@ class DataProvider{
 		return Objects.equals(channelCache.channel, id) ? channelCache : null;
 	}
 
-	public static void saveChannel(Channel channel){
-		channelCache=channel;
-	}
+    public static Channel getCachedChannel(){
+        return channelCache;
+    }
+
+    public static void saveChannel(Channel channel) {
+        channelCache = channel;
+    }
 }

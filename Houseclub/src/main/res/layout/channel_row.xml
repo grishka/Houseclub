@@ -4,8 +4,7 @@
 	android:layout_height="wrap_content"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:padding="16dp"
-	android:background="#FFF"
-	android:foreground="?android:selectableItemBackground">
+	android:background="@drawable/background_channel_item">
 
 	<TextView
 		android:id="@+id/topic"

@@ -241,6 +241,10 @@ public class VoiceService extends Service{
 		uiHandler.removeCallbacks(pinger);
 		pubnub.unsubscribeAll();
 		pubnub.destroy();
+		uiHandler.post(() -> {
+			for(ChannelEventListener l:listeners)
+				l.onSelfLeft();
+		});
 	}
 
 	public void leaveCurrentChannel(){
@@ -421,6 +425,7 @@ public class VoiceService extends Service{
 		void onChannelUpdated(Channel channel);
 		void onSpeakingUsersChanged(List<Integer> ids);
 		void onChannelEnded();
+		void onSelfLeft();
 	}
 
 	private class RtcEngineEventHandler extends IRtcEngineEventHandler{
