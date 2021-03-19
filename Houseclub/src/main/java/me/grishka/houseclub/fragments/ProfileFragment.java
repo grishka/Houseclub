@@ -24,6 +24,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ import me.grishka.houseclub.api.methods.UpdateBio;
 import me.grishka.houseclub.api.methods.UpdateInstagram;
 import me.grishka.houseclub.api.methods.UpdatePhoto;
 import me.grishka.houseclub.api.methods.UpdateName;
+import me.grishka.houseclub.api.methods.UpdatePhoto;
 import me.grishka.houseclub.api.model.FullUser;
 
 public class ProfileFragment extends LoaderFragment{
@@ -73,6 +75,7 @@ public class ProfileFragment extends LoaderFragment{
 		super.onAttach(activity);
 		loadData();
 		self=getArguments().getInt("id")==Integer.parseInt(ClubhouseSession.userID);
+		isImageFitToScreen=true;
 		if(self)
 			setHasOptionsMenu(true);
 	}
@@ -111,6 +114,9 @@ public class ProfileFragment extends LoaderFragment{
 			photo.setOnClickListener(this::onPhotoClick);
 			name.setOnClickListener(this::onNameClick);
 			inviteButton.setOnClickListener(this::onInviteClick);
+		}
+		else {
+			photo.setOnClickListener(this::onForeignPhotoClick);
 		}
 
 		webView.setVisibility(View.GONE);
@@ -518,5 +524,16 @@ public class ProfileFragment extends LoaderFragment{
 		Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		startActivityForResult(intent, PICK_PHOTO_RESULT);
+	}
+	private void onForeignPhotoClick(View view) {
+		if(isImageFitToScreen) {
+			isImageFitToScreen=false;
+			photo.setLayoutParams(new LinearLayout.LayoutParams((int) (272 * (getResources().getDisplayMetrics().density)), (int) (272 * (getResources().getDisplayMetrics().density))));
+			photo.setAdjustViewBounds(true);
+		}else{
+			isImageFitToScreen=true;
+			photo.setLayoutParams(new LinearLayout.LayoutParams((int) (72 * (getResources().getDisplayMetrics().density)), (int) (72 * (getResources().getDisplayMetrics().density))));
+			photo.setScaleType(ImageView.ScaleType.FIT_XY);
+		}
 	}
 }
