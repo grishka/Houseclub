@@ -9,6 +9,13 @@ android {
 		targetSdkVersion 30
 		versionCode 9
 		versionName "1.0.8"
+
+		Properties properties = new Properties()
+		if (project.rootProject.file('local.properties').canRead()) {
+			properties.load(project.rootProject.file("local.properties").newDataInputStream())
+		}
+
+		buildConfigField "String", "INSTAGRAM_APP_ID", '"'+properties.getProperty("instagramAppId")+'"'
 	}
 	buildTypes {
 		release {
