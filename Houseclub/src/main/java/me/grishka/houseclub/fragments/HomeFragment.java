@@ -39,6 +39,7 @@ import me.grishka.appkit.utils.V;
 import me.grishka.houseclub.DataProvider;
 import me.grishka.houseclub.MainActivity;
 import me.grishka.houseclub.R;
+import me.grishka.houseclub.VoiceService;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.GetChannels;
 import me.grishka.houseclub.api.model.Channel;
@@ -109,7 +110,7 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
 		returnView.findViewById(R.id.return_container).setOnClickListener((it) -> {
 			Channel channel = DataProvider.getCachedChannel();
 			if (channel != null)
-				((MainActivity) getActivity()).joinChannel(channel);
+				((MainActivity) getActivity()).joinChannel(channel.channel);
 		});
 		VoiceService.addListener(channelEventListener);
 	}

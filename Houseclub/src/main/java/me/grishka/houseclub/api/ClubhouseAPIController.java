@@ -151,7 +151,7 @@ public class ClubhouseAPIController{
 						BaseResponse br=gson.fromJson(respStr, BaseResponse.class);
 
 						String error;
-						if (!br.errorMessage.isEmpty()) error=br.errorMessage;
+						if (br.errorMessage != null && !br.errorMessage.isEmpty()) error=br.errorMessage;
 						else error="ERROR with code " +resp.code();
 						br.errorMessage = error;
 

@@ -465,8 +465,7 @@ public class VoiceService extends Service{
 					for(ChannelEventListener l:listeners)
 						l.onUserMuteChanged(uid, muted);
 				}
-				for(ChannelEventListener l:listeners)
-					l.onUserMuteChanged(uid, muted);
+				
 			});
 		}
 	}

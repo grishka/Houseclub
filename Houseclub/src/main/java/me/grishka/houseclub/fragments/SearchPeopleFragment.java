@@ -19,6 +19,7 @@ import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.imageloader.ViewImageLoader;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.api.methods.SearchPeople;
+import me.grishka.houseclub.api.model.FullUser;
 import me.grishka.houseclub.api.model.SearchUser;
 
 public class SearchPeopleFragment extends BaseSearchFragment {
@@ -52,7 +53,21 @@ public class SearchPeopleFragment extends BaseSearchFragment {
                         dataLoaded();
                         if (adapter != null && result.users != null && !result.users.isEmpty()) {
                             onUsersFound();
-                            adapter.updateUsers(result.users);
+
+                            ArrayList<SearchUser> users2 = new ArrayList<SearchUser>();
+
+                            for(FullUser u: result.users){
+
+                                SearchUser u2=  new SearchUser();
+                                u2.name = u.name;
+                                u2.bio = u.bio;
+                                u2.photoUrl = u.photoUrl;
+                                u2.userId = u.userId;
+
+                                users2.add(u2);
+                            }
+
+                            adapter.updateUsers(users2);
                         } else {
                             onUsersNotFound();
                         }

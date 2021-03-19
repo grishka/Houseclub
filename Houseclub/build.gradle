@@ -38,12 +38,13 @@ android {
 }
 
 dependencies {
-	implementation 'com.github.grishka.litex:recyclerview:1.0'
-	implementation 'com.github.grishka.litex:swiperefreshlayout:1.0'
-	implementation 'com.github.grishka.litex:viewpager2:1.0'
-	implementation 'com.github.grishka:appkit:c7854a3'
+	implementation "androidx.recyclerview:recyclerview:1.1.0"
+	implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
+	implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+	implementation "androidx.viewpager2:viewpager2:1.0.0"
+	implementation 'com.github.omarss:appkit:c12bec5'
 	implementation 'com.squareup.okhttp3:okhttp:3.14.7'
-	api 'com.github.grishka.litex:annotation:1.0'
+	implementation "androidx.annotation:annotation:1.1.0"
 
 	implementation 'com.google.code.gson:gson:2.8.6'
 //	implementation 'com.squareup:otto:1.3.8'

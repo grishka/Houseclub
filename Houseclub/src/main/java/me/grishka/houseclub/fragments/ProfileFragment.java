@@ -49,6 +49,7 @@ import me.grishka.houseclub.api.methods.InviteToApp;
 import me.grishka.houseclub.api.methods.Me;
 import me.grishka.houseclub.api.methods.Unfollow;
 import me.grishka.houseclub.api.methods.UpdateBio;
+import me.grishka.houseclub.api.methods.UpdateInstagram;
 import me.grishka.houseclub.api.methods.UpdateName;
 import me.grishka.houseclub.api.methods.UpdatePhoto;
 import me.grishka.houseclub.api.model.FullUser;
@@ -63,9 +64,11 @@ public class ProfileFragment extends LoaderFragment{
 			invites;
 	private ImageView photo, inviterPhoto;
 
-	private Button followBtn;
-	private View socialButtons;
+	private Button followBtn, inviteButton;
+	private View socialButtons, inviteLayout;
 	private boolean self, isImageFitToScreen;
+	private WebView webView;
+	private EditText invitePhoneNum;
 
 
 	@Override
