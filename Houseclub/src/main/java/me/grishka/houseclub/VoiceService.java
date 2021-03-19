@@ -145,6 +145,7 @@ public class VoiceService extends Service{
 	}
 
 	private void doJoinChannel(){
+		engine.setAudioProfile(Constants.AUDIO_PROFILE_MUSIC_HIGH_QUALITY_STEREO, Constants.AUDIO_SCENARIO_GAME_STREAMING);
 		engine.setChannelProfile(isSelfSpeaker ? Constants.CHANNEL_PROFILE_COMMUNICATION : Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
 		engine.joinChannel(channel.token, channel.channel, "", Integer.parseInt(ClubhouseSession.userID));
 		uiHandler.postDelayed(pinger, 30000);
@@ -455,14 +456,14 @@ public class VoiceService extends Service{
 			uiHandler.post(new Runnable(){
 				@Override
 				public void run(){
-							for(ChannelUser u:channel.users){
-								if(u.userId==uid){
-									u.isMuted=muted;
-									break;
-								}
-							}
-							for(ChannelEventListener l:listeners)
-								l.onUserMuteChanged(uid, muted);
+					for(ChannelUser u:channel.users){
+						if(u.userId==uid){
+							u.isMuted=muted;
+							break;
+						}
+					}
+					for(ChannelEventListener l:listeners)
+						l.onUserMuteChanged(uid, muted);
 				}
 			});
 		}
