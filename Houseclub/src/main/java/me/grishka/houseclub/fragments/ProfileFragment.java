@@ -62,7 +62,7 @@ public class ProfileFragment extends LoaderFragment{
 	private FullUser user;
 
 	private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram,
-			invites;
+			invites, mutualfollowers;
 	private ImageView photo, inviterPhoto;
 	private Button followBtn, inviteButton;
 	private EditText invitePhoneNum;
@@ -87,6 +87,7 @@ public class ProfileFragment extends LoaderFragment{
 		name=v.findViewById(R.id.name);
 		username=v.findViewById(R.id.username);
 		followers=v.findViewById(R.id.followers);
+		mutualfollowers=v.findViewById(R.id.mutualfollowers);
 		following=v.findViewById(R.id.following);
 		followsYou=v.findViewById(R.id.follows_you);
 		bio=v.findViewById(R.id.bio);
@@ -107,6 +108,7 @@ public class ProfileFragment extends LoaderFragment{
 		instagram.setOnClickListener(this::onInstagramClick);
 		twitter.setOnClickListener(this::onTwitterClick);
 		followers.setOnClickListener(this::onFollowersClick);
+		mutualfollowers.setOnClickListener(this::onMutualFollowersClick);
 		following.setOnClickListener(this::onFollowingClick);
 		v.findViewById(R.id.inviter_btn).setOnClickListener(this::onInviterClick);
 		if(self){
@@ -146,6 +148,7 @@ public class ProfileFragment extends LoaderFragment{
 
 						followsYou.setVisibility(user.followsMe ? View.VISIBLE : View.GONE);
 						followers.setText(getResources().getQuantityString(R.plurals.followers, user.numFollowers, user.numFollowers));
+						mutualfollowers.setText(R.string.mutual_followers_title);
 						following.setText(getResources().getQuantityString(R.plurals.following, user.numFollowing, user.numFollowing));
 						bio.setText(user.bio);
 						if(TextUtils.isEmpty(user.bio) && self)
@@ -409,6 +412,11 @@ public class ProfileFragment extends LoaderFragment{
 		Bundle args=new Bundle();
 		args.putInt("id", user.userId);
 		Nav.go(getActivity(), FollowersFragment.class, args);
+	}
+	private void onMutualFollowersClick(View v){
+		Bundle args=new Bundle();
+		args.putInt("id", user.userId);
+		Nav.go(getActivity(), MutualFollowersFragment.class, args);
 	}
 
 	private void onFollowingClick(View v){
