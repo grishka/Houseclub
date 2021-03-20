@@ -159,7 +159,10 @@ public class HomeFragment extends BaseRecyclerFragment<Channel>{
         if (returnView != null) {
             returnView.setVisibility(View.INVISIBLE);
         }
-        list.setPadding(list.getPaddingLeft(), list.getPaddingTop(), list.getPaddingRight(), 0);
+
+        if(list != null){
+			list.setPadding(list.getPaddingLeft(), list.getPaddingTop(), list.getPaddingRight(), 0);
+		}
     }
 
     private void checkReturnBar() {
