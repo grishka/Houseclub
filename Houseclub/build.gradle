@@ -37,7 +37,12 @@ android {
 //	}
 }
 
+apply plugin: 'com.google.gms.google-services'
+
 dependencies {
+	implementation platform('com.google.firebase:firebase-bom:26.7.0')
+	implementation 'com.google.firebase:firebase-analytics'
+
 	implementation "androidx.recyclerview:recyclerview:1.1.0"
 	implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
