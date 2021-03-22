@@ -71,7 +71,7 @@ public class NotificationListFragment extends BaseRecyclerFragment<Notification>
 
 	@Override
 	protected void doLoadData(int offset, int count){
-		currentRequest=new GetNotifications(getArguments().getInt("id"), 50, offset/50+1)
+		currentRequest=new GetNotifications(getArguments().getLong("id"), 50, offset/50+1)
 				.setCallback(new SimpleCallback<GetNotifications.Response>(this){
 					@Override
 					public void onSuccess(GetNotifications.Response result){
@@ -129,14 +129,21 @@ public class NotificationListFragment extends BaseRecyclerFragment<Notification>
 
 		@Override
 		public void onBind(Notification item){
-			name.setText(item.userProfile.name);
-			message.setText(item.message);
+			if(name != null)
+				name.setText(item.userProfile.name);
+			if(message != null)
+				message.setText(item.message);
+			if(time != null)
 			time.setText(DateUtils.getRelativeTimeSpanString(item.timeCreated.getTime()));
 
-			if(item.userProfile.photoUrl!=null)
-				imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
-			else
-				photo.setImageDrawable(placeholder);
+			if(item.userProfile.photoUrl!=null){
+				if(imgLoader != null)
+					imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
+			}
+			else{
+				if(photo != null)
+					photo.setImageDrawable(placeholder);
+			}
 		}
 
 		@Override

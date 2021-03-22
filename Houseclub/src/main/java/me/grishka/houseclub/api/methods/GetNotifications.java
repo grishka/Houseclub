@@ -7,7 +7,7 @@ import me.grishka.houseclub.api.ClubhouseAPIRequest;
 import me.grishka.houseclub.api.model.Notification;
 
 public class GetNotifications extends ClubhouseAPIRequest<GetNotifications.Response>{
-	public GetNotifications(int userID, int pageSize, int page){
+	public GetNotifications(long userID, int pageSize, int page){
 		super("GET", "get_notifications", Response.class);
 		queryParams=new HashMap<>();
 		queryParams.put("user_id", userID+"");

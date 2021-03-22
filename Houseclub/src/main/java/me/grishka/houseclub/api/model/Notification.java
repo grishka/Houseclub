@@ -3,7 +3,7 @@ package me.grishka.houseclub.api.model;
 import java.util.Date;
 
 public class Notification {
-    public int notificationId;
+    public long notificationId;
     public boolean inUnread;
     public User userProfile;
     public int eventId;
