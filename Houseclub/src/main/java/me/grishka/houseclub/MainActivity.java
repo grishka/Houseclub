@@ -7,9 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.util.Date;
@@ -37,6 +40,25 @@ public class MainActivity extends FragmentStackActivity{
 
 	private Channel channelToJoin;
 	private static final int PERMISSION_RESULT=270;
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		updateWindowSize();
+	}
+
+	public void updateWindowSize() {
+		Resources resources = getResources();
+		// set the window to a known size so that we don't have issues with different
+		// screen sizes
+		int referenceWidthDp = resources.getDimensionPixelSize(R.dimen.reference_width);
+		int referenceHeightDp = resources.getDimensionPixelSize(R.dimen.reference_height);
+		WindowManager.LayoutParams attrs = getWindow().getAttributes();
+		// set layout when the orientation has changed
+		if (attrs.width != referenceWidthDp || attrs.height != referenceHeightDp) {
+			getWindow().setLayout(referenceWidthDp, referenceHeightDp);
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){

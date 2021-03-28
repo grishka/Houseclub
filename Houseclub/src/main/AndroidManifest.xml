@@ -10,6 +10,8 @@
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+	<uses-configuration android:reqTouchScreen="finger" />
+	<uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
 	<application
 		android:allowBackup="true"
@@ -18,8 +20,10 @@
 		android:name=".App"
 		android:icon="@mipmap/ic_launcher"
 		android:roundIcon="@mipmap/ic_launcher_round"
-		android:usesCleartextTraffic="true">
-		<activity android:name=".MainActivity" android:configChanges="screenSize|orientation" android:launchMode="singleTask">
+		android:usesCleartextTraffic="true"
+		android:resizeableActivity="true">
+		<activity android:name=".MainActivity"  android:launchMode="singleTask" android:resizeableActivity="true"
+			android:configChanges="colorMode|orientation|screenLayout|screenSize|smallestScreenSize|keyboardHidden|keyboard">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
