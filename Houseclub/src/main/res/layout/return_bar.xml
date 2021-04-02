@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey" />
+
+    <TextView
+        android:id="@+id/return_to_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#fff"
+        android:clickable="true"
+        android:ellipsize="end"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="center"
+        android:maxLines="1"
+        android:padding="20dp"
+        android:text="Return to ..."
+        android:textColor="@color/text_gray" />
+</LinearLayout>

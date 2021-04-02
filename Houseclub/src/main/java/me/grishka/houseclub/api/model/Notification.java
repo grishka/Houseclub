@@ -11,6 +11,6 @@ public class Notification {
     public Date timeCreated;
     public String message;
 
-    public static final int NOTIFICATION_TYPE_USER=1;
-    public static final int NOTIFICATION_TYPE_EVENT=16;
+    public static final int NOTIFICATION_TYPE_USER = 1;
+    public static final int NOTIFICATION_TYPE_EVENT = 16;
 }

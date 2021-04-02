@@ -1,104 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:padding="24dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:text="@string/enter_your_phone"
-			android:textSize="22sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/enter_your_phone"
+            android:textSize="22sp" />
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="48dp"
-			android:layout_marginBottom="8dp"
-			android:background="@drawable/white_round_rectangle"
-			android:gravity="center_vertical"
-			android:padding="4dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/white_round_rectangle"
+            android:gravity="center_vertical"
+            android:padding="4dp">
 
-			<com.rilixtech.widget.countrycodepicker.CountryCodePicker
-				android:id="@+id/country_code_picker"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginStart="8dp"
-				app:ccp_enableHint="false"
-				app:ccp_hidePhoneCode="true"
-				app:ccp_hideNameCode="true" />
+            <com.rilixtech.widget.countrycodepicker.CountryCodePicker
+                android:id="@+id/country_code_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                app:ccp_enableHint="false"
+                app:ccp_hideNameCode="true"
+                app:ccp_hidePhoneCode="true" />
 
-			<EditText
-				android:id="@+id/phone_input"
-				android:layout_width="match_parent"
-				android:layout_height="48dp"
-				android:layout_marginStart="4dp"
-				android:layout_marginEnd="8dp"
-				android:background="@null"
-				android:hint="@string/phone_number"
-				android:inputType="phone"
-				android:textColorHint="@color/hint" />
-		</LinearLayout>
+            <EditText
+                android:id="@+id/phone_input"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                android:background="@null"
+                android:hint="@string/phone_number"
+                android:inputType="phone"
+                android:textColorHint="@color/hint" />
+        </LinearLayout>
 
-		<EditText
-			android:id="@+id/code_input"
-			android:layout_width="match_parent"
-			android:layout_height="48dp"
-			android:layout_marginTop="8dp"
-			android:layout_marginBottom="8dp"
-			android:background="@drawable/white_round_rectangle"
-			android:gravity="center"
-			android:hint="@string/sms_code"
-			android:inputType="number"
-			android:textColorHint="@color/hint" />
+        <EditText
+            android:id="@+id/code_input"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/white_round_rectangle"
+            android:gravity="center"
+            android:hint="@string/sms_code"
+            android:inputType="number"
+            android:textColorHint="@color/hint" />
 
-		<LinearLayout
-			android:id="@+id/resend_code_layout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="4dp"
-			android:gravity="center"
-			android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/resend_code_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_gravity="center_horizontal"
-				android:layout_marginBottom="8dp"
-				android:text="@string/resend_code_message"
-				android:textColor="@color/text_gray" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:text="@string/resend_code_message"
+                android:textColor="@color/text_gray" />
 
-			<Button
-				android:id="@+id/resend_code"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="8dp"
-				android:background="@null"
-				android:minWidth="0dp"
-				android:minHeight="0dp"
-				android:padding="4dp"
-				android:text="@string/resend_code_button"
-				android:textAllCaps="false"
-				android:textColor="@color/text_gray"
-				android:textStyle="normal" />
+            <Button
+                android:id="@+id/resend_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:padding="4dp"
+                android:text="@string/resend_code_button"
+                android:textAllCaps="false"
+                android:textColor="@color/text_gray"
+                android:textStyle="normal" />
 
-		</LinearLayout>
+        </LinearLayout>
 
-		<Button
-			android:id="@+id/next"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:layout_marginTop="48dp"
-			android:text="@string/next" />
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="48dp"
+            android:text="@string/next" />
 
-	</LinearLayout>
+    </LinearLayout>
 
 </ScrollView>

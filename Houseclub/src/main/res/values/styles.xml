@@ -1,48 +1,52 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-	<!-- Base application theme. -->
-	<style name="AppTheme" parent="Theme.AppKit.Light">
-		<item name="android:windowLightStatusBar">true</item>
-		<item name="android:statusBarColor">@color/lightBeige</item>
-		<item name="android:windowBackground">@color/lightBeige</item>
-		<item name="android:splitMotionEvents">false</item>
-		<item name="android:windowLightNavigationBar">true</item>
-		<item name="android:navigationBarColor">@color/navBar</item>
-		<item name="android:actionBarTheme">@style/Widget.Toolbar</item>
-		<item name="android:colorAccent">@color/blue</item>
-		<item name="android:buttonStyle">@style/Widget.Button</item>
-		<item name="android:alertDialogTheme">@style/AlertDialog</item>
-		<item name="android:textColorPrimary">#000</item>
-		<item name="android:textColor">#000</item>
-	</style>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppKit.Light">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/lightBeige</item>
+        <item name="android:windowBackground">@color/lightBeige</item>
+        <item name="android:splitMotionEvents">false</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarColor">@color/navBar</item>
+        <item name="android:actionBarTheme">@style/Widget.Toolbar</item>
+        <item name="android:colorAccent">@color/blue</item>
+        <item name="android:buttonStyle">@style/Widget.Button</item>
+        <item name="android:alertDialogTheme">@style/AlertDialog</item>
+        <item name="android:textColorPrimary">#000</item>
+        <item name="android:textColor">#000</item>
+    </style>
 
-	<style name="Widget.Toolbar" parent="android:ThemeOverlay.Material.ActionBar">
-		<item name="android:titleTextAppearance">@android:style/TextAppearance.Material.Widget.Toolbar.Title</item>
-		<item name="android:textColorPrimary">#000</item>
-		<item name="android:textColorSecondary">#000</item>
-		<item name="android:colorPrimary">@color/lightBeige</item>
-	</style>
+    <style name="Widget.Toolbar" parent="android:ThemeOverlay.Material.ActionBar">
+        <item name="android:titleTextAppearance">
+            @android:style/TextAppearance.Material.Widget.Toolbar.Title
+        </item>
+        <item name="android:textColorPrimary">#000</item>
+        <item name="android:textColorSecondary">#000</item>
+        <item name="android:colorPrimary">@color/lightBeige</item>
+    </style>
 
-	<style name="Widget.Button" parent="android:Widget.Material.Button.Colored">
-		<item name="android:textColor">#FFF</item>
-		<item name="android:colorAccent">@color/blue</item>
-		<item name="android:stateListAnimator">@null</item>
-		<item name="android:textAllCaps">false</item>
-	</style>
+    <style name="Widget.Button" parent="android:Widget.Material.Button.Colored">
+        <item name="android:textColor">#FFF</item>
+        <item name="android:colorAccent">@color/blue</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">38dp</item>
+        <item name="android:background">@drawable/button_blue_background</item>
+    </style>
 
-	<style name="Widget.Button.Grey" parent="android:Widget.Material.Button">
-		<item name="android:textColor">#DC4855</item>
-		<item name="android:colorAccent">#E3E0D9</item>
-		<item name="android:stateListAnimator">@null</item>
-		<item name="android:textAllCaps">false</item>
-		<item name="android:background">@drawable/button_grey_background</item>
-	</style>
+    <style name="Widget.Button.Grey" parent="android:Widget.Material.Button">
+        <item name="android:textColor">#DC4855</item>
+        <item name="android:colorAccent">#E3E0D9</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">@drawable/button_grey_background</item>
+    </style>
 
-	<style name="AlertDialog" parent="android:Theme.Material.Light.Dialog.Alert">
-		<item name="android:colorAccent">@color/blue</item>
-	</style>
+    <style name="AlertDialog" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/blue</item>
+    </style>
 
-	<color name="lightBeige">#F1EEE4</color>
-	<color name="blue">#5b75a6</color>
-	<color name="navBar">#000</color>
-	<color name="grey">#E3E0D9</color>
+    <color name="lightBeige">#F1EEE4</color>
+    <color name="blue">#5b75a6</color>
+    <color name="navBar">#000</color>
+    <color name="grey">#E3E0D9</color>
 </resources>

@@ -1,8 +1,7 @@
 package me.grishka.houseclub.fragments;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
+import android.app.AlertDialog;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Outline;
@@ -10,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,15 +17,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import me.grishka.appkit.Nav;
 import me.grishka.appkit.api.SimpleCallback;
 import me.grishka.appkit.fragments.BaseRecyclerFragment;
@@ -33,203 +35,328 @@ import me.grishka.appkit.imageloader.ImageLoaderRecyclerAdapter;
 import me.grishka.appkit.imageloader.ImageLoaderViewHolder;
 import me.grishka.appkit.utils.BindableViewHolder;
 import me.grishka.appkit.utils.V;
+import me.grishka.houseclub.DataProvider;
 import me.grishka.houseclub.MainActivity;
 import me.grishka.houseclub.R;
 import me.grishka.houseclub.VoiceService;
 import me.grishka.houseclub.api.ClubhouseSession;
 import me.grishka.houseclub.api.methods.GetChannels;
 import me.grishka.houseclub.api.model.Channel;
+import me.grishka.houseclub.api.model.ChannelUser;
+import me.grishka.houseclub.utils.AndroidUtils;
 
-public class HomeFragment extends BaseRecyclerFragment<Channel>{
+public class HomeFragment extends BaseRecyclerFragment<Channel> {
 
-	private ChannelAdapter adapter;
-	private ViewOutlineProvider roundedCornersOutline=new ViewOutlineProvider(){
-		@Override
-		public void getOutline(View view, Outline outline){
-			outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), V.dp(8));
-		}
-	};
+    private ChannelAdapter adapter;
+    private View returnView;
+    private boolean hasLeft = false;
 
-	public HomeFragment(){
-		super(20);
-	}
+    private ViewOutlineProvider roundedCornersOutline = new ViewOutlineProvider() {
+        @Override
+        public void getOutline(View view, Outline outline) {
+            outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), V.dp(8));
+        }
+    };
 
-	@Override
-	public void onAttach(Activity activity){
-		super.onAttach(activity);
-		loadData();
-		setHasOptionsMenu(true);
-	}
+    public HomeFragment() {
+        super(20);
+    }
 
-	@Override
-	protected void doLoadData(int offset, int count){
-		currentRequest=new GetChannels()
-				.setCallback(new SimpleCallback<GetChannels.Response>(this){
-					@Override
-					public void onSuccess(GetChannels.Response result){
-						currentRequest=null;
-						onDataLoaded(result.channels, false);
-					}
-				}).exec();
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        loadData();
+        setHasOptionsMenu(true);
+    }
 
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState){
-		super.onViewCreated(view, savedInstanceState);
-		list.addItemDecoration(new RecyclerView.ItemDecoration(){
-			@Override
-			public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state){
-				outRect.bottom=outRect.top=V.dp(8);
-				outRect.left=outRect.right=V.dp(16);
-			}
-		});
-		getToolbar().setElevation(0);
-	}
+    @Override
+    protected void doLoadData(int offset, int count) {
+        currentRequest = new GetChannels()
+                .setCallback(new SimpleCallback<GetChannels.Response>(this) {
+                    @Override
+                    public void onSuccess(GetChannels.Response result) {
+                        currentRequest = null;
+                        onDataLoaded(result.channels, false);
+                    }
+                }).exec();
+    }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig){
-		super.onConfigurationChanged(newConfig);
-		getToolbar().setElevation(0);
-	}
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        list.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.bottom = outRect.top = V.dp(8);
+                outRect.left = outRect.right = V.dp(16);
+            }
+        });
+        getToolbar().setElevation(0);
 
-	@Override
-	protected RecyclerView.Adapter getAdapter(){
-		if(adapter==null){
-			adapter=new ChannelAdapter();
-			adapter.setHasStableIds(true);
-		}
-		return adapter;
-	}
 
-	@Override
-	public boolean wantsLightNavigationBar(){
-		return true;
-	}
+        // add Return to "channel" bar to bottom of toolbar
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        returnView = inflater.inflate(R.layout.return_bar, null);
+        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ViewGroup parent = ((ViewGroup) getView().getParent());
+        parent.addView(returnView, params);
+        returnView.post(() -> {
+            final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) returnView.getLayoutParams();
+            layoutParams.gravity = Gravity.BOTTOM;
+            if (AndroidUtils.hasNavigationBar(getActivity())) {
+                layoutParams.bottomMargin = AndroidUtils.getNavigationBarSize(getContext());
+            }
+        });
 
-	@Override
-	public boolean wantsLightStatusBar(){
-		return true;
-	}
+        returnView.findViewById(R.id.return_to_channel).setOnClickListener((it) -> {
+            Channel channel = DataProvider.getCachedChannel();
+            if (channel != null)
+                ((MainActivity) getActivity()).joinChannel(channel);
+        });
+        VoiceService.addListener(channelEventListener);
+    }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-		menu.add(0,0,0,"").setIcon(R.drawable.ic_notifications).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		menu.add(0,1,0,"").setIcon(R.drawable.ic_baseline_person_24).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-	}
+    private final VoiceService.ChannelEventListener channelEventListener = new VoiceService.ChannelEventListener() {
+        @Override
+        public void onUserMuteChanged(int id, boolean muted) {
+        }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item){
-		Bundle args=new Bundle();
-		args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
-		if(item.getItemId()==0) {
-			Nav.go(getActivity(), NotificationListFragment.class, args);
-		} else if(item.getItemId()==1){
-			Nav.go(getActivity(), ProfileFragment.class, args);
-		}
-		return true;
-	}
+        @Override
+        public void onUserJoined(ChannelUser user) {
+        }
 
-	private class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> implements ImageLoaderRecyclerAdapter{
+        @Override
+        public void onUserLeft(int id) {
+        }
 
-		@NonNull
-		@Override
-		public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-			return new ChannelViewHolder();
-		}
+        @Override
+        public void onCanSpeak(String inviterName, int inviterID) {
+        }
 
-		@Override
-		public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position){
-			holder.bind(data.get(position));
-		}
+        @Override
+        public void onChannelUpdated(Channel channel) {
+            hasLeft = false;
+            checkReturnBar();
+        }
 
-		@Override
-		public int getItemCount(){
-			return data.size();
-		}
+        @Override
+        public void onSpeakingUsersChanged(List<Integer> ids) {
+        }
 
-		@Override
-		public long getItemId(int position){
-			return data.get(position).channelId;
-		}
+        @Override
+        public void onChannelEnded() {
+            hideReturnBar();
+        }
 
-		@Override
-		public int getImageCountForItem(int position){
-			Channel chan=data.get(position);
-			int count=0;
-			for(int i=0;i<Math.min(2, chan.users.size());i++){
-				if(chan.users.get(i).photoUrl!=null)
-					count++;
-			}
-			return count;
-		}
+        @Override
+        public void onSelfLeft() {
+            hasLeft = true;
+            hideReturnBar();
+        }
 
-		@Override
-		public String getImageURL(int position, int image){
-			Channel chan=data.get(position);
-			for(int i=0;i<Math.min(2, chan.users.size());i++){
-				if(chan.users.get(i).photoUrl!=null){
-					if(image==0)
-						return chan.users.get(i).photoUrl;
-					else
-						image--;
-				}
-			}
-			return null;
-		}
-	}
+    };
 
-	private class ChannelViewHolder extends BindableViewHolder<Channel> implements View.OnClickListener, ImageLoaderViewHolder{
+    private void hideReturnBar() {
+        if (returnView != null) {
+            returnView.setVisibility(View.INVISIBLE);
+        }
+        list.setPadding(list.getPaddingLeft(), list.getPaddingTop(), list.getPaddingRight(), 0);
+    }
 
-		private TextView topic, speakers, numMembers, numSpeakers;
-		private ImageView pic1, pic2;
-		private Drawable placeholder=new ColorDrawable(getResources().getColor(R.color.grey));
+    private void checkReturnBar() {
+        try {
+            Channel channel = DataProvider.getCachedChannel();
+            if (returnView != null) {
+                if (channel != null) {
+                    TextView title = returnView.findViewById(R.id.return_to_channel);
+                    if (title != null) {
+                        String channelName = (channel.topic == null) ? "the channel" : channel.topic;
+                        title.setText(getString(R.string.return_to_channel, channelName));
+                    }
+                    returnView.setVisibility(View.VISIBLE);
+                    list.setPadding(list.getPaddingLeft(), list.getPaddingTop(), list.getPaddingRight(), returnView.getHeight());
+                } else hideReturnBar();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		public ChannelViewHolder(){
-			super(getActivity(), R.layout.channel_row);
-			topic=findViewById(R.id.topic);
-			speakers=findViewById(R.id.speakers);
-			numSpeakers=findViewById(R.id.num_speakers);
-			numMembers=findViewById(R.id.num_members);
-			pic1=findViewById(R.id.pic1);
-			pic2=findViewById(R.id.pic2);
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        getToolbar().setElevation(0);
+        // return bar with navigation bar will look ugly
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
+                && AndroidUtils.hasNavigationBar(getActivity()))
+            hideReturnBar();
+        else if (returnView.getVisibility() == View.INVISIBLE && !hasLeft) checkReturnBar();
+    }
 
-			itemView.setOutlineProvider(roundedCornersOutline);
-			itemView.setClipToOutline(true);
-			itemView.setElevation(V.dp(2));
-			itemView.setOnClickListener(this);
-		}
+    @Override
+    protected RecyclerView.Adapter getAdapter() {
+        if (adapter == null) {
+            adapter = new ChannelAdapter();
+            adapter.setHasStableIds(true);
+        }
+        return adapter;
+    }
 
-		@Override
-		public void onBind(Channel item){
-			topic.setText(item.topic);
-			numMembers.setText(""+item.numAll);
-			numSpeakers.setText(""+item.numSpeakers);
-			speakers.setText(item.users.stream().map(user->user.isSpeaker ? (user.name+" 💬") : user.name).collect(Collectors.joining("\n")));
+    @Override
+    public boolean wantsLightNavigationBar() {
+        return true;
+    }
 
-			imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
-		}
+    @Override
+    public boolean wantsLightStatusBar() {
+        return true;
+    }
 
-		@Override
-		public void onClick(View view){
-			((MainActivity)getActivity()).joinChannel(item);
-		}
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_home, menu);
+    }
 
-		private ImageView imgForIndex(int index){
-			if(index==0)
-				return pic1;
-			return pic2;
-		}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Bundle args = new Bundle();
+        args.putInt("id", Integer.parseInt(ClubhouseSession.userID));
 
-		@Override
-		public void setImage(int index, Bitmap bitmap){
-			if(index==0 && item.users.get(0).photoUrl==null)
-				index=1;
-			imgForIndex(index).setImageBitmap(bitmap);
-		}
 
-		@Override
-		public void clearImage(int index){
-			imgForIndex(index).setImageDrawable(placeholder);
-		}
-	}
+        if (item.getItemId() == R.id.homeMenuProfile) {
+            Nav.go(getActivity(), ProfileFragment.class, args);
+        } else if (item.getItemId() == R.id.homeMenuSearchPeople) {
+            args.putInt(BaseSearchFragment.KEY_SEARCH_TYPE, BaseSearchFragment.SearchType.PEOPLE.ordinal());
+            Nav.go(getActivity(), SearchPeopleFragment.class, args);
+        } else if (item.getItemId() == R.id.homeMenuNotification) {
+            Nav.go(getActivity(), NotificationListFragment.class, args);
+        } else if (item.getItemId() == R.id.homeMenuAbout) {
+            about();
+        } else if (item.getItemId() == R.id.homeMenuLogout) {
+            logOut();
+        }
+        return true;
+
+    }
+
+    private class ChannelAdapter extends RecyclerView.Adapter<ChannelViewHolder> implements ImageLoaderRecyclerAdapter {
+
+        @NonNull
+        @Override
+        public ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new ChannelViewHolder();
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ChannelViewHolder holder, int position) {
+            holder.bind(data.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return data.size();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return data.get(position).channelId;
+        }
+
+        @Override
+        public int getImageCountForItem(int position) {
+            Channel chan = data.get(position);
+            int count = 0;
+            for (int i = 0; i < Math.min(2, chan.users.size()); i++) {
+                if (chan.users.get(i).photoUrl != null)
+                    count++;
+            }
+            return count;
+        }
+
+        @Override
+        public String getImageURL(int position, int image) {
+            Channel chan = data.get(position);
+            for (int i = 0; i < Math.min(2, chan.users.size()); i++) {
+                if (chan.users.get(i).photoUrl != null) {
+                    if (image == 0)
+                        return chan.users.get(i).photoUrl;
+                    else
+                        image--;
+                }
+            }
+            return null;
+        }
+    }
+
+    private class ChannelViewHolder extends BindableViewHolder<Channel> implements View.OnClickListener, ImageLoaderViewHolder {
+
+        private TextView topic, speakers, numMembers, numSpeakers;
+        private ImageView pic1, pic2;
+        private Drawable placeholder = new ColorDrawable(getResources().getColor(R.color.grey));
+
+        public ChannelViewHolder() {
+            super(getActivity(), R.layout.channel_row);
+            topic = findViewById(R.id.topic);
+            speakers = findViewById(R.id.speakers);
+            numSpeakers = findViewById(R.id.num_speakers);
+            numMembers = findViewById(R.id.num_members);
+            pic1 = findViewById(R.id.pic1);
+            pic2 = findViewById(R.id.pic2);
+
+            itemView.setOutlineProvider(roundedCornersOutline);
+            itemView.setClipToOutline(true);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onBind(Channel item) {
+            topic.setText(item.topic);
+            numMembers.setText("" + item.numAll);
+            numSpeakers.setText("" + item.numSpeakers);
+            speakers.setText(item.users.stream().map(user -> user.isSpeaker ? (user.name + " 💬") : user.name).collect(Collectors.joining("\n")));
+
+            imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
+        }
+
+        @Override
+        public void onClick(View view) {
+            ((MainActivity) getActivity()).joinChannel(item);
+        }
+
+        private ImageView imgForIndex(int index) {
+            if (index == 0)
+                return pic1;
+            return pic2;
+        }
+
+        @Override
+        public void setImage(int index, Bitmap bitmap) {
+            if (index == 0 && item.users.get(0).photoUrl == null)
+                index = 1;
+            imgForIndex(index).setImageBitmap(bitmap);
+        }
+
+        @Override
+        public void clearImage(int index) {
+            imgForIndex(index).setImageDrawable(placeholder);
+        }
+    }
+
+    private void logOut() {
+        ClubhouseSession.userID = ClubhouseSession.userToken = null;
+        ClubhouseSession.write();
+        Nav.goClearingStack(getActivity(), LoginFragment.class, null);
+    }
+
+    private void about() {
+        new AlertDialog.Builder(this.getActivity())
+                .setTitle(R.string.about)
+                .setMessage(R.string.about_text)
+                .setPositiveButton(R.string.ok, null)
+                .setCancelable(false)
+                .show();
+
+    }
+
+
 }
