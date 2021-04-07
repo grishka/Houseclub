@@ -15,3 +15,8 @@
 /Houseclub/release
 /Houseclub/build
 *.jks
+.settings/org.eclipse.buildship.core.prefs
+.project
+Houseclub/.classpath
+.vscode/settings.json
+Houseclub/.settings/org.eclipse.buildship.core.prefs

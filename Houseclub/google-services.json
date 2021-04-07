@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "852035166601",
+    "project_id": "houseclub-4df76",
+    "storage_bucket": "houseclub-4df76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852035166601:android:a6b8ed0b546a0429d78158",
+        "android_client_info": {
+          "package_name": "me.grishka.houseclub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852035166601-ao4tbvqr065hkcf4aniembmsoav7dscm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAerCw39FLbleumOa4wSXxZFhsl5CKq5sE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852035166601-ao4tbvqr065hkcf4aniembmsoav7dscm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
