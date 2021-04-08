@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="reference_width">320dp</dimen>
+    <dimen name="reference_height">480dp</dimen>
+</resources>
