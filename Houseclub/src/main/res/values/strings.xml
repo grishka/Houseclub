@@ -17,6 +17,8 @@
 	<string name="log_out">Log out</string>
 	<string name="ongoing_call">Ongoing call</string>
 	<string name="leave_room">Leave room</string>
+	<string name="mute_speaker">Mute speaker</string>
+	<string name="unmute_speaker">Unmute speaker</string>
 	<string name="join_this_room">Join this room?</string>
 	<string name="join">Join</string>
 	<string name="cancel">Cancel</string>
