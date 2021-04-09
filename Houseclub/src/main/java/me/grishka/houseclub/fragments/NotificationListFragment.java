@@ -128,11 +128,17 @@ public class NotificationListFragment extends BaseRecyclerFragment<Notification>
 		@Override
 		public void onBind(Notification item){
 			itemView.setAlpha(item.inUnread?1F:0.5F);
-			name.setText(item.userProfile.name);
+
+			    if (item.userProfile != null) {
+				name.setText(item.userProfile.name);
+			    } else {
+				name.setText("someone");
+			    }
+			
 			message.setText(item.message);
 			time.setText(DateUtils.getRelativeTimeSpanString(item.timeCreated.getTime()));
 
-			if(item.userProfile.photoUrl!=null)
+			if(item.userProfile != null && item.userProfile.photoUrl!=null)
 				imgLoader.bindViewHolder(adapter, this, getAdapterPosition());
 			else
 				photo.setImageDrawable(placeholder);
