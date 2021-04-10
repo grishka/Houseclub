@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +43,8 @@ import me.grishka.houseclub.api.methods.InviteToApp;
 import me.grishka.houseclub.api.methods.Me;
 import me.grishka.houseclub.api.methods.Unfollow;
 import me.grishka.houseclub.api.methods.UpdateBio;
-import me.grishka.houseclub.api.methods.UpdatePhoto;
 import me.grishka.houseclub.api.methods.UpdateName;
+import me.grishka.houseclub.api.methods.UpdatePhoto;
 import me.grishka.houseclub.api.model.FullUser;
 
 public class ProfileFragment extends LoaderFragment{
@@ -54,17 +55,19 @@ public class ProfileFragment extends LoaderFragment{
 
 	private TextView name, username, followers, following, followsYou, bio, inviteInfo, twitter, instagram,
 			invites;
-	private ImageView photo, inviterPhoto;
+	private ImageView photo, photo_edit_icon,inviterPhoto;
 	private Button followBtn, inviteButton;
 	private EditText invitePhoneNum;
 	private View socialButtons, inviteLayout;
 	private boolean self;
+
 
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
 		loadData();
 		self=getArguments().getInt("id")==Integer.parseInt(ClubhouseSession.userID);
+		isImageFitToScreen=true;
 		if(self)
 			setHasOptionsMenu(true);
 	}
@@ -98,10 +101,15 @@ public class ProfileFragment extends LoaderFragment{
 		following.setOnClickListener(this::onFollowingClick);
 		v.findViewById(R.id.inviter_btn).setOnClickListener(this::onInviterClick);
 		if(self){
+			photo_edit_icon=v.findViewById(R.id.photo_edit_icon);
+			photo_edit_icon.setVisibility(View.VISIBLE);
 			bio.setOnClickListener(this::onBioClick);
 			photo.setOnClickListener(this::onPhotoClick);
 			name.setOnClickListener(this::onNameClick);
 			inviteButton.setOnClickListener(this::onInviteClick);
+		}
+		else {
+			photo.setOnClickListener(this::onForeignPhotoClick);
 		}
 
 		return v;
@@ -414,5 +422,16 @@ public class ProfileFragment extends LoaderFragment{
 		Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		startActivityForResult(intent, PICK_PHOTO_RESULT);
+	}
+	private void onForeignPhotoClick(View view) {
+		if(isImageFitToScreen) {
+			isImageFitToScreen=false;
+			photo.setLayoutParams(new LinearLayout.LayoutParams((int) (272 * (getResources().getDisplayMetrics().density)), (int) (272 * (getResources().getDisplayMetrics().density))));
+			photo.setAdjustViewBounds(true);
+		}else{
+			isImageFitToScreen=true;
+			photo.setLayoutParams(new LinearLayout.LayoutParams((int) (72 * (getResources().getDisplayMetrics().density)), (int) (72 * (getResources().getDisplayMetrics().density))));
+			photo.setScaleType(ImageView.ScaleType.FIT_XY);
+		}
 	}
 }
