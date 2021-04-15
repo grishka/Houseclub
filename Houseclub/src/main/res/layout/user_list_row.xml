@@ -13,7 +13,7 @@
 		android:id="@+id/photo"
 		android:layout_width="48dp"
 		android:layout_height="48dp"
-		android:layout_marginRight="12dp"
+		android:layout_marginEnd="12dp"
 		tools:src="#0f0"/>
 
 	<LinearLayout

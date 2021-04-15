@@ -1,0 +1,67 @@
+<resources>
+	<string name="app_name">هاوس‌کلاب</string>
+	<string name="login">ورود</string>
+	<string name="phone_number">شماره تلفن</string>
+	<string name="enter_your_phone">شماره تلفنتان را وارد نمایید #</string>
+	<string name="sms_code">کد دریافتی</string>
+	<string name="resend_code_message">کدی دریافت نکردید؟</string>
+	<string name="next">بعدی</string>
+	<string name="resend_code_button">ارسال مجدد</string>
+	<string name="warning">هشدار!</string>
+	<string name="warning_text">این یک نسخه غیررسمی از کلاب‌هاوس است. در صورت استفاده از این برنامه، ممکن است حساب شما مسدود شود. مسئولیت استفاده از این برنامه بر عهده خودتان است.</string>
+	<string name="i_understand">متوجهم</string>
+	<string name="loading">در حال بارگذاری...</string>
+	<string name="error_loading">خطا در دریافت اطلاعات</string>
+	<string name="waitlist">لیست انتظار</string>
+	<string name="waitlist_text">"در انتظار دریافت دعوت‌نامه کلاب‌هاوس. حساب کاربری شما به طور موقت غیرفعال است. "</string>
+	<string name="log_out">خروج</string>
+	<string name="ongoing_call">تماس در حال انجام</string>
+	<string name="leave_room">ترک اتاق</string>
+	<string name="join_this_room">پیوستن به این اتاق؟</string>
+	<string name="join">پیوستن</string>
+	<string name="cancel">لغو</string>
+	<string name="followed_by_speakers">دنبال‌شده توسط سخنرانان</string>
+	<string name="others_in_room">دیگر افراد در اتاق</string>
+	<string name="confirm_join_as_speaker">%s از شما دعوت کرده تا صحبت کنید، موافقید؟</string>
+	<string name="register">ثبت نام</string>
+	<string name="first_name">نام</string>
+	<string name="last_name">نام خانوادگی</string>
+	<string name="username">نام کاربری</string>
+	<string name="complete_registration">تکمیل ثبت‌نام</string>
+	<string name="all_fields_are_required">تمامی موارد اجباری هستند.</string>
+	<string name="username_limit">نام کاربری نمی‌تواند بیشتر از 16 حرف باشد.</string>
+	<string name="register_warning">"این نسخه از برنامه غیررسمی و آزمایشی است. احتمال مسدود شدن حساب شما در صورت استفاده از این برنامه وجود دارد. بهتر است از یک گوشی با سیستم‌عامل ios برای ثبت نام استفاده کنید، هرچند با همین برنامه هم امکان ثبت‌نام وجود دارد.   لطفاً توجه کنید که بعد از ثبت‌نام فقط یک‌بار می‌توانید نام خود را تغییر دهید. لطفاً از نام واقعی خود استفاده کنید. "</string>
+	<string name="welcome_to_clubhouse">به کلاب‌هاوس خوش آمدید!</string>
+	<string name="invite_button_label">دعوت‌کردن</string>
+	<string name="invite_phone_hint">شماره تلفن را وارد کنید</string>
+	<string name="follows_you">شما را دنبال می‌کند</string>
+	<string name="follow">دنبال کردن</string>
+	<string name="following">دنبال می‌شود</string>
+	<plurals name="followers">
+		<item quantity="one">%d دنبال‌کننده</item>
+		<item quantity="other">%d دنبال‌کننده</item>
+	</plurals>
+	<plurals name="following">
+		<item quantity="one">%d دنبال‌شونده</item>
+		<item quantity="other">%d دنبال‌شونده</item>
+	</plurals>
+	<plurals name="invites">
+		<item quantity="one">شما %d دعوت‌نامه دارید</item>
+		<item quantity="other">شما %d دعوت‌نامه دارید</item>
+	</plurals>
+	<string name="followers_title">دنبال‌کنندگان</string>
+	<string name="following_title">دنبال‌شوندگان</string>
+	<string name="notifications_title">اعلان‌ها</string>
+	<string name="confirm_unfollow">آنفالو کردن %s؟</string>
+	<string name="yes">بله</string>
+	<string name="no">خیر</string>
+	<string name="joined_date">تاریخ پیوستن: %s</string>
+	<string name="invited_by">معرفی‌شده توسط %s</string>
+	<string name="update_bio">به‌روز‌رسانی بیو</string>
+	<string name="update_name">به‌روزرسانی نام</string>
+	<string name="save">ذخیره</string>
+	<string name="event_not_started">این رویداد هنوز شروع نشده است</string>
+	<string name="event_expired">این رویداد اتمام یافته است.</string>
+	<string name="log_in_to_activate">"لطفاً برای فعال‌سازی حساب کاربریتان، دوباره وارد شوید. "</string>
+	<string name="ok">تایید</string>
+</resources>
