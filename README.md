@@ -1,4 +1,8 @@
+- **[Follow Updates](https://twitter.com/nuMilaD)**
+
+
 **سورس کد این ریپازیتوری بیش از این آپدیت نمی‌شود .**
+
 
 
   
@@ -7,7 +11,6 @@
   
 **لینک دانلود فایل نصب:**
 - **[دانلود از کافه بازار](https://cafebazaar.ir/app/ir.miladnouri.houseclub)**
-- **[دانلود از گوگل پلی ](https://play.google.com/store/apps/details?id=ir.miladnouri.houseclub)**
 - **[دانلود از گیت‌هاب](https://github.com/miladnouri/Houseclub/releases)**  
     
     
